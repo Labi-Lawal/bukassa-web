@@ -3,10 +3,17 @@
         <div class="section-title">Edit Profile</div>
         <div class="section-main">
             <div class="form">
+
                 <div class="field">
                     <div class="label">First Name</div>
                     <input v-model="firstname" @keyup="determineButtonState" type="text" placeholder="First Name" required>
                 </div>
+                
+                <div class="field">
+                    <div class="label">First Name</div>
+                    <input v-model="firstname" @keyup="determineButtonState" type="text" placeholder="First Name" required>
+                </div>
+
                 <div class="field">
                     <div class="label">First Name</div>
                     <input v-model="firstname" @keyup="determineButtonState" type="text" placeholder="First Name" required>

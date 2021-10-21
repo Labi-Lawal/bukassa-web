@@ -1,14 +1,14 @@
 <template>
     <div class="tutor">
         <Header />
-        <section class="body">
+        <section class="body" v-if="!isLoading">
             <div class="details">
                 <div class="intro-vid">
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Uck2h5Y7688" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <IntroVideo :videoLink="tutor.intro_vid"/>
                 </div>
                 <div class="tutor-profile">
                     <div class="left">
-                        <img src="../assets/user1.jpg" alt="">
+                        <img :src="tutor.image" alt="">
                         <div class="buttons">
                             <button @click="showContactModal">
                                 <font-awesome-icon :icon="['fas', 'comments']" />
@@ -18,20 +18,12 @@
                     </div>
                     <div class="right">
                         <div class="title">TUTOR</div>
-                        <div class="tutor-name">Priscilia Jose</div>
+                        <div class="tutor-name">{{ tutor.tutor_name }}</div>
                         <div class="languages">
-                            <div>English,</div>
-                            <div>English</div>
+                            <div class="lang"> {{ tutor.language_skills.join(',') }} </div>
                         </div>
                         <div class="ratings">
-                            <div class="rating">
-                                <font-awesome-icon :icon="['fas', 'star']" />
-                                <font-awesome-icon :icon="['fas', 'star']" />
-                                <font-awesome-icon :icon="['fas', 'star']" />
-                                <font-awesome-icon :icon="['fas', 'star']" />
-                                <font-awesome-icon :icon="['fas', 'star']" />
-                            </div>
-                            <div class="number">4.9</div>
+                            <TutorRatingsIcon :rating="tutor.rating" :showDigit="false"/>
                         </div>
                         <div class="metrics">
                             <div>
@@ -40,17 +32,17 @@
                             </div>
                             <div>
                                 <div class="title">Ratings</div>
-                                <div class="number">4.5</div>
+                                <div class="number">{{ tutor.rating }}</div>
                             </div>
                             <div>
                                 <div class="title">Reviews</div>
-                                <div class="number">201</div>
+                                <div class="number">{{ tutor.reviews.length }}</div>
                             </div>
                         </div>
                         <div class="bio">
                             <div class="section-title">About Me</div>
                             <div class="content">
-                                Lorem ipsum dolor sit amet consectetur adipiscing elit integer, proin per facilisis congue suspendisse leo porttitor, netus metus tristique litora quam auctor massa. Tellus nunc class diam pretium consequat augue conubia hendrerit, ornare dignissim nullam parturient litora semper imperdiet mollis, facilisi torquent venenatis auctor dictum porttitor quam. Tempor duis rutrum iaculis vivamus sociis quisque mus, etiam quam primis nec interdum eu, inceptos semper mauris est cum ligula. Nascetur fusce ut in tellus pulvinar platea class phasellus vivamus augue, nibh volutpat iaculis dictumst bibendum purus suspendisse integer curae, convallis imperdiet primis porttitor consequat rutrum ridiculus molestie lacinia. 
+                                {{ tutor.bio.substr(0, 1).toUpperCase() + tutor.bio.substr(1, tutor.bio.length) }}
                             </div>
                         </div>
                     </div>
@@ -150,16 +142,27 @@
 
 <script>
     import Header from '../components/Header.vue';
-    import Footer from '../components/Footer.vue';
+    import IntroVideo from "../components/tutor/intro-video.vue";
+    import TutorRatingsIcon from "../components/TutorRatingsIcon.vue";
     import Calendar from '../components/Calendar.vue';
+    import Footer from '../components/Footer.vue';
+    import net from '../services/http';
 
     export default {
         name: 'Tutor',
         components: {
             Header,
+            IntroVideo,
+            TutorRatingsIcon,
+            Calendar,
             Footer,
-            Calendar
         },  
+        data() {
+            return {
+                isLoading: true,
+                tutor: { }
+            }
+        },
         methods: {
             showContactModal() {
                 const contactModalBackDrop = document.getElementById("contactModalBackDrop");
@@ -174,7 +177,20 @@
 
                 contactModalBackDrop.style.display = "none";
                 contactModalFrame.style.display = "none";
+            },
+            async fetchTutorData() {
+                try {
+                    const response = await net.http.get('/tutors/' + this.$route.params.name);
+                    this.tutor = response.data.data;
+                    this.isLoading = false;
+
+                } catch (error) {
+                    console.log(error);
+                }
             }
+        },
+        beforeMount() {
+            this.fetchTutorData();
         }
     }
 </script>
@@ -259,9 +275,10 @@
     div.right div.tutor-name {
         font-size: 260%;
         font-weight: 700;
+        text-transform: capitalize;
     }
     div.right div.languages {
-        display: flex;
+        text-transform: capitalize;
     }
     div.right div.languages > div{
         margin-right: 1%;

@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import ExploreTutors from '../views/ExploreTutors.vue'
-import Tutor from '../views/Tutor.vue'
-import Register from '../views/Register.vue'
-import SignIn from '../views/SignIn.vue'
-import UserProfile from '../views/UserProfile.vue'
-import EditProfile from '../components/EditProfile.vue'
 
 const routes = [
   {
@@ -16,7 +10,7 @@ const routes = [
   {
     path: '/signin',
     name: 'SignIn',
-    component: SignIn,
+    component: ()=> import('../views/SignIn.vue'),
     beforeEnter: (to, from, next) => {
       if(localStorage.getItem('access-token') == null) next();
       else router.push('/profile');
@@ -25,32 +19,77 @@ const routes = [
   {
     path: '/register',
     name: 'Register',
-    component: Register,
+    component: ()=> import('../views/Register.vue'),
     beforeEnter: (to, from, next) => {
       if(localStorage.getItem('access-token') == null) next();
       else router.push('/profile');
     }
   },
   {
-    path: '/tutors/explore',
-    name: 'ExploreTutors',
-    component: ExploreTutors
+    path: '/logout',
+    beforeEnter: (to, from, next) => {
+      if(localStorage.getItem('access-token') != null)
+        localStorage.removeItem("access-token");
+
+      router.push('/signin');
+    }
   },
   {
-    path: '/tutors/tutorname',
+    path: '/tutors/explore',
+    name: 'ExploreTutors',
+    component: ()=> import('../views/ExploreTutors.vue'),
+    children: [
+      {
+        path: 'intro-video',
+        name: 'IntroVideo',
+        component: ()=> import('../components/tutor/intro-video'),
+      },
+      {
+        path: 'schedule',
+        name: 'Schedule',
+        component: ()=> import('../components/schedule/schedule-min.vue')
+      }
+    ]
+  },
+  {
+    path: '/tutor/:name',
     name: 'Tutor',
-    component: Tutor
+    component: ()=> import('../views/Tutor.vue'),
+  },
+  {
+    path: '/become-tutor',
+    name: 'BecomeTutor',
+    component: ()=> import('../views/BecomeTutor.vue'),
   },
   {
     path: '/profile',
-    component: UserProfile,
+    name: 'UserProfile',
+    component: ()=> import('../views/UserProfile.vue'),
     children: [
       {
-        path: 'edit',
-        component:  EditProfile
+        path: 'schedule', alias: '', name: 'UserSchedule',
+        component:  ()=> import('../components/schedule/schedule.vue'),
+      },
+      {
+        path: 'lessons', name: 'UserLessons',
+        component:  ()=> import('../components/userprofile/lessons.vue'),
+      },
+      {
+        path: 'tutors', name: 'UserTutors',
+        component:  ()=> import('../components/userprofile/tutors.vue'),
+      },
+      {
+        path: 'edit', name: 'EditProfile',
+        component:  ()=> import('../components/userprofile/edit-profile.vue'),
       },
     ]
   },
+  {
+    path: '/community',
+    name: 'Community',
+    component: ()=> import('../views/BecomeTutor.vue'),
+  },
+  
 ]
 
 const router = createRouter({

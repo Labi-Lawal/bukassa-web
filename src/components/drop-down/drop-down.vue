@@ -22,7 +22,6 @@ export default defineComponent({
     name: 'Drop-Down',
     props: ['options', 'selected', 'selectedIndex', 'placeholder', 'isOptionsVisible', 'hideIcon', 'hideBorder'],
     data(){
-        console.log(this.options[this.selectedIndex]);
         return {}
     },
     methods: {

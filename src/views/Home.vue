@@ -4,6 +4,7 @@
     <div class="front">
       <section class="hero">
         <Header />
+
         <div class="hero-content">
           <div class="hero-text">We Are The Bridge Connecting You With The Best Tutors</div>
           <div class="search-form"> 
@@ -13,6 +14,7 @@
         </div>
       </section> 
     </div>
+
     <Footer />
   </div>
 </template>
@@ -51,8 +53,9 @@
       color: white;
       height: 100vh;
     }
-    section.hero div.drop-down > div.dot {
-      display: none !important;
+    div.drop-down .dot {
+      /* display: none !important; */
+      background: white !important;
     }
     div.hero-content {
       text-align: center;

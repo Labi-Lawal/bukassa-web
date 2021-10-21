@@ -2,7 +2,38 @@
     <div class="profile">
         <Header />
         <section class="profile-frame">
-           
+            <div class="profile-head">
+                <div class="user">
+                    <div class="user-image">
+                        <img src="../assets/userimage.png">
+                    </div>
+                    <div class="user-info"> 
+                        <div class="role">STUDENT</div>
+                        <div class="name">Dummy Denkins</div>
+                        <div class="metrics">
+                            <div class="">
+                                <div class="title">Total Classes</div>
+                                <div class="figure">4</div>
+                            </div>
+                            <div class="">
+                                <div class="title">Classes Taken</div>
+                                <div class="figure">1</div>
+                            </div>
+                            <div class="">
+                                <div class="title">Pending Classes</div>
+                                <div class="figure">3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-nav">
+               <router-link to="/profile/schedule" class="nav" :class="($route.name)"><div>SCHEDULE</div></router-link>
+               <router-link to="/profile/lessons" class="nav"><div>LESSONS</div></router-link>
+               <router-link to="/profile/tutors" class="nav"><div>TUTORS</div></router-link>
+               <router-link to="/profile/edit" class="nav"><div>EDIT PROFILE</div></router-link>
+            </div>
+            <router-view />
         </section>
         <Footer />
     </div>
@@ -17,55 +48,85 @@
             Header,
             Footer
         },
+        data(){
+            console.log(this.$route);
+            return {}
+        }
     }
 </script>
 
-<style scoped>
+<style scoped> 
     section.profile-frame {
-        border: 1px solid rgb(240, 240, 240);
-        width: 80%;
+        width: 70%;
         height: 80vh;
-        margin: 2% auto;
+        margin: 0 auto;
+    }
+    div.profile-head {
+        height: 250px;
         display: flex;
+        width: 70%;
+        margin: 0 auto;
     }
-    div.nav {
-        border-right: 1px solid rgb(240, 240, 240);
-        text-align: center;
-        width: 15%;
+    div.user {
+        width: 100%;
+        display: flex;
+        /* justify-content: space-between; */
     }
-    div.nav div.initial {
-        border: 1px solid black;
-        height: 90px;
-        width: 90px;
+    div.user-image {
         border-radius: 50%;
-        margin: 5% auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: black;
-        color: white;
-        font-weight: 600;
-        font-size: 150%;
+        width: 150px;
+        height: 150px;
+        margin: auto 0%;
+        margin-left: 5%;
+        overflow: hidden;
+        background: rgb(238, 238, 238);
     }
-    div.nav div.name {
+    div.user-info {
+        margin: auto 25% auto auto;
+    }
+    div.user-info div.role {
+        font-size: 90%;
+        color: grey;
         font-weight: 700;
-        font-size: 120%;
     }
-    div.links {
-        margin-top: 20%;
+    div.user-info div.name {
+        font-size: 200%;
+        font-weight: 700;
     }
-    div.links div {
+    div.metrics {
+        width: 150%;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+    div.metrics div.title {
+        font-size: 90%;
         color: grey;
         font-weight: 600;
-        font-size: 100%;
-        padding: 5% 0%;
     }
-    div.links div:hover {
-        background: rgb(250, 250, 250);
+    div.metrics div.figure {
+        font-size: 150%;
+        font-weight: 700;
+    }
+
+    div.profile-nav {
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        margin: 0 auto;
+        border-bottom: 1px solid lightgrey;
+    }
+    div.profile-nav .nav {
+        width: calc(100% / 8);
+        height: 100%;
+        text-align: center;
+        padding: 2% 0%;
+        font-weight: 500;
         color: grey;
-        cursor: pointer;
+        margin-bottom: -1px;
     }
-    div.details{
-        width: 85%;
+    div.profile-nav .router-link-exact-active {
+        border-bottom: 2px solid black;
+        color: black;
     }
 </style>

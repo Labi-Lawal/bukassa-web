@@ -1,6 +1,6 @@
 <template>
     <body>
-        <AuthPageHeader />
+        <Header />
         <section class="body">
             <div class="image-box">
 
@@ -39,12 +39,12 @@
 </template>
 
 <script>
-    import AuthPageHeader from '@/components/AuthPageHeader.vue';
+    import Header from '@/components/Header.vue';
     import PlainTextButton from '@/components/buttons/plain-text-button.vue';
     import net from '@/services/http.js';
     
     export default {
-        components: { AuthPageHeader, PlainTextButton },
+        components: { Header, PlainTextButton },
         data() {
             var emailModel = {
                     type: 'email',
@@ -78,9 +78,10 @@
                     };
 
                     try {
+
                         const response = await net.http.post('/user/auth', body);
                         
-                        localStorage.setItem("access-token", response.data.token);
+                        localStorage.setItem("access-token", response.data.token);p
                         if(response.status == 200) {
                             window.location.pathname = '/dashboard';
                         }
@@ -123,6 +124,10 @@
                 if(emailRegExp.test(email)) return true;
                 else false;
             }
+        },
+        async created(){
+            let response = await net.http.get(`${url}/product`);
+            console.log(response);
         }
     }
 </script>

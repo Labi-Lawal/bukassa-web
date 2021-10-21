@@ -168,7 +168,6 @@
 
                     calendar.appendChild(dayContainer);
                 };
-                console.log(calendar);
             },
             initButtons() {},
             openModal(date) {

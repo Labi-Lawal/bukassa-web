@@ -11,7 +11,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import pageTitle from "./page-title.vue";
+import pageTitle from "./title/page-title.vue";
 import card from "./card.vue"
 
 export default defineComponent({

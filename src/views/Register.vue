@@ -86,7 +86,7 @@ export default {
 
                 try {
                     const response = await net.http.post('/user/register', body);
-                    localStorage.setItem("access-item", response.data.token);
+                    localStorage.setItem("access-token", response.data.token);
                     if(response.status == 200) {
                         window.location.pathname = '/dashboard';
                     }
