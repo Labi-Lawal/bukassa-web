@@ -197,6 +197,7 @@ export default {
     div.logo {
         font-weight: 900;
         font-size: 160%;
+        /* color: var(--burgundy-100); */
     }
     div.drop-down {
         margin-left: auto;

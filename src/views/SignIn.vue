@@ -2,9 +2,7 @@
     <body>
         <Header />
         <section class="body">
-            <div class="image-box">
-
-            </div>
+            <div class="image-box"></div>
             <div class="form-box-frame">
                 <div class="form-box">
                     <div class="heading">Log into <br /> your account  </div>
@@ -14,17 +12,19 @@
                         
                         <form @submit.prevent="signInButtonPressed">
 
-                            <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email">
+                            <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email" autocomplete="off">
                             <div class="error-message" v-if="emailModel.error != ''">{{ emailModel.error }}</div>
 
-                            <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password">
+                            <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password" autocomplete="off">
                             <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
                             <div class="link">
                                 <router-link to="/"> Forgot your password? </router-link>
                             </div>
                             
-                            <plain-text-button buttonText='SIGN IN' @button-action="signUserIn" />
+                            <div class="btn">
+                                <plain-text-button buttonText='SIGN IN' :isLoading="isLoading" @button-action="signUserIn" />
+                            </div>
 
                         </form>
                         <div class="orsignup">
@@ -65,32 +65,37 @@
                 emailModel,
                 passwordModel, 
                 formModel, 
-                isDisabled 
+                isDisabled,
+                isLoading: false
             }
         },
         methods: {
             async signUserIn() {
                 if (this.validateInput()) {
-
+                    
+                    this.isLoading = true;
+                    
                     var body = {
                         email: this.emailModel.value,
                         password: this.passwordModel.value
                     };
 
-                    try {
-
-                        const response = await net.http.post('/user/auth', body);
-                        
-                        localStorage.setItem("access-token", response.data.token);p
-                        if(response.status == 200) {
-                            window.location.pathname = '/dashboard';
-                        }
-
-                    } catch (error) { 
-                        if(error.response.status == 404) {
+                    this.$store.dispatch("signin", body)
+                    .then(()=> {
+                        if(this.$store.state.tempRoute != '')  
+                            this.$router.push({ path: `/${this.$store.state.tempRoute}`})
+                        else 
+                            this.$router.push({ path: '/profile' })
+                    })
+                    .catch(error => {
+                        this.isLoading = false;
+                    
+                        if(error.response.status == 404)
                             this.formModel.error = "Invalid Login Credentials";
-                        }
-                    }
+                        else
+                            this.formModel.error = "A server error occurred, please try logging in again";
+                    });
+           
                 }
             },
             validateInput() {
@@ -124,10 +129,6 @@
                 if(emailRegExp.test(email)) return true;
                 else false;
             }
-        },
-        async created(){
-            let response = await net.http.get(`${url}/product`);
-            console.log(response);
         }
     }
 </script>
@@ -214,5 +215,8 @@
         font-weight: 700;
         font-size: 100%;
         color: #bd1d1d;
+    }
+    .btn {
+        height: 60px;
     }
 </style>

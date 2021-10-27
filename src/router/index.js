@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store';
 import Home from '../views/Home.vue'
 
 const routes = [
@@ -28,28 +29,15 @@ const routes = [
   {
     path: '/logout',
     beforeEnter: (to, from, next) => {
-      if(localStorage.getItem('access-token') != null)
-        localStorage.removeItem("access-token");
-
-      router.push('/signin');
+      store.dispatch('signout')
+      .then(()=> router.push('/signin'))
+      .catch(()=> router.back());
     }
   },
   {
     path: '/tutors/explore',
     name: 'ExploreTutors',
     component: ()=> import('../views/ExploreTutors.vue'),
-    children: [
-      {
-        path: 'intro-video',
-        name: 'IntroVideo',
-        component: ()=> import('../components/tutor/intro-video'),
-      },
-      {
-        path: 'schedule',
-        name: 'Schedule',
-        component: ()=> import('../components/schedule/schedule-min.vue')
-      }
-    ]
   },
   {
     path: '/tutor/:name',
@@ -65,6 +53,10 @@ const routes = [
     path: '/profile',
     name: 'UserProfile',
     component: ()=> import('../views/UserProfile.vue'),
+    beforeEach: (to, from, next)=> {
+      if(localStorage.getItem('access-token') != null) next();
+      else router.push('/signin');
+    },
     children: [
       {
         path: 'schedule', alias: '', name: 'UserSchedule',
@@ -89,6 +81,12 @@ const routes = [
     name: 'Community',
     component: ()=> import('../views/BecomeTutor.vue'),
   },
+  {
+    path: '/booking-payment',
+    component: ()=> import('../views/BookingPayment.vue'),
+    name: 'BookingPayment',
+    props: true
+  }
   
 ]
 

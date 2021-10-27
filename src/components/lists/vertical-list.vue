@@ -44,7 +44,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import IntroVideo from "../tutor/intro-video.vue";
+import IntroVideo from "../tutor/TutorIntrovideo.vue";
 import TutorRatingsIcon from "../TutorRatingsIcon.vue";
 
 export default defineComponent({

@@ -4,13 +4,13 @@
         <section class="body" v-if="!isLoading">
             <div class="details">
                 <div class="intro-vid">
-                    <IntroVideo :videoLink="tutor.intro_vid"/>
+                    <TutorIntroVideo :videoLink="tutor.intro_vid"/>
                 </div>
                 <div class="tutor-profile">
                     <div class="left">
                         <img :src="tutor.image" alt="">
                         <div class="buttons">
-                            <button @click="showContactModal">
+                            <button @click="openContactModal">
                                 <font-awesome-icon :icon="['fas', 'comments']" />
                                 <div class="text">Chat Me</div>
                             </button>
@@ -28,7 +28,7 @@
                         <div class="metrics">
                             <div>
                                 <div class="title">Total Students</div>
-                                <div class="number">2,234,353</div>
+                                <div class="number">5</div>
                             </div>
                             <div>
                                 <div class="title">Ratings</div>
@@ -57,83 +57,30 @@
                                 <div class="duration">50 mins</div>
                                 <div class="lang">English Class</div>
                             </div>
-                            <div class="price">$150</div>
+                            <div class="price">{{ appendCurreny(150) }}</div>
                         </div>
                         <div class="package">
                             <div class="package-details">
                                 <div class="duration">45 mins</div>
                                 <div class="lang">Spanish Class</div>
                             </div>
-                            <div class="price">$250</div>
+                            <div class="price">{{ appendCurreny(250) }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="calendar">
                     <div class="section-title">Schedule</div>
-                    <Calendar />
+                    <TutorScheduleCalendar @buttonAction="openBookingModal" />
                 </div>
-            </div>
-            <div id="contactModalBackDrop" @click="hideContactModal"></div>
-            <div id="contactModalFrame">
-                <div class="contactModal">
-                    <div class="contactHead">
-                        <div class="name">Contact Priscilia Jose</div>
-                        <div class="cancelcontact" @click="hideContactModal"><font-awesome-icon :icon="['fas', 'times']" /></div>
-                    </div>
-                    <div class="questions">
-                        <div class="field">
-                            <div class="question">What is the main reason you're taking lessons?</div>
-                            <select>
-                                <option selected disabled hidden>Please select an option</option>
-                                <option>School</option>
-                                <option>Test</option>
-                                <option>Work</option>
-                                <option>Travel</option>
-                                <option>Personal Interest</option>
-                                <option>Lessons are for my child</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <div class="question">Is there a specific area that you would like to focus on during your lessons?</div>
-                            <select>
-                                <option selected disabled hidden>Please select an option</option>
-                                <option>School</option>
-                                <option>Test</option>
-                                <option>Work</option>
-                                <option>Travel</option>
-                                <option>Personal Interest</option>
-                                <option>Lessons are for my child</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <div class="question">What language proficiency level are you aiming for?</div>
-                            <select>
-                                <option selected disabled hidden>Please select an option</option>
-                                <option>School</option>
-                                <option>Test</option>
-                                <option>Work</option>
-                                <option>Travel</option>
-                                <option>Personal Interest</option>
-                                <option>Lessons are for my child</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <div class="question">What language proficiency level are you aiming for?</div>
-                            <textarea></textarea>
-                        </div>
-                        <div class="field">
-                            <div class="question">What language proficiency level are you aiming for?</div>
-                            <textarea></textarea>
-                        </div>
-                    </div>
-                    <div class="send">
-                        <button class="cancel" @click="hideContactModal">CANCEL</button>
-                        <button class="send-message" @click="hideContactModal">SEND</button>
-                    </div>
-                </div>
+            </div> 
+            <div class="modals" v-if="showModals">
+
+                <TutorBookingModal v-if="showBookingModal" :tutorEvents="tutor.events" :tutorname="tutor.tutor_name" @setNewTutorEventAction="setNewEvent" @buttonAction="closeBookingModal" />
+                
+                <TutorContactModal v-if="showContactModal" @buttonAction="closeContactModal" />
+                
+                <BackDrop @buttonAction="closeModal"/>
+
             </div>
         </section>
         <Footer />
@@ -142,41 +89,59 @@
 
 <script>
     import Header from '../components/Header.vue';
-    import IntroVideo from "../components/tutor/intro-video.vue";
+    import BackDrop from "../components/BackDrop.vue";
+    import TutorContactModal from "../components/tutor/TutorContactModal.vue";
+    import TutorBookingModal from "../components/tutor/TutorBookingModal.vue";
+    import TutorIntroVideo from "../components/tutor/TutorIntrovideo.vue";
     import TutorRatingsIcon from "../components/TutorRatingsIcon.vue";
-    import Calendar from '../components/Calendar.vue';
+    import TutorScheduleCalendar from '../components/tutor/TutorScheduleCalendar.vue';
     import Footer from '../components/Footer.vue';
     import net from '../services/http';
+    import appendCurreny  from "../helper/currency.js";
 
     export default {
         name: 'Tutor',
         components: {
             Header,
-            IntroVideo,
+            TutorIntroVideo,
             TutorRatingsIcon,
-            Calendar,
+            TutorScheduleCalendar,
+            TutorContactModal,
+            TutorBookingModal,
+            BackDrop,
             Footer,
         },  
         data() {
             return {
+                appendCurreny,
                 isLoading: true,
-                tutor: { }
+                tutor: { },
+                showModals: false,
+                showContactModal: false,
+                showBookingModal: false,
             }
         },
         methods: {
-            showContactModal() {
-                const contactModalBackDrop = document.getElementById("contactModalBackDrop");
-                const contactModalFrame = document.getElementById("contactModalFrame");
-
-                contactModalBackDrop.style.display = "block";
-                contactModalFrame.style.display = "flex";
+            openContactModal() {
+                this.showModals = true;
+                this.showContactModal = true;
             },
-            hideContactModal() {
-                const contactModalBackDrop = document.getElementById("contactModalBackDrop");
-                const contactModalFrame = document.getElementById("contactModalFrame");
-
-                contactModalBackDrop.style.display = "none";
-                contactModalFrame.style.display = "none";
+            closeContactModal() {
+                this.showModals = false;
+                this.showContactModal = false;
+            },
+            openBookingModal(date) {
+                this.showModals = true;
+                this.showBookingModal = true;
+            },
+            closeBookingModal() {
+                this.showModals = false;
+                this.showBookingModal = false;
+            },
+            closeModal() {
+                this.showModals = false;
+                this.showBookingModal = false;
+                this.showContactModal = false;
             },
             async fetchTutorData() {
                 try {
@@ -186,6 +151,20 @@
 
                 } catch (error) {
                     console.log(error);
+                }
+            },
+            async setNewEvent(eventInfo) {
+                console.log(eventInfo);
+                try {
+                    const response = await net.httpSec.post(
+                        '/tutors/'+ this.$route.params.name +'/newevent', 
+                        {newevent: eventInfo}
+                    );
+                    this.tutor = response.data.data;
+                    console.log(this.tutor);
+
+                } catch (error) {
+                    console.log(error.response);
                 }
             }
         },
@@ -197,10 +176,10 @@
 
 <style scoped>
     section.body {
-        width: 80%;
-        margin: 0% auto;
+        width: 90%;
+        margin: 2% auto 0%;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between; 
     }
     div.details {
         width: 60%;
@@ -222,16 +201,17 @@
         padding: 1% 0% 0%;
     }
     div.left {
-        width: 20%;
-        text-align: center;
+        width: 16%;
+        /* text-align: center; */
     }
     div.left img {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         object-fit: cover;
         object-position: top;
-        margin: 0% 0% 0%;
+        margin: 0% auto 0%;
+        display: block;
     }
     div.left div.buttons {
         margin: 4% 0% 0%;
@@ -246,7 +226,10 @@
         font-size: 100%;
         background: none;
         font-weight: 700;
-        margin: 0% 0% 2%;
+        margin: 10px 0% 2%;
+        background: var(--burgundy-100);
+        color: white;
+        border-radius: 5px;
     }
     div.left button > svg {
         width: 30%;
@@ -263,9 +246,10 @@
         color: white;
     }
     div.right {
-        padding: 4% 0% 0% 4%;
+        padding: 2% 0% 0% 4%;
         margin-left: 0%;
         width: 80%;
+        font-size: 110%;
     }
     div.right div.title {
         font-weight: 700;
@@ -273,7 +257,7 @@
         color: grey;
     }
     div.right div.tutor-name {
-        font-size: 260%;
+        font-size: 240%;
         font-weight: 700;
         text-transform: capitalize;
     }
@@ -300,7 +284,7 @@
     }
     div.metrics > div > div.title{
         font-weight: 600;
-        font-size: 90%;
+        font-size: 100%;
     }
     div.metrics > div > div.number{
         font-weight: 700;
@@ -362,103 +346,16 @@
         border-radius: 4px;
         margin-top: 5%;
     }
-
-    div#contactModalBackDrop {
-        display: none;
+    
+    
+    div.modals {
         width: 100%;
         height: 100vh;
-        position: fixed;
-        top: 0px;
-        left: 0px;
-        background: rgba(0, 0, 0, 0.452);
-        z-index: 1000;
-    }
-    div#contactModalFrame {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 30%;
-        top: 0px;
-        left: 35%;
-        height: 100vh;
+        top: 0;
+        left: 0;
         position: absolute;
-        z-index: 1000;
-        padding: 5% 0%;
-    }
-    div.contactModal {
-        width: 100%;
-        background: white;
-        border-radius: 5px;
-    }
-    div.contactHead {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 2% 4%;
-        border-bottom: 1px solid lightgrey;
-        font-weight: 400;
-    }
-    div.cancelcontact {
-        font-size: 140%;
-        cursor: pointer;
-    }
-    div.field {
-        width: 90%;
-        margin: 0% auto;
-        padding: 2% 0%;
-    }
-    div.question {
-        margin: 0% auto;
-        padding: 2% 1%;
-        font-weight: 300;
-        color: rgb(119, 119, 119);
-    }
-    select {
-        width: 100%;
-        font-size: 100%;
-        border: 1px solid lightgrey;
-        padding: 3% 0%;
-        font-weight: 300;
-        color: grey;
-        outline: none;
-    }
-    option {
-        margin: 2% 0%;
-    }
-    textarea {
-        width: 90%;
-        height: 100px;
-        display: block;
-        border: 1px solid #ccc;
-        border-radius: 2px;
-        padding: 5%;
-        outline: none;
-        color: #333;
-        font-size: 14px;
-        resize: none;   
-    }
-    div.send {
-        padding: 4% 5%;
-        border-top: 1px solid lightgrey;
-        display: flex;
-        justify-content: flex-end;
-        border-top: 1px solid #ccc;
+    } 
 
-    }
-    div.send > button {
-        padding: 3% 5%;
-        border: 1px solid #ccc;
-        background: none;
-        color: rgb(97, 97, 97);
-        font-weight: 700;
-        cursor: pointer;
-    }
-    div.send > button:hover{
-        background: rgb(224, 224, 224);
-    }
-    div.send button.cancel {
-        margin-right: 2%;
-    }
 
 </style>
 

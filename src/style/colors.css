@@ -1,5 +1,13 @@
 :root {
     --burgundy-100: #AE1919;
+    --burgundy-200: #863547;
+    --burgundy-300: #AE1919;
+    --burgundy-400: #AE1919;
+    --burgundy-500: #66001a;
+    --burgundy-600: #5a0016;
+    --burgundy-700: #4d0013;
+    --burgundy-800: #400010;
+    --burgundy-900: #33000d;
     --border-color: #cccccc;
     --rating-icons: #ffc400;
 }

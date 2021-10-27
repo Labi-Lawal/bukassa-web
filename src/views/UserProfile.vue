@@ -1,15 +1,15 @@
 <template>
     <div class="profile">
         <Header />
-        <section class="profile-frame">
+        <section class="profile-frame" v-if="userInfo != ''">
             <div class="profile-head">
                 <div class="user">
                     <div class="user-image">
                         <img src="../assets/userimage.png">
                     </div>
                     <div class="user-info"> 
-                        <div class="role">STUDENT</div>
-                        <div class="name">Dummy Denkins</div>
+                        <div class="role">{{ userInfo.roles.join(', ') }}</div>
+                        <div class="name">{{ userInfo.fullname }}</div>
                         <div class="metrics">
                             <div class="">
                                 <div class="title">Total Classes</div>
@@ -44,13 +44,27 @@
     import Footer from '../components/Footer.vue';
     
     export default {
-         components: {
-            Header,
-            Footer
-        },
+        components: { Header, Footer },
         data(){
-            console.log(this.$route);
-            return {}
+            return { 
+                userInfo: ''
+            }
+        },
+        methods: { },
+        beforeMount() {
+            this.userInfo = this.$store.state.user;
+
+            if(this.userInfo == '') {
+                this.$store.dispatch('fetchuserinfo')
+                .then((user)=> {
+                    // this.userInfo = this.$store.state.userInfo;
+                    console.log(user);
+                    this.userInfo = user;
+                })
+                .catch((error)=> {
+                    console.log(error.response);
+                });
+            }
         }
     }
 </script>
@@ -88,10 +102,12 @@
         font-size: 90%;
         color: grey;
         font-weight: 700;
+        text-transform: capitalize;
     }
     div.user-info div.name {
         font-size: 200%;
         font-weight: 700;
+        text-transform: capitalize;
     }
     div.metrics {
         width: 150%;

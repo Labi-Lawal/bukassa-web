@@ -10,7 +10,7 @@
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
-    name: 'intro-video',
+    name: 'tutor-intro-video',
     props: ['videoLink']
 })
 </script>
@@ -21,7 +21,8 @@ export default defineComponent({
     height: 100%; 
 }
 iframe {
-    border-radius: 5px;
+    border-radius: 30px;
+    border: none;
 }
 </style>
 

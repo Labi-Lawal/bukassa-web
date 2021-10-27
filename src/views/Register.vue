@@ -13,10 +13,10 @@
                     <div class="error-msg" v-if="formModel.error != ''">{{ formModel.error }}</div>
 
                     <form @submit.prevent="signInButtonPressed">
-                        <input v-model="fullnameModel.value" @keyup="validateFullname()" :type="fullnameModel.type" class="fullname" placeholder="Fullname">
+                        <input v-model="fullnameModel.value" @keyup="validateFullname()" :type="fullnameModel.type" class="fullname" placeholder="Fullname" autocomplete="off">
                         <div class="error-message" v-if="fullnameModel.error != ''">{{ fullnameModel.error }}</div>
 
-                        <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email">
+                        <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email" autocomplete="off">
                         <div class="error-message" v-if="emailModel.error != ''">{{ emailModel.error }}</div>
 
                         <select class="account-type" @change="validateRole()" v-model="roleModel.value">
@@ -27,10 +27,12 @@
                         </select>
                         <div class="error-message" v-if="roleModel.error != ''">{{ roleModel.error }}</div>
 
-                        <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password">
+                        <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password" autocomplete="off">
                         <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
-                        <plain-text-button buttonText="CREATE NEW ACCOUNT" @button-action="registerUser" />
+                        <div class="btn_wrapper">
+                            <plain-text-button buttonText="CREATE NEW ACCOUNT" :isLoading="isLoading" @button-action="registerUser" /> 
+                        </div>
 
                         <div class="legal">
                             By signing up, you agree to our Terms, Data Policy and Cookie Policy.
@@ -71,7 +73,8 @@ export default {
             fullnameModel,
             roleModel,
             formModel,
-            typeSelected
+            typeSelected,
+            isLoading: false
         }
     },
     methods: {
@@ -84,23 +87,23 @@ export default {
                     password: this.passwordModel.value
                 };
 
-                try {
-                    const response = await net.http.post('/user/register', body);
-                    localStorage.setItem("access-token", response.data.token);
-                    if(response.status == 200) {
-                        window.location.pathname = '/dashboard';
-                    }
-    
-                } catch (error) { 
-                    console.log(error.response);
+                this.isLoading = true;
+            
+                this.$store.dispatch('register', body)
+                .then(()=> {
+                    if(this.$store.state.tempRoute != '') 
+                        this.$router.push({ path: `/${this.$store.state.tempRoute}`})
+                    else 
+                        this.$router.push({ path: '/profile' })
+                })
+                .catch((error)=> {
+                    this.isLoading = false;
 
-                    if( error.response.status == 409 ) {
+                    if( error.response.status == 409 )
                         this.emailModel.error = error.response.data.message
-                    }
-                    if (error.response.status == 422 ) {
+                    if (error.response.status == 422 )
                         this.formModel.error = error.response.data.message;
-                    }
-                }
+                });
             }
         },
         validateInput() {
@@ -240,8 +243,9 @@ export default {
     div.form-box input.error ~ div.error-message{
         display: block;
     }
-    button {
+    .btn_wrapper {
         margin-top: 5% !important;
+        height: 60px;
     }
     div.legal{
         text-align: center;
