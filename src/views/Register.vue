@@ -19,14 +19,6 @@
                         <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email" autocomplete="off">
                         <div class="error-message" v-if="emailModel.error != ''">{{ emailModel.error }}</div>
 
-                        <select class="account-type" @change="validateRole()" v-model="roleModel.value">
-                            <option value="" selected disabled hidden>Select Account Type</option>
-                            <option value="student">Student</option>
-                            <option value="tutor">Tutor</option>
-                            <option value="parent">Parent</option>
-                        </select>
-                        <div class="error-message" v-if="roleModel.error != ''">{{ roleModel.error }}</div>
-
                         <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password" autocomplete="off">
                         <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
@@ -61,7 +53,6 @@ export default {
     data() {
         var emailModel = { type: 'email', value: '', error: '' },
         passwordModel = { type: 'password', value: '', error: '' },
-        roleModel = { type: 'select', value: '', error: '' }, 
         fullnameModel = { type: 'text', value: '', error: '' },
         formModel = { error: '' },
 
@@ -71,7 +62,6 @@ export default {
             emailModel,
             passwordModel,
             fullnameModel,
-            roleModel,
             formModel,
             typeSelected,
             isLoading: false
@@ -83,7 +73,6 @@ export default {
                 var body = {
                     fullname: this.fullnameModel.value,
                     email: this.emailModel.value,
-                    role: this.roleModel.value,
                     password: this.passwordModel.value
                 };
 

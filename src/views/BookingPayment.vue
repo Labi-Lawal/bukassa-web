@@ -117,6 +117,7 @@ export default {
   .booking_payment {
     width: 100%;
     display: flex;
+    align-items: flex-start;
     margin-top: 2%;
     position: relative;
   }
@@ -255,3 +256,4 @@ export default {
     margin:  1%;
   }
 </style>
+

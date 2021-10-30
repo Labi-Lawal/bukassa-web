@@ -2,16 +2,19 @@
   <router-view/>
 </template>
 <script>
+import axios from 'axios';
+import net from './services/http';
+
 export default {
   created() {
-    // this.$http.interceptors.response.use(undefined, (err) => {
-    //   return new Promise((resolve, reject) => {
-    //     if(err.status === 401 && err.config && !err.config._isRetryRequest) {
-    //       this.$store.dispatch('signout');
-    //     }
-    //     throw err;
-    //   });
-    // });
+    net.httpSec.interceptors.response.use(undefined, (err) => {
+      return new Promise((resolve, reject) => {
+        if(err.response.status === 401 && err.response.config && !err.response.config._isRetryRequest) {
+          this.$store.dispatch('signout');
+        }
+        throw err;
+      });
+    });
   }
 }
 </script>

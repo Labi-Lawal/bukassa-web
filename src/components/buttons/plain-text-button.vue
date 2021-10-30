@@ -34,7 +34,7 @@ export default defineComponent({
 
 <style scoped>
     .submit{
-        width: 91%;
+        width: 100%;
         height: 100%;
         font-weight: 700;
         background: rgb(16, 16, 16);

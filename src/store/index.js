@@ -53,10 +53,15 @@ export default createStore({
             state.user = {};
             state.token = '';
             localStorage.removeItem('access-token');
+            this.commit('update_auth_status', true);
+        },
+        update_auth_status(state, payload) {
+            state.isSignedIn = payload;
         },
         auth_success(state, payload) {
             this.commit('store_token', payload.token);
             this.commit('store_user', payload.user);
+            this.commit('update_auth_status', true);
         },
     },
     actions: { 
@@ -130,8 +135,16 @@ export default createStore({
                 }
             });
         },
+        updatesigninstatus({commit}, payload){
+            return new Promise(async (resolve, reject)=> {
+                commit('update_auth_status', payload);
+                resolve();
+            });
+        }
     },
     getters: { 
+        isSignedIn: state => state.isSignedIn,
+        token: state => state.token
     }
 
 });

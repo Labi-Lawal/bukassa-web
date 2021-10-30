@@ -12,18 +12,16 @@ const routes = [
     path: '/signin',
     name: 'SignIn',
     component: ()=> import('../views/SignIn.vue'),
-    beforeEnter: (to, from, next) => {
-      if(localStorage.getItem('access-token') == null) next();
-      else router.push('/profile');
+    meta: {
+      authRoute: true
     }
   },
   {
     path: '/register',
     name: 'Register',
     component: ()=> import('../views/Register.vue'),
-    beforeEnter: (to, from, next) => {
-      if(localStorage.getItem('access-token') == null) next();
-      else router.push('/profile');
+    meta: {
+      authRoute: true
     }
   },
   {
@@ -53,9 +51,8 @@ const routes = [
     path: '/profile',
     name: 'UserProfile',
     component: ()=> import('../views/UserProfile.vue'),
-    beforeEach: (to, from, next)=> {
-      if(localStorage.getItem('access-token') != null) next();
-      else router.push('/signin');
+    meta: {
+      requiresAuth: true
     },
     children: [
       {
@@ -93,6 +90,32 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+router.beforeEach((to, from, next)=> {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if(store.getters.isSignedIn) next();
+    else next('/signin');
+      
+  }
+  
+  if(to.matched.some(record => record.meta.authRoute)) {
+    if(store.getters.token != '') {
+      if(store.getters.isSignedIn) next('/profile');
+      else {
+        console.log("UPDATING USER STATUS");
+        store.dispatch('updatesigninstatus', true);
+        next('/profile');
+      }
+    }
+    else {
+      console.log("NOT SIGNED IN");
+      store.dispatch('signout');
+      next();
+    }
+  }
+
+  else next(); 
+});
 
 export default router
