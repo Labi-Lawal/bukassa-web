@@ -1,16 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store';
-import Home from '../views/Home.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: ()=> import('../views/Home.vue'),
   },
   {
-    path: '/signin',
-    name: 'SignIn',
+    path: '/login',
+    name: 'Login',
     component: ()=> import('../views/SignIn.vue'),
     meta: {
       authRoute: true
@@ -26,9 +25,10 @@ const routes = [
   },
   {
     path: '/logout',
+    name: 'Logout',
     beforeEnter: (to, from, next) => {
       store.dispatch('signout')
-      .then(()=> router.push('/signin'))
+      .then(()=> router.push('/login'))
       .catch(()=> router.back());
     }
   },
@@ -46,14 +46,15 @@ const routes = [
     path: '/become-tutor',
     name: 'BecomeTutor',
     component: ()=> import('../views/BecomeTutor.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/profile',
     name: 'UserProfile',
     component: ()=> import('../views/UserProfile.vue'),
-    meta: {
-      requiresAuth: true
-    },
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'schedule', alias: '', name: 'UserSchedule',
@@ -61,10 +62,24 @@ const routes = [
       },
       {
         path: 'lessons', name: 'UserLessons',
-        component:  ()=> import('../components/userprofile/lessons.vue'),
+        component:  ()=> import('../components/userprofile/Lessons/Index.vue'),
+        children: [
+          {
+            path: '', name: 'All Lessons',
+            component:  ()=> import('../components/userprofile/Lessons/lessons.vue'),
+          },
+          {
+            path: 'create', name: 'Create Lesson',
+            component:  ()=> import('../components/userprofile/Lessons/create.vue'),
+          }
+        ]
       },
       {
         path: 'tutors', name: 'UserTutors',
+        component:  ()=> import('../components/userprofile/tutors.vue'),
+      },
+      {
+        path: 'students', name: 'UserStudents',
         component:  ()=> import('../components/userprofile/tutors.vue'),
       },
       {
@@ -92,30 +107,36 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, from, next)=> {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if(store.getters.isSignedIn) next();
-    else next('/signin');
-      
-  }
-  
-  if(to.matched.some(record => record.meta.authRoute)) {
-    if(store.getters.token != '') {
-      if(store.getters.isSignedIn) next('/profile');
-      else {
-        console.log("UPDATING USER STATUS");
-        store.dispatch('updatesigninstatus', true);
-        next('/profile');
+router.beforeEach ( async (to, from, next)=> {
+
+  if(to.matched.some(record=> record.meta.requiresAuth)) {
+    if(store.getters.token) {
+      if(store.getters.userData != '') {
+        if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
+          await store.dispatch('fetchtutordata')
+          .then((response)=> {
+            next('/profile');
+          })
+          .catch(()=> next('/logout'))
+
+        } else next();
+      } else {
+        // fetch user data
+        await store.dispatch('fetchuserdata')
+        .then(async ()=> {
+          if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
+            await store.dispatch('fetchtutordata')
+            .then(()=> next())
+            .catch(()=> next('/logout'))
+          } 
+        })
+        .catch(()=> next('/logout'));
       }
     }
-    else {
-      console.log("NOT SIGNED IN");
-      store.dispatch('signout');
-      next();
-    }
+    else next('/login');
   }
 
-  else next(); 
+  else next();
 });
 
 export default router

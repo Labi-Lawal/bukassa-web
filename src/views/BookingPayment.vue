@@ -69,17 +69,17 @@
         </div>
       </div>
     </section>
-    <Footer />
+    <SiteFooter />
   </div>
 </template>
 
 <script>
 import Header from '../components/Header.vue'
-import Footer from '../components/Footer.vue'
+import SiteFooter from '../components/SiteFooter.vue'
 
 export default {
     name:"booking-payment",
-    components: { Header, Footer },
+    components: { Header, SiteFooter },
     data() {
       var bookingInfo = '';
       var paymentOptions = [
@@ -234,7 +234,7 @@ export default {
   } 
   .lesson_title {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     margin-bottom: 1%;
   }
   .lesson_title_middle {

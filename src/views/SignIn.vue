@@ -22,8 +22,12 @@
                                 <router-link to="/"> Forgot your password? </router-link>
                             </div>
                             
-                            <div class="btn">
-                                <plain-text-button buttonText='SIGN IN' :isLoading="isLoading" @button-action="signUserIn" />
+                            <div class="signin_btn_wrapper">
+                                <ButtonPlainText 
+                                    buttonText='SIGN IN' 
+                                    :isLoading="isLoading" 
+                                    @button-action="signUserIn" 
+                                />
                             </div>
 
                         </form>
@@ -40,11 +44,10 @@
 
 <script>
     import Header from '@/components/Header.vue';
-    import PlainTextButton from '@/components/buttons/plain-text-button.vue';
-    import net from '@/services/http.js';
+    import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
     
     export default {
-        components: { Header, PlainTextButton },
+        components: { Header, ButtonPlainText },
         data() {
             var emailModel = {
                     type: 'email',
@@ -216,7 +219,15 @@
         font-size: 100%;
         color: #bd1d1d;
     }
-    .btn {
-        height: 60px;
+    .signin_btn_wrapper {
+        height: 50px;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 5%;
+    }
+    .signin_btn_wrapper button {
+        border: none;
+        background: var(--paper-grey-900);
+        color: white;
     }
 </style>

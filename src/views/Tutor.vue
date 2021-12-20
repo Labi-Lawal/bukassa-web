@@ -18,9 +18,9 @@
                     </div>
                     <div class="right">
                         <div class="title">TUTOR</div>
-                        <div class="tutor-name">{{ tutor.tutor_name }}</div>
+                        <div class="tutor-name">{{ tutor.tutorName }}</div>
                         <div class="languages">
-                            <div class="lang"> {{ tutor.language_skills.join(',') }} </div>
+                            <div class="lang"> {{ tutor.languages.join(',') }} </div>
                         </div>
                         <div class="ratings">
                             <TutorRatingsIcon :rating="tutor.rating" :showDigit="false"/>
@@ -83,7 +83,7 @@
 
             </div>
         </section>
-        <Footer />
+        <SiteFooter />
     </div>
 </template>
 
@@ -95,7 +95,7 @@
     import TutorIntroVideo from "../components/tutor/TutorIntrovideo.vue";
     import TutorRatingsIcon from "../components/TutorRatingsIcon.vue";
     import TutorScheduleCalendar from '../components/tutor/TutorScheduleCalendar.vue';
-    import Footer from '../components/Footer.vue';
+    import SiteFooter from '../components/SiteFooter.vue';
     import net from '../services/http';
     import appendCurreny  from "../helper/currency.js";
 
@@ -109,7 +109,7 @@
             TutorContactModal,
             TutorBookingModal,
             BackDrop,
-            Footer,
+            SiteFooter,
         },  
         data() {
             return {
@@ -144,14 +144,12 @@
                 this.showContactModal = false;
             },
             async fetchTutorData() {
-                try {
-                    const response = await net.http.get('/tutors/' + this.$route.params.name);
-                    this.tutor = response.data.data;
+                await this.$store.dispatch('fetchtutor', this.$route.params.name)
+                .then((tutor)=> {
+                    this.tutor = tutor;
                     this.isLoading = false;
-
-                } catch (error) {
-                    console.log(error);
-                }
+                })
+                .catch((error)=> { console.log(error.response) });
             },
             async setNewEvent(eventInfo) {
                 console.log(eventInfo);

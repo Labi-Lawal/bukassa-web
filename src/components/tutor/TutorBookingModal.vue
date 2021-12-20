@@ -2,7 +2,7 @@
     <div id="newEventsModal">
 
         <div class="modal_head">
-            <ProgressIndicator :sections="bookingSections" :currentSectionIndex="currentSection" @prevSectionButtonAction="goToPrevSection"/>
+            <aProgressIndicator :sections="bookingSections" :currentSectionIndex="currentSection" @prevSectionButtonAction="goToPrevSection"/>
         </div>
 
         <div class="modal_content">
@@ -22,7 +22,7 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import ProgressIndicator from "../ProgressIndicator.vue";
-import TutorLessonsList from "./TutorLessonsList.vue";
+import TutorLessonsList from "../lists/TutorLessonsList.vue";
 import TutorFullScheduleCalendar from "./TutorFullScheduleCalendar.vue";
 import TutorCommunicationTools from "./TutorCommunicationTools.vue";
 

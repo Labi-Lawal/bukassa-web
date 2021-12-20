@@ -22,8 +22,8 @@
                         <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password" autocomplete="off">
                         <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
-                        <div class="btn_wrapper">
-                            <plain-text-button buttonText="CREATE NEW ACCOUNT" :isLoading="isLoading" @button-action="registerUser" /> 
+                        <div class="register_btn_wrapper">
+                            <ButtonPlainText buttonText="CREATE NEW ACCOUNT" :isLoading="isLoading" @button-action="registerUser" /> 
                         </div>
 
                         <div class="legal">
@@ -45,11 +45,11 @@
     
 import Header from '@/components/Header.vue';
 import AccountTypes from '@/components/account-types.vue';
-import PlainTextButton from '@/components/buttons/plain-text-button.vue';
+import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
 import net from '@/services/http';
 
 export default {
-    components: { Header, AccountTypes, PlainTextButton },
+    components: { Header, AccountTypes, ButtonPlainText },
     data() {
         var emailModel = { type: 'email', value: '', error: '' },
         passwordModel = { type: 'password', value: '', error: '' },
@@ -96,7 +96,7 @@ export default {
             }
         },
         validateInput() {
-            if(this.validateFullname() && this.validateEmail() && this.validateRole() && this.validatePassword()) return true;
+            if(this.validateFullname() && this.validateEmail() && this.validatePassword()) return true;
             else return false;
         },
         validateFullname() { 
@@ -129,15 +129,6 @@ export default {
             this.emailModel.error = '';
             return true;
         },
-        validateRole() { 
-            if(this.roleModel.value == '') {
-                this.roleModel.error = "Please select a role";
-                return false;
-            }
-
-            this.roleModel.error = '';
-            return true;
-        },
         validatePassword() {
             if(this.passwordModel.value == '') {
                 this.passwordModel.error = "Password field cannot be empty";
@@ -162,6 +153,7 @@ export default {
         },
         emailValidation(email) {
             const emailRegExp = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+            
             if(emailRegExp.test(email)) return true;
             else false;
         }
@@ -232,9 +224,16 @@ export default {
     div.form-box input.error ~ div.error-message{
         display: block;
     }
-    .btn_wrapper {
-        margin-top: 5% !important;
-        height: 60px;
+    .register_btn_wrapper {
+        height: 50px;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 5%;
+    }
+    .register_btn_wrapper button {
+        border: none;
+        background: var(--paper-grey-900);
+        color: white;
     }
     div.legal{
         text-align: center;

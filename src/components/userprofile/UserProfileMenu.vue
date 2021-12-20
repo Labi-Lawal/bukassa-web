@@ -1,14 +1,14 @@
 <template>
   <div class="user-profile-menu">
-    <div class="menu-item">
-      <font-awesome-icon :icon="['fas', 'search']"/>
-      <label>My Lessons</label>
-    </div>
-    <div class="menu-item">
-      <router-link to="/logout" class="anchor">
-        <label>Log Out</label>
-      </router-link>
-    </div>
+    <router-link
+      class="menu_item"
+      v-for="(navItem, index) in nav"
+      :key="index"
+      :to="navItem.path"
+    >
+      
+      <div class="label"> {{ navItem.label }} </div>
+    </router-link>
   </div>
 </template>
 
@@ -17,9 +17,13 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: "user-profile-menu",
-    props: ["hide"],
+    props: ["hide", "nav"],
     data() {
-        return { }
+      console.log(this.nav);
+
+      return {
+      
+      }
     },
     methods: { }
 });
@@ -28,29 +32,33 @@ export default defineComponent({
 <style scoped> 
   .user-profile-menu {
     position: absolute;
-    top: 150%;
+    top: 80px;
     right: 0;
     width: 500%;
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 4% 0%;
     background: white;
     box-shadow: 0px 0px 8px 1px rgb(221, 221, 221);
     border-radius: 2px;
     color: rgb(12, 12, 12) !important;
+    z-index: 10000000;
   }
-  .menu-item {
+  .menu_item {
     padding: 6% 5%;
     display: flex;
     align-items: center;
   }
-  .menu-item:hover {
+  .menu_item:hover {
     background: rgb(238, 238, 238);
   }
-  .menu-item > .anchor {
+  .menu_item > .anchor {
     width: 100%;
   }
-  .menu-item label {
+  .menu_item .label {
     margin-left: 7%;
     font-weight: 500;
+    text-transform: capitalize;
   }
 
 </style>

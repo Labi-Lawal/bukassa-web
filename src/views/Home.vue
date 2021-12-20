@@ -15,11 +15,16 @@
             <div class="title_detail">
               We don’t just teach African languages to your kid, we also bring awareness of various African cultures, reintroduce them to their roots and Identity by teaching them their native language.
             </div>
+            
             <form class="search">
               <input placeholder="Search A Language">
+              
               <div class="btn_wrapper">
-                <PlainTextButton buttonText="Find A Tutor" />
+                <ButtonPlainText 
+                  buttonText="Find A Tutor" 
+                />
               </div> 
+            
             </form>
           </div>
         </div>
@@ -64,7 +69,7 @@
               </div>
             </div>
             <div class="btn_wrapper">
-              <PlainTextButton buttonText="View All Languages" />
+              <ButtonPlainText buttonText="View All Languages" />
             </div>
           </div>
         </div>
@@ -83,7 +88,7 @@
               <li>Learn from certified teachers with proven experience </li>
             </ul>
             <div class="btn_wrapper">
-              <PlainTextButton buttonText="Find A Tutor" />
+              <ButtonPlainText buttonText="Find A Tutor" />
             </div>
           </div>
         </div>
@@ -97,7 +102,7 @@
               <li>Motivate yourself by taking part in the italki Language Challenge </li>
             </ul>
             <div class="btn_wrapper">
-              <PlainTextButton buttonText="Find A Language" />
+              <ButtonPlainText buttonText="Find A Language" />
             </div>
           </div>
           <div class="image_wrapper">
@@ -117,7 +122,7 @@
               <li>Study at your own pace without worrying about rigid schedules or fixed fees </li>
             </ul>
             <div class="btn_wrapper">
-              <PlainTextButton buttonText="Find A Tutor" />
+              <ButtonPlainText buttonText="Find A Tutor" />
             </div>
           </div>
         </div>
@@ -195,26 +200,26 @@
           Explore all of our lessons and pick your suitable ones to enroll and start learning with <br> us! We ensure that you will never regret it!
         </div>
         <div class="book_a_class_btn_wrapper">
-          <PlainTextButton buttonText="Find A Tutor" />
+          <ButtonPlainText buttonText="Find A Tutor" />
         </div>
       </div>
     
     </section>
-    <Footer />
+    <SiteFooter />
   </div>
 </template>
 
 <script>
   import Header from '../components/Header.vue'
-  import PlainTextButton from '../components/buttons/plain-text-button.vue';
-  import Footer from '../components/Footer.vue'
+  import ButtonPlainText from '../components/buttons/ButtonPlainText.vue';
+  import SiteFooter from '../components/SiteFooter.vue'
 
   export default {
     name: 'Home',
     components: {
       Header,
-      PlainTextButton,
-      Footer
+      ButtonPlainText,
+      SiteFooter
     }
 }
 </script>
@@ -280,6 +285,8 @@
       border-radius: 0;
       margin: 0;
       background: var(--burgundy-100);
+      color: white;
+      border: none;
     }
 
 
@@ -328,6 +335,7 @@
     }
     .all_languages .btn_wrapper button {
       background: var(--burgundy-100);
+      color: white;
       border: none;
     }
   
@@ -485,6 +493,7 @@
     }
     .break_down .btn_wrapper button{
       background: var(--burgundy-100);
+      color: white;
       border: 1px solid var(--burgundy-100);
     }
 
@@ -516,6 +525,8 @@
     }
     .book_a_class_btn_wrapper button {
       background: var(--burgundy-100);
+      color: white;
+      border: none;
       font-size: 120%;
     }
 </style>

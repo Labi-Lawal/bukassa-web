@@ -1,15 +1,34 @@
 <template>
     <div class="profile">
         <Header />
-        <section class="profile-frame" v-if="userInfo != ''">
-            <div class="profile-head">
+        <section class="profile_frame" v-if="userInfo != ''">
+            <div class="side_bar">
                 <div class="user">
-                    <div class="user-image">
+                    <div class="user_image">
                         <img src="../assets/userimage.png">
                     </div>
-                    <div class="user-info"> 
-                        <div class="role">{{ userInfo.roles.join(', ') }}</div>
+                    <div class="user_info">
+                        <div class="role">{{ userInfo.role }}</div>
                         <div class="name">{{ userInfo.fullname }}</div>
+                    </div>
+                </div>
+                <div class="nav">
+                    <div
+                        v-for="(navItem, index) in nav"
+                        :key="index"
+                        class="menu_item"
+                    >
+                        <router-link
+                            class="menu_item_link"
+                            :to="navItem.path"
+                        >
+                            <div class="icon"><img :src="navItem.source" /></div>
+                            <div class="label"> {{ navItem.label }} </div>
+                        </router-link>
+                    </div>
+                </div>
+                <!-- <div class="user">
+                    <div class="user-info"> 
                         <div class="metrics">
                             <div class="">
                                 <div class="title">Total Classes</div>
@@ -25,124 +44,180 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
-            <div class="profile-nav">
-               <router-link to="/profile/schedule" class="nav" :class="($route.name)"><div>SCHEDULE</div></router-link>
-               <router-link to="/profile/lessons" class="nav"><div>LESSONS</div></router-link>
-               <router-link to="/profile/tutors" class="nav"><div>TUTORS</div></router-link>
-               <router-link to="/profile/edit" class="nav"><div>EDIT PROFILE</div></router-link>
+            <div class="profile_content">
+                <router-view />
             </div>
-            <router-view />
         </section>
-        <Footer />
+        <SiteFooter />
     </div>
 </template>
 
 <script>
     import Header from '../components/Header.vue';
-    import Footer from '../components/Footer.vue';
+    import SiteFooter from '../components/SiteFooter.vue';
     
     export default {
-        components: { Header, Footer },
+        components: { Header, SiteFooter },
         data(){
+
+            const studentMenu = [
+                {
+                    label: 'schedule',
+                    path: '/profile/schedule',
+                    source: require('../assets/icons/schedule.png')
+                },
+                {
+                    label: 'my lessons',
+                    path: '/profile/lessons',
+                    source: require('../assets/icons/online-lesson.png')
+                },
+                {
+                    label: 'my Tutors',
+                    path: '/profile/tutors',
+                    source: require('../assets/icons/tutor.png')
+                },
+                {
+                    label: 'edit profile',
+                    path: '/profile/edit',
+                    source: require('../assets/icons/editprofile.png')
+                },
+                {
+                    label: 'logout',
+                    path: '/logout',
+                    source: require('../assets/icons/logout.png')
+                }
+            ],
+            tutorMenu = [
+                {
+                    label: 'schedule',
+                    path: '/profile/schedule',
+                    source: require('../assets/icons/schedule.png')
+                },
+                {
+                    label: 'my lessons',
+                    path: '/profile/lessons',
+                    source: require('../assets/icons/online-lesson.png')
+                },
+                {
+                    label: 'my students',
+                    path: '/profile/students',
+                    source: require('../assets/icons/students.png')
+                },
+                {
+                    label: 'edit profile',
+                    path: '/profile/edit',
+                    source: require('../assets/icons/editprofile.png')
+                },
+                {
+                    label: 'logout',
+                    path: '/logout',
+                    source: require('../assets/icons/logout.png')
+                }
+            ];
+
+            var nav = [];
+
+            if(this.$store.getters.userData.role == 'student') 
+                nav = studentMenu;
+            if(this.$store.getters.userData.role == 'tutor') 
+                nav = tutorMenu;
+
             return { 
-                userInfo: ''
+                userInfo: this.$store.getters.userData,
+                nav,
+                currentNav: 0
             }
         },
         methods: { },
-        beforeMount() {
-            this.userInfo = this.$store.state.user;
-
-            if(this.userInfo == '') {
-                this.$store.dispatch('fetchuserinfo')
-                .then((user)=> {
-                    // this.userInfo = this.$store.state.userInfo;
-                    console.log(user);
-                    this.userInfo = user;
-                })
-                .catch((error)=> {
-                    console.log(error.response);
-                });
-            }
+        async beforeMount() {
+            
         }
     }
 </script>
 
 <style scoped> 
-    section.profile-frame {
-        width: 70%;
-        height: 80vh;
-        margin: 0 auto;
-    }
-    div.profile-head {
-        height: 250px;
+    .profile_frame {
+        width: 90%;
+        margin: 2% auto;
         display: flex;
-        width: 70%;
-        margin: 0 auto;
     }
-    div.user {
+    .side_bar {
+        box-shadow: 0px 0px 2px 1px var(--paper-grey-200);
+        height: 75vh;
+        width: 18%;
+        border-radius: 10px;
+        padding: 1% 0;
+    }
+    .user {
         width: 100%;
         display: flex;
-        /* justify-content: space-between; */
+        margin-top: 5%;
     }
-    div.user-image {
+    .user_image {
         border-radius: 50%;
-        width: 150px;
-        height: 150px;
-        margin: auto 0%;
-        margin-left: 5%;
+        height: 60px;
+        width: 60px;
         overflow: hidden;
-        background: rgb(238, 238, 238);
+        box-shadow: 0px 0px 3px 1px var(--paper-grey-200);
+        margin-left: 10%;
     }
-    div.user-info {
-        margin: auto 25% auto auto;
-    }
-    div.user-info div.role {
-        font-size: 90%;
-        color: grey;
-        font-weight: 700;
+    .user_info {
+        margin-left: 5%;
         text-transform: capitalize;
     }
-    div.user-info div.name {
-        font-size: 200%;
-        font-weight: 700;
-        text-transform: capitalize;
+    .user_info .role {
+        color: var(--paper-grey-600);
+        font-size: 100%;
+        font-weight: 500; 
     }
-    div.metrics {
-        width: 150%;
-        display: flex;
-        justify-content: space-between;
-        margin-top: 40px;
-    }
-    div.metrics div.title {
-        font-size: 90%;
-        color: grey;
-        font-weight: 600;
-    }
-    div.metrics div.figure {
-        font-size: 150%;
-        font-weight: 700;
+    .user_info .name {
+        font-size: 120%;
+        font-weight: 500;
     }
 
-    div.profile-nav {
+    .metrics {
         display: flex;
-        justify-content: space-between;
-        width: 90%;
-        margin: 0 auto;
-        border-bottom: 1px solid lightgrey;
     }
-    div.profile-nav .nav {
-        width: calc(100% / 8);
+    .metrics .title {
+        font-size: 80%;
+    }
+
+    .nav {
+        margin-top: 10%;
+    }
+    .menu_item {
+        height: 50px;
+    }
+    .menu_item:hover {
+        background: var(--paper-grey-100);
+    }
+    .menu_item .icon {
+        width: 25px;
+        height: 25px;
+    }
+    .menu_item .icon img {
+        filter: grayscale(100%);
+    }
+    .menu_item .label {
+        text-transform: capitalize;
+        font-weight: 600;
+        color: var(--paper-grey-700);
+        margin-left: 5%;
+    }
+    .menu_item_link {
+        display: flex;
+        align-items: center;
         height: 100%;
-        text-align: center;
-        padding: 2% 0%;
-        font-weight: 500;
-        color: grey;
-        margin-bottom: -1px;
+        padding-left: 15%;
     }
-    div.profile-nav .router-link-exact-active {
-        border-bottom: 2px solid black;
-        color: black;
+    .menu_item_link.router-link-active {
+        background: var(--paper-grey-100);
+    }
+
+    .profile_content {
+        width: 80%;
+        padding: 0 1%;
     }
 </style>

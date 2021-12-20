@@ -17,11 +17,11 @@
             <div class="user-image">
                 <img src="../assets/userimage.png">
             </div>
-            <UserProfileMenu v-if="showUserMenu" />
+            <UserProfileMenu v-if="showUserMenu" :nav="nav" />
         </div>
         <div class="no-user-nav" v-show="!isLoggedIn">
             <div class="login-btn">
-                <router-link to="/signin">
+                <router-link to="/login">
                     <div class="login-btn-text">Login</div>
                 </router-link>
             </div>
@@ -92,8 +92,82 @@ export default {
         let isOptionsVisible = [false, false], selected = [true, true];
 
         let selectedCurrencyIndex = 0, selectedLanguageIndex = 0;
+        
+        const studentMenu = [
+        {
+          label: 'my lessons',
+          path: '/my-lessons',
+          icon: ''
+        },
+        {
+          label: 'my tutors',
+          path: '/my-tutors',
+          icon: ''
+        },
+        {
+          label: 'schedule',
+          path: '/schedule',
+          icon: ''
+        },
+        {
+          label: 'sign out',
+          path: '/logout',
+          icon: ''
+        }
+        ],
+        tutorMenu = [
+            {
+            label: 'my lessons',
+            path: '/my-lessons',
+            icon: ''
+            },
+            {
+            label: 'my students',
+            path: '/my-students',
+            icon: ''
+            },
+            {
+            label: 'schedule',
+            path: '/schedule',
+            icon: ''
+            },
+            {
+            label: 'sign out',
+            path: '/logout',
+            icon: ''
+            }
+        ];
 
-        return { allCurrencies, allLanguages, isOptionsVisible, selectedCurrencyIndex, selectedLanguageIndex, selected, showUserMenu, isLoggedIn }
+
+        return { 
+            allCurrencies, 
+            allLanguages, 
+            isOptionsVisible, 
+            selectedCurrencyIndex, 
+            selectedLanguageIndex, 
+            selected, 
+            showUserMenu, 
+            isLoggedIn,
+            studentMenu,
+            tutorMenu,
+            nav: [
+                {
+                    label: 'Profile',
+                    path: '/profile',
+                    icon: ''
+                },
+                {
+                    label: 'schedule',
+                    path: '/schedule',
+                    icon: ''
+                },
+                {
+                    label: 'logout',
+                    path: '/logout',
+                    icon: ''
+                }
+            ]
+        }
     },
     methods: { 
         getSelectedIndex() { 
@@ -136,6 +210,7 @@ export default {
         }
     },
     beforeMount() {
+
         if(localStorage.getItem("currency") == null ) {
             localStorage.setItem(
                 "currency", 
@@ -169,11 +244,10 @@ export default {
 
 <style scoped>
     header {
-        border-bottom: 1px solid lightgrey;
         box-shadow: 0px 0px 5px 2px var(--shadow-color);
         display: flex;
         align-items: center;
-        height: 100px;
+        height: 80px;
         padding: 0% 5%;
     }
     div.logo {
@@ -195,7 +269,8 @@ export default {
     nav > * {
         padding: 0px 30px 0px 0px;
         font-size: 110%;
-        font-weight: 400;
+        font-weight: 500;
+        color: var(--paper-grey-600);
     }
 
     div.user-nav {

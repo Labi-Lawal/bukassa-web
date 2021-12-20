@@ -7,55 +7,75 @@
             <div class="sub">
                 <div class="search-form">
                     <form class="search">
-                        <input :type="searchModel.type" placeholder="Search tutors by keyword">
+                        <input 
+                            :type="searchModel.type" 
+                            v-model="searchModel.value"
+                            placeholder="Search tutors by keyword"
+                            @keyup="search"
+                        >
                         <button><font-awesome-icon :icon="['fas', 'search']" /></button>
                     </form>
                 </div>
-                <div class="tutors-found"> {{ listOfTutors.length }} tutors found</div>
+                <div class="tutors-found"> {{ allTutors.length }} tutors found</div>
             </div>
-            <div class="all-tutors">
-                <vertical-list list-type="tutors" :list-items="listOfTutors"/>
+            <div class="all-tutors" v-if="allTutors.length > 0">
+                <VerticalList :tutors="allTutors"/>
+            </div>
+            <div class="no_tutors" v-else>
+                <EmptyList 
+                    text="No tutor found"
+                    image="../../assets/icons/tutor.png"
+                />
             </div>
         </section>
 
-        <Footer />
+        <SiteFooter />
     </div>
 </template>
 
 <script>
 import { defineComponent } from '@vue/runtime-core';
 import Header from '@/components/Header.vue';
-import VerticalList from '@/components/lists/vertical-list.vue';
+import VerticalList from '@/components/lists/VerticalList.vue';
 import GridList from '@/components/lists/grid-list.vue';
-import Footer from '@/components/Footer.vue';
+import SiteFooter from '@/components/SiteFooter.vue';
 import net from '@/services/http.js';
 import Subheading from '@/components/title/subheading.vue';
+import EmptyList from "@/components/lists/EmptyList.vue";
 
 export default defineComponent({
     name: 'Home',
-    components: { Header, GridList, VerticalList, Subheading, Footer },
+    components: { Header, GridList, VerticalList, EmptyList, Subheading, SiteFooter },
     data() {
-        let listOfTutors = [];
-
         let searchModel = {
             type: 'text',
             value: ''
         }
 
         return { 
-            listOfTutors,
+            allTutors: [],
             searchModel
         }
     },
     methods: {
         async fetchTutors() {
-            try {
-                let response = await net.http.get("/tutors/explore");
-                console.log(this.listOfTutors);
-                this.listOfTutors = response.data.data;
-
-            } catch (error) {
+            this.$store.dispatch('fetchtutors')
+            .then((tutors)=> {
+                this.allTutors = tutors;
+            })
+            .catch((error)=> {
                 console.log(error.response);
+            })
+        },
+        search() {
+            if(this.searchModel.value != '') {
+                this.allTutors = this.$store.getters.tutors.filter(tutor => {
+                    return tutor.tutorName.search(this.searchModel.value) != -1;
+                });
+
+               console.log(this.allTutors);
+            } else {
+                this.allTutors = this.$store.getters.tutors;
             }
         }
     },
