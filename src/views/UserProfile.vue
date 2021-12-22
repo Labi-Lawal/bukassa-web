@@ -27,6 +27,7 @@
                         </router-link>
                     </div>
                 </div>
+
                 <!-- <div class="user">
                     <div class="user-info"> 
                         <div class="metrics">
@@ -45,6 +46,7 @@
                         </div>
                     </div>
                 </div> -->
+                
             </div>
             <div class="profile_content">
                 <router-view />

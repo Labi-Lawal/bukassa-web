@@ -23,7 +23,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import DropDown from "@/components/drop-down/drop-down.vue";
+import DropDown from "@/components/DropDown/DropDown.vue";
 
 export default defineComponent({
     name:'input field',

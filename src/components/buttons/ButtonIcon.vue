@@ -6,7 +6,7 @@
         <div
             class="text"
             v-if="!isLoading">
-            <font-awesome-icon :icon="['fas', iconName]" />
+            <font-awesome-icon :icon="['fas', buttonIcon]" />
         </div>
 
         <div 
@@ -28,7 +28,7 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: "button-icon",
-    props: ['iconName', 'isLoading']
+    props: ['buttonIcon', 'isLoading']
 });
 </script>
 

@@ -8,9 +8,10 @@ import net from './services/http';
 export default {
   created() {
     net.httpSec.interceptors.response.use(undefined, (err) => {
-      return new Promise((resolve, reject) => {
+      return new Promise(() => {
         if(err.response.status === 401 && err.response.config && !err.response.config._isRetryRequest) {
-          this.$store.dispatch('signout');
+          this.$store.dispatch('signout')
+          .then(()=> this.$router.push('/signin'));
         }
         throw err;
       });

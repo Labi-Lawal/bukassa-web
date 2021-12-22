@@ -4,7 +4,7 @@
 
         <section class="become_tutor_body">
             <div 
-                v-if=" isTutor === 'false' "
+                v-if="applicationSubmitted === false"
             >
                 <div class="become_tutor_page_form">
                     <form @submit.prevent="signInButtonPressed">
@@ -26,13 +26,14 @@
                                     <div class="field">
                                         <label>Nationality</label>
                                         <div class="dropdown_wrapper">
-                                            <DropDown  
+                                            <DropDown
                                                 placeholder="-- Select Your Nationality --"
                                                 :dropdownIndex=0
                                                 :options=countries
                                                 :selected=dropdownSelected[0]
                                                 :selectedIndex=dropdownSelectedIndex[0]
                                                 :isOptionsVisible=optionsVisible[0]
+                                                :hideBorder=false
                                                 @showOptions=showOptions
                                                 @optionSelect=selectOption
                                             />
@@ -51,7 +52,8 @@
                                                 :selected=dropdownSelected[1]
                                                 :selectedIndex=dropdownSelectedIndex[1]
                                                 :isOptionsVisible=optionsVisible[1]
-                                                raiseBy="10"
+                                                raiseBy=10
+                                                :hideBorder=false
                                                 @showOptions=showOptions
                                                 @optionSelect=selectOption
                                             />
@@ -108,7 +110,8 @@
                                                 :selected=dropdownSelected[2]
                                                 :selectedIndex=dropdownSelectedIndex[2]
                                                 :isOptionsVisible=optionsVisible[2]
-                                                raiseBy="9"
+                                                raiseBy=9
+                                                :hideBorder=false
                                                 @showOptions=showOptions
                                                 @optionSelect=selectOption
                                             />
@@ -136,7 +139,8 @@
                                                 :selected=dropdownSelected[3]
                                                 :selectedIndex=dropdownSelectedIndex[3]
                                                 :isOptionsVisible=optionsVisible[3]
-                                                raiseBy="8"
+                                                raiseBy=8
+                                                :hideBorder=false
                                                 @showOptions=showOptions
                                                 @optionSelect=selectOption
                                             />
@@ -158,28 +162,42 @@
                                 <div class="sub_title">
                                     <div class="sub_title_note">Note: You will not be able to change your teaching language.</div>
                                 </div>
-                                <div class="double_field_equal">
-                                    <div class="form_field_wrapper">
-                                        <div class="field">
-                                            <label>Langauges</label>
-                                            <div class="dropdown_wrapper">
-                                                <DropDown  
-                                                    placeholder="-- Select Language --"
-                                                    :dropdownIndex=4
-                                                    :options=languages
-                                                    :selected=dropdownSelected[4]
-                                                    :selectedIndex=dropdownSelectedIndex[4]
-                                                    :isOptionsVisible=optionsVisible[4]
-                                                    raiseBy="7"
-                                                    @showOptions=showOptions
-                                                    @optionSelect=selectOption
+                                <div class="form_field_wrapper">
+                                    <div class="field">
+                                        <label>Languages</label>
+
+                                        <div
+                                            class="language_field"
+                                            v-for="(languageModel, index) in languagesModel"
+                                            :key="index"
+                                        >   
+                                            <div class="input">
+                                                <InputField 
+                                                    :model="languageModel"
+                                                    @inputAction="validateLanguages()"
                                                 />
                                             </div>
-                                            <div class="field_error" v-if="selectedLangaugeError != ''">
-                                                {{ selectedLangaugeError }}
+                                            <div 
+                                                class="remove_language_btn_wrapper"
+                                                v-if="index !== 0"
+                                            >
+                                                <ButtonIcon
+                                                    buttonIcon="times"
+                                                    @buttonAction="removeLanguage(index)"
+                                                />
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="add_language_btn_wrapper">
+                                    <ButtonIconText 
+                                        buttonIcon="plus"
+                                        buttonText="Add Language"
+                                        @buttonAction="addLanguage()"
+                                    />
+                                </div>
+                                <div class="field_error" v-if="selectedLanguagesError != ''">
+                                    {{ selectedLanguagesError }}
                                 </div>
                             </div>
                         </div>
@@ -187,7 +205,7 @@
                         <div class="form_section">
                             <div class="form">
                                 <div class="title">
-                                    <div class="no">3.</div>
+                                    <div class="no">4.</div>
                                     <FormTitle title="Teacher Profile Picture" />
                                 </div>
                                 <div class="body">
@@ -331,7 +349,8 @@
                                                         :selected=dropdownSelected[5]
                                                         :selectedIndex=dropdownSelectedIndex[5]
                                                         :isOptionsVisible=optionsVisible[5]
-                                                        raiseBy="6"
+                                                        raiseBy=6
+                                                        :hideBorder=false
                                                         @showOptions=showOptions
                                                         @optionSelect=selectOption
                                                     />
@@ -352,7 +371,8 @@
                                                             :selected=dropdownSelected[6]
                                                             :selectedIndex=dropdownSelectedIndex[6]
                                                             :isOptionsVisible=optionsVisible[6]
-                                                            raiseBy="5"
+                                                            raiseBy=5
+                                                            :hideBorder=false
                                                             @showOptions=showOptions
                                                             @optionSelect=selectOption
                                                         />
@@ -371,7 +391,8 @@
                                                             :selected=dropdownSelected[7]
                                                             :selectedIndex=dropdownSelectedIndex[7]
                                                             :isOptionsVisible=optionsVisible[7]
-                                                            raiseBy="4"
+                                                            raiseBy=4
+                                                            :hideBorder=false
                                                             @showOptions=showOptions
                                                             @optionSelect=selectOption
                                                         />
@@ -422,7 +443,8 @@
                                                         :selected=dropdownSelected[8]
                                                         :selectedIndex=dropdownSelectedIndex[8]
                                                         :isOptionsVisible=optionsVisible[8]
-                                                        raiseBy="3"
+                                                        raiseBy=3
+                                                        :hideBorder=false
                                                         @showOptions=showOptions
                                                         @optionSelect=selectOption
                                                     />
@@ -443,7 +465,8 @@
                                                             :selected=dropdownSelected[9]
                                                             :selectedIndex=dropdownSelectedIndex[9]
                                                             :isOptionsVisible=optionsVisible[9]
-                                                            raiseBy="2"
+                                                            raiseBy=2
+                                                            :hideBorder=false
                                                             @showOptions=showOptions
                                                             @optionSelect=selectOption
                                                         />
@@ -462,7 +485,8 @@
                                                             :selected=dropdownSelected[10]
                                                             :selectedIndex=dropdownSelectedIndex[10]
                                                             :isOptionsVisible=optionsVisible[10]
-                                                            raiseBy="1"
+                                                            raiseBy=1
+                                                            :hideBorder=false
                                                             @showOptions=showOptions
                                                             @optionSelect=selectOption
                                                         />
@@ -497,7 +521,8 @@
                                                             :selected=dropdownSelected[11]
                                                             :selectedIndex=dropdownSelectedIndex[11]
                                                             :isOptionsVisible=optionsVisible[11]
-                                                            :raiseBy="0"
+                                                            raiseBy=0
+                                                            :hideBorder=false
                                                             @showOptions=showOptions
                                                             @optionSelect=selectOption
                                                         />
@@ -666,7 +691,7 @@
                                                 @videoSaved="introVideoSelected"
                                             />
                                             <div 
-                                                class="error intro_video_error" 
+                                                class="error intro_video_error"
                                                 v-if="introVideoModel.error != ''"
                                             >
                                                 {{ introVideoModel.error }}
@@ -686,18 +711,33 @@
 
                 <div class="submit_button_section">
                     <div class="submit_btn_wrapper">
-                        <ButtonPlainText 
+                        <ButtonPlainText
                             buttonText="SUBMIT"
                             @buttonAction="submitApplication"
+                            :isLoading="isSubmitting"
                         />
                     </div>
                 </div>
             </div>
             <div 
-                v-if=" isTutor === 'applied' "
+                v-else
+                class="application_submitted_modal_wrapper"
             >
-                <div class="">
-                    application submitted
+                <div class="application_submitted_modal">
+                    <div class="modal_img_wrapper">
+                        <img src="@/assets/become-tutor-success.png" />
+                    </div>
+                    <div class="modal_text">
+                        <div class="title">Congrats!</div>
+                        <div class="body">
+                            As a tutor you're all set and ready to start teaching here.
+                        </div>
+                    </div>
+                    <div class="finish_btn_wrapper">
+                        <ButtonPlainText 
+                            buttonText="CREATE LESSON"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
@@ -708,26 +748,29 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import Header from "../components/Header.vue";
-import SiteFooter from "../components/SiteFooter.vue";
-import PageTitle from "../components/title/page-title.vue";
-import FormTitle from "../components/title/FormTitle.vue";
-import ButtonPlainText from "../components/buttons/ButtonPlainText.vue";
-import VideoFileSelector from "../components/VideoFileSelector.vue";
-import InputField from "../components/InputField.vue";
-import DropDown from "../components/drop-down/drop-down.vue";
-import TextareaField from "../components/TextareaField.vue";
-import CheckBox from "../components/checkbox/CheckBox.vue";
+import Header from "@/components/Header.vue";
+import SiteFooter from "@/components/SiteFooter.vue";
+import PageTitle from "@/components/title/page-title.vue";
+import FormTitle from "@/components/title/FormTitle.vue";
+import ButtonPlainText from "@/components/buttons/ButtonPlainText.vue";
+import ButtonIconText from "@/components/buttons/ButtonIconText.vue";
+import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
+import VideoFileSelector from "@/components/VideoFileSelector.vue";
+import InputField from "@/components/InputField.vue";
+import DropDown from "@/components/DropDown/DropDown.vue";
+import TextareaField from "@/components/TextareaField.vue";
+import CheckBox from "@/components/checkbox/CheckBox.vue";
 
 export default defineComponent({
-    name: '',
     components: { 
         Header, 
         SiteFooter, 
         PageTitle, 
         DropDown, 
         FormTitle, 
-        ButtonPlainText, 
+        ButtonPlainText,
+        ButtonIconText,
+        ButtonIcon,
         VideoFileSelector, 
         InputField, 
         TextareaField, 
@@ -770,30 +813,8 @@ export default defineComponent({
                 note: ''
             }
         ],
-        languages = [
-            {
-                display_name: 'English',
-                value:'english',
-                note: ''
-            },
-            {
-                display_name: 'French',
-                value:'french',
-                note: ''
-            },
-            {
-                display_name: 'Yoruba',
-                value:'yoruba',
-                note: ''
-            }
-        ],
         years = [],
-        selectedLanguages = [{
-            langauge: '',
-            proficiency: ''
-        }],
         selectedYearFrom, selectedYearTo,
-        userSelectedLanguages = [],
         dropdownSelected = [],
         dropdownSelectedIndex = [0, 0, 0, 0, 0, 0],
         optionsVisible = [false, false, false, false, false, false],
@@ -986,10 +1007,17 @@ export default defineComponent({
             cities,
             selectedCity: '',
             selectedCityError: '',
-            languages,
-            selectedLanguage: '',
-            selectedLangaugeError: '',
-            userSelectedLanguages,
+            languagesModel: [
+                {   
+                    type: 'text',
+                    value: '',
+                    error: '',
+                }
+            ],
+            
+            selectedLanguages: [],
+            selectedLanguagesError: '',
+
             formError: '',
             dropdownSelected,
             dropdownSelectedIndex,
@@ -998,20 +1026,20 @@ export default defineComponent({
 
             degreeTypes: [
                 {
-                    display_name: 'A',
-                    value: 'a'
+                    display_name: 'BSc',
+                    value: 'bsc'
                 },
                 {
-                    display_name: 'B',
-                    value: 'b'
+                    display_name: 'BA',
+                    value: 'ba'
                 },
                 {
-                    display_name: 'C',
-                    value: 'c'
+                    display_name: 'BEng',
+                    value: 'beng'
                 },
                 {
-                    display_name: 'D',
-                    value: 'd'
+                    display_name: 'BEd',
+                    value: 'BEd'
                 }
             ],
             selectedEduYearFrom: '',
@@ -1052,7 +1080,8 @@ export default defineComponent({
                 fileContent: {},
                 error: ''
             },
-            isTutor: this.$store.getters.userData.tutor
+            isSubmitting: false,
+            applicationSubmitted: false
         }
     },
     methods: {
@@ -1072,7 +1101,7 @@ export default defineComponent({
                     gender: this.selectedGender,
                     str: this.strAddModel.value,
                     city: this.selectedCity,
-                    language: this.selectedLanguage,
+                    languages: this.selectedLanguages,
                     
                     // SECTION 3
                     profileimage: this.profilepicModel.fileContent,
@@ -1082,7 +1111,7 @@ export default defineComponent({
                     // EDU
                     eduinstitution: this.institutionModel.value,
                     course: this.courseModel.value,
-                    edudegree: this.selectedEduDegreeType,
+                    eduDegree: this.selectedEduDegreeType,
                     edufrom: this.selectedEduYearFrom,
                     eduto: this.selectedEduYearTo,
                     edudesc: this.eduDescModel.value,
@@ -1106,7 +1135,7 @@ export default defineComponent({
                     lessonsdesc: this.lessonsDescModel.value,
                     teachingmat: this.selectedTeachingMaterials,
 
-                    // SECTION 6
+                    // SECTION 6 
                     introvideo: this.introVideoModel.value
                 };
 
@@ -1117,8 +1146,11 @@ export default defineComponent({
                     formData.append(key, becomeTeacherForm[key]);
                 });
 
+                this.isSubmitting = true;
                 this.$store.dispatch('submittutorapplication', formData)
+                .then(()=> this.applicationSubmitted = true)
                 .catch((error)=> {
+                    this.isSubmitting = false;
                     console.log(error);
                     this.formError = 'There was an error submitting application, please try again.'
                 });
@@ -1227,13 +1259,25 @@ export default defineComponent({
             return true;
         },
         validateLanguages() {
-            if(this.selectedLanguages == '') {
-                this.selectedLangaugeError = 'Please select an option'
+            for(var i=0; i<this.languagesModel.length; i++) {
+                const element = this.languagesModel[i];
+
+                if(element.value != '') {
+                    this.selectedLanguages[i] = element.value;
+                    element.error = '';
+                }
+                else {
+                    element.error = 'This field cannot be left empty';
+                    return false;
+                }
+            } 
+
+            if(this.selectedLanguages.length == 0) {
+                this.selectedLanguagesError = 'Please select your languages'
                 return false;
-            } else {
-                this.selectedLangaugeError = ''
             }
 
+            this.selectedLanguagesError = '';
             return true;
         },
         validateEduInstitution() {
@@ -1475,74 +1519,74 @@ export default defineComponent({
             this.optionsVisible[index] = !this.optionsVisible[index];
         },
         selectOption(selected) {
-            this.dropdownSelectedIndex[selected.dropdownIndex] = selected.optionSelectedIndex;
+
+            this.dropdownSelected[selected.dropdownIndex] = true;
+            this.dropdownSelectedIndex[selected.dropdownIndex] = selected.optionIndex;
             
             if(selected.dropdownIndex == 0) {
-                this.selectedNativeCountry = this.countries[selected.optionSelectedIndex].value;
+                this.selectedNativeCountry = this.countries[selected.optionIndex].value;
                 this.selectedNativeCountryError = '';
             }
        
             if(selected.dropdownIndex == 1) {
-                this.selectedResidentCountry = this.countries[selected.optionSelectedIndex].value;
+                this.selectedResidentCountry = this.countries[selected.optionIndex].value;
                 this.selectedResidentCountryError = '';
             }
           
             if(selected.dropdownIndex == 2) {
-                this.selectedGender = this.gender[selected.optionSelectedIndex].value;
+                this.selectedGender = this.gender[selected.optionIndex].value;
                 this.selectedGenderError = '';
             }
           
             if(selected.dropdownIndex == 3) {
-                this.selectedCity = this.cities[selected.optionSelectedIndex].value;
+                this.selectedCity = this.cities[selected.optionIndex].value;
                 this.selectedCityError = '';
             }
           
             if(selected.dropdownIndex == 4) {
-                this.selectedLanguages = this.languages[selected.optionSelectedIndex].value;
+                this.selectedLanguages.push(this.languages[selected.optionIndex].value);
                 this.selectedLangaugeError = '';
             }
   
             if(selected.dropdownIndex == 5) {
-                this.selectedEduDegreeType = this.degreeTypes[selected.optionSelectedIndex].value;
+                this.selectedEduDegreeType = this.degreeTypes[selected.optionIndex].value;
                 this.selectedEduYearFromError = '';
 
                 this.validateEduDegreeType();
             }
 
             if(selected.dropdownIndex == 6) { 
-                this.selectedEduYearFrom = this.years[selected.optionSelectedIndex].value;
+                this.selectedEduYearFrom = this.years[selected.optionIndex].value;
                 this.selectedEduYearFromError = '';
             }
     
             if(selected.dropdownIndex == 7) {
-                this.selectedEduYearTo = this.years[selected.optionSelectedIndex].value;
+                this.selectedEduYearTo = this.years[selected.optionIndex].value;
                 this.selectedEduYearToError = '';
             }
             
             if(selected.dropdownIndex == 8) {
-                this.selectedWorkCountryFrom = this.countries[selected.optionSelectedIndex].value;
+                this.selectedWorkCountryFrom = this.countries[selected.optionIndex].value;
                 this.selectedWorkCountryFromError = '';
             }
 
             if(selected.dropdownIndex == 9) {
-                this.selectedWorkYearFrom = this.years[selected.optionSelectedIndex].value;
+                this.selectedWorkYearFrom = this.years[selected.optionIndex].value;
                 this.selectedWorkYearFromError = '';
             }
 
             if(selected.dropdownIndex == 10) {
-                this.selectedWorkYearTo = this.years[selected.optionSelectedIndex].value;
+                this.selectedWorkYearTo = this.years[selected.optionIndex].value;
                 this.selectedWorkYearToError = '';
             }
 
             if(selected.dropdownIndex == 11) {
-                this.selectedCertYear = this.years[selected.optionSelectedIndex].value;
+                this.selectedCertYear = this.years[selected.optionIndex].value;
                 this.selectedCertYearError = ''
             }
 
 
             this.formError = '';
-            this.dropdownSelected[selected.dropdownIndex] = true;
-            
             this.showOptions(selected.dropdownIndex);
         },
         hideAllOptions() {
@@ -1591,9 +1635,7 @@ export default defineComponent({
                 const selectedBox = this.allTeachingMaterials[index-1];
 
                 if(this.selectedTeachingMaterials.includes(selectedBox.value)) {
-                console.log(this.selectedTeachingMaterials);
                 var indexof = this.selectedTeachingMaterials.indexOf(selectedBox.value);
-                console.log(indexof);
 
                 this.selectedTeachingMaterials.splice(this.selectedTeachingMaterials.indexOf(selectedBox.value), 1);
                 selectedBox.selected = false;
@@ -1605,9 +1647,6 @@ export default defineComponent({
             }
         },
         introVideoSelected(source) {
-            
-            console.log(source.file);
-
             this.introVideoModel.value = source;
             this.validateIntroVideo();
         },
@@ -1622,6 +1661,16 @@ export default defineComponent({
             this.certFileModel.name = this.certFileModel.value.name;
 
             this.validateCertFile();
+        },
+        addLanguage() {
+            this.languagesModel.push({
+                type: 'text',
+                value: '',
+                error: '',
+            });
+        },
+        removeLanguage(index) {
+            this.languagesModel.splice(index, 1);
         }
     },
     async beforeMount() {
@@ -1632,7 +1681,7 @@ export default defineComponent({
 
 <style scoped>
 .become_tutor_body {
-    padding: 5% 0 0;
+    
 }
 .become_tutor_page_form {
     width: 90%;
@@ -1713,14 +1762,13 @@ form {
     flex-wrap: wrap;
     width: 100%;
     padding: 1% 0;
-    margin: auto 0;
 }
 .field > * {    
     width: 100%;
 }
 label {
-    padding: 2% 0;
-    color: rgb(92, 92, 92);
+    height: 23px;
+    color: var(--paper-grey-600);
 }
 input, textarea {
     border: 1px solid grey;
@@ -1735,35 +1783,41 @@ input, textarea {
     height: 40px;
     margin-bottom: 1%;
 }
-.dropdown_wrapper .select {
-    border: 1px solid grey;
-}
 
-.add_another_language {
+.language_field {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1%;
+}
+.language_field .input {
+    width: 90%;
+}
+.add_language_btn_wrapper {
     width: 24%;
-    font-size: 90%;
+    height: 40px;
     margin-left: auto;
     margin-top: 5%;
-    padding: 1%;
-    background: rgba(0, 110, 255, 0.056);
-    border-radius: 5px;
-    color: rgba(0, 110, 255, 0.891);
-    cursor: pointer;
 }
-.remove_language {
-    border: 1px solid rgb(208, 75, 75);
-    color: rgb(208, 75, 75);
-    background: rgba(255, 0, 0, 0.056);
-    margin-bottom: 1%;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+.add_language_btn_wrapper button {
+    border: none;
+    background: rgba(74, 81, 90, 0.056);
+    color: rgba(0, 110, 255, 0.891);
+    border-radius: 5px;
+}
+.remove_language_btn_wrapper {
+    margin-left: auto;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+.remove_language_btn_wrapper button {
+    border: 1px solid rgb(208, 75, 75);
+    color: rgb(208, 75, 75);
+    background: rgba(255, 0, 0, 0.056);
+    border-radius: 50%;
 }
 
 .profile_picture_section {
@@ -1921,4 +1975,47 @@ input, textarea {
     font-size: 90%;
     color: red;
 }
+
+.application_submitted_modal_wrapper {
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.application_submitted_modal {
+    box-shadow: var(--shadow-100);
+    border-radius: 5px;
+    width: 400px;
+}
+
+.modal_img_wrapper {
+    height: 300px;
+}
+.modal_img_wrapper img {
+    object-fit: contain;
+}
+.modal_text {
+    text-align: center;
+    padding: 10% 0;
+}
+.modal_text .title {
+    font-size: 110%;
+    font-weight: 600;
+    color: var(--paper-grey-800);
+}
+.modal_text .body {
+    color: var(--paper-grey-500);
+    width: 70%;
+    margin: 0 auto;
+}
+.finish_btn_wrapper {
+    border-top: 1px solid var(--paper-grey-200);
+    height: 60px;
+}
+.finish_btn_wrapper button {
+    border: none;
+    background: none;
+    color: var(--burgundy-200);
+} 
 </style>

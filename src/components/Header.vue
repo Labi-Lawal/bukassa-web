@@ -11,7 +11,7 @@
         <nav>
             <router-link to="/tutors/explore">Find a tutor</router-link>
             <router-link to="/community">Community</router-link>
-            <router-link to="/become-tutor">Become a tutor</router-link>
+            <router-link to="/become-tutor" v-if="userRole !== 'tutor'">Become a tutor</router-link>
         </nav>
         <div class="user-nav" v-show="isLoggedIn" @click="toggleProfileMenu">
             <div class="user-image">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import HeaderNestedDropDown from '@/components/drop-down/HeaderNestedDropDown.vue';
+import HeaderNestedDropDown from '@/components/DropDown/HeaderNestedDropDown.vue';
 import UserProfileMenu from '@/components/userprofile/UserProfileMenu.vue';
 
 export default {
@@ -92,54 +92,11 @@ export default {
         let isOptionsVisible = [false, false], selected = [true, true];
 
         let selectedCurrencyIndex = 0, selectedLanguageIndex = 0;
-        
-        const studentMenu = [
-        {
-          label: 'my lessons',
-          path: '/my-lessons',
-          icon: ''
-        },
-        {
-          label: 'my tutors',
-          path: '/my-tutors',
-          icon: ''
-        },
-        {
-          label: 'schedule',
-          path: '/schedule',
-          icon: ''
-        },
-        {
-          label: 'sign out',
-          path: '/logout',
-          icon: ''
-        }
-        ],
-        tutorMenu = [
-            {
-            label: 'my lessons',
-            path: '/my-lessons',
-            icon: ''
-            },
-            {
-            label: 'my students',
-            path: '/my-students',
-            icon: ''
-            },
-            {
-            label: 'schedule',
-            path: '/schedule',
-            icon: ''
-            },
-            {
-            label: 'sign out',
-            path: '/logout',
-            icon: ''
-            }
-        ];
 
+        const userRole = this.$store.getters.userData.role;
 
-        return { 
+        return {
+            userRole,
             allCurrencies, 
             allLanguages, 
             isOptionsVisible, 
@@ -148,8 +105,6 @@ export default {
             selected, 
             showUserMenu, 
             isLoggedIn,
-            studentMenu,
-            tutorMenu,
             nav: [
                 {
                     label: 'Profile',

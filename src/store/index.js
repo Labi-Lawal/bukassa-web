@@ -1,5 +1,8 @@
 import { createStore } from 'vuex';
 import net from "../services/http";
+import axios from "axios";
+
+const baseURL = process.env.VUE_APP_API_BASE_URL;
 
 export default createStore({
     state: {
@@ -36,7 +39,8 @@ export default createStore({
             localStorage.setItem('language', selectedlang);
             state.prefLanguage = selectedlang;
         },
-        setNewEvent(state, payload) {
+        store_event(state, payload) {
+            localStorage.setItem('bookinginfo', JSON.stringify(payload));
             state.bookingInfo = payload;
         },
         saveUser(state, payload) {
@@ -113,7 +117,7 @@ export default createStore({
             });
         },
         signout({commit}) {
-            return new Promise((resolve, reject)=>{
+            return new Promise( resolve=> {
                 commit('clear_user');
                 resolve();
             });
@@ -147,30 +151,26 @@ export default createStore({
                 });
             });
         },
-        submitEvent(commit) {
-            return new Promise(async (resolve, reject)=> {
-                const eventInfo = commit.state.bookingInfo;
-
-                try {
-                    const response = await net.httpSec.post(
-                        `/tutors/${eventInfo.tutorname}/newevent`, {newevent: eventInfo}
-                    );
-
-                    console.log(response.data);
-
-                } catch(error) {
-                    console.log(error.response);
-                }
-            });
-        },
         submittutorapplication({commit}, payload) {
-            return new Promise((resolve, reject)=> {
-                net.httpSec.post('/tutors/becometutor', payload)
+            return new Promise(async (resolve, reject)=> {
+                
+                const headers = {
+                    'Content-Type': 'multipart/form-data'
+                };
+                
+                await net.httpSec.post('/tutors/becometutor', payload, headers)
                 .then((response)=> {
-                    console.log(response.data);
+                    const tutor = response.data.tutor,
+                    user = response.data.user;
+
+                    commit('store_tutor', tutor);
+                    commit('store_user', user);
+
+                    resolve();
                 })
                 .catch((error)=> {
                     console.log(error.response);
+                    reject(error);
                 });
             });
         },
@@ -214,6 +214,32 @@ export default createStore({
                     reject(error);
                 });
             });
+        },
+        storenewevent({commit}, payload) {
+            commit('store_event', payload);
+        },
+        createevent({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                
+                
+                const headers= {
+                    'x-access-token':`Bearer ${this.state.token}`
+                };
+                
+                await axios.post(
+                    `${baseURL}/tutors/${payload.tutorname}/newevent`, 
+                    { newevent: payload },
+                    { headers: headers }
+                ).then((updatedUserInfo)=> {
+                    commit('store_user', updatedUserInfo);
+                    resolve();
+
+                }).catch((error)=> {
+                    console.log(error);
+                    reject(error)
+
+                });
+            });
         }
     },
     getters: { 
@@ -221,7 +247,8 @@ export default createStore({
         userData: state => state.user,
         tutorData: state => state.tutor,
         tutors: state => state.tutors,
-        token: state => state.token
+        token: state => state.token,
+        bookingData: state => (state.bookingInfo == '') ?JSON.parse(localStorage.getItem('bookinginfo')) : state.bookingInfo
     }
 
 });

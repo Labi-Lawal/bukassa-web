@@ -1,7 +1,20 @@
 <template>
-    <div class="empty_list">
-        <div class="icon">
-            <img src="../../assets/icons/tutor.png" />
+    <div 
+        class="empty_list"
+        :style="{
+            'text-align': position
+        }"
+    >
+        <div 
+            :class="{
+                icon: true,
+                center: (position == 'center') ?true :false 
+            }"
+        >
+            <img 
+                src="../../assets/icons/emptyfolder.png" 
+                v-if="image=='empty'"
+            />
         </div>
         <div class="label">{{ text }}</div>
     </div>
@@ -13,7 +26,7 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'empty-list',
-    props: ['text', 'image']
+    props: ['text', 'image', 'position']
 });
 </script>
 
@@ -23,8 +36,11 @@ export default defineComponent({
         padding: 4% 0%;
     }
     .icon{
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
+    }
+    .center {
+        margin: 0 auto;
     }
     .label {
         font-size: 180%;

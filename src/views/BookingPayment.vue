@@ -27,24 +27,24 @@
       <div class="check_out">
         <div class="checkout_summary">
           <div class="tutor_info">
-            <img src="https://res.cloudinary.com/labilawal/image/upload/v1634454383/ufsm2u8hkmrvdtabyfjj.jpg">
-            <div class="tutor_name">Tutor Name</div>
+            <img :src="tutor.profilePicture">
+            <div class="user_info">
+              <div class="tutor_name">{{ tutor.tutorName }}</div>
+              <div class="lesson_title_middle">
+                {{ bookingInfo.lesson.language }} 
+                <div class="dot"> </div> 
+                {{ convertMilliSecsToMins(bookingInfo.lesson.durationInMilliSecs) }} mins
+            </div>
+            </div>
           </div>
           <div class="info">
-            <div class="lesson_title_middle">
-              English <div class="dot"> </div> 30 mins
+            <div class="lesson_item lesson_title">
+              <font-awesome-icon :icon="['fas', 'circle']" class="icon" />
+              <div class="label">{{ bookingInfo.lesson.title }}</div>
             </div>
-            <div class="lesson_title">
-              <div class="dot"></div>
-              <div class="label">Having a formal conversation In English</div>
-            </div>
-            <div class="lesson_title">
-              <div class="dot"></div>
-              <div class="label">Oct 25, 2021 11:00 - 12:00</div>
-            </div>
-            <div class="lesson_title">
-              <div class="dot"></div>
-              <div class="label">Communication Tool: Zoom</div>
+            <div class="lesson_item lesson_date">
+              <font-awesome-icon :icon="['fas', 'clock']" class="icon" />
+              <div class="label">{{ bookingInfo.datetime }}</div>
             </div>
           </div>
         </div>
@@ -52,19 +52,19 @@
           <div class="prices">
             <div class="sub_total">
               <div class="label">Subtotal</div>
-              <div class="price">$50.00</div>
+              <div class="price">{{ appendCurreny(bookingInfo.lesson.price) }}</div>
             </div>
             <div class="sub_total">
               <div class="label">Processing Fee</div>
-              <div class="price">$2.00</div>
+              <div class="price">{{ appendCurreny(processingFee) }}</div>
             </div>
           </div>
           <div class="total_price">
-            <div class="label">Subtotal</div>
-            <div class="price">$52.00</div>
+            <div class="label">Total</div>
+            <div class="price">{{ totalPrice }}</div>
           </div>
           <button @click="submitEvent" >
-            Pay $52.00
+            Pay {{ totalPrice }}
           </button>
         </div>
       </div>
@@ -74,14 +74,15 @@
 </template>
 
 <script>
-import Header from '../components/Header.vue'
-import SiteFooter from '../components/SiteFooter.vue'
+import Header from '@/components/Header.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
+import convertMilliSecsToMins  from "@/helper/duration.js";
+import appendCurreny  from "@/helper/currency.js";
 
 export default {
     name:"booking-payment",
     components: { Header, SiteFooter },
     data() {
-      var bookingInfo = '';
       var paymentOptions = [
         {
           image: "https://res.cloudinary.com/labilawal/image/upload/v1635042139/paypal-3384015_960_720_kfqenl.png",
@@ -89,13 +90,19 @@ export default {
         }
       ],
       selectedPaymentMethod = null,
-      selectedIndex;
+      selectedIndex,
+      tutor;
 
       return { 
-        bookingInfo,
+        bookingInfo: this.$store.getters.bookingData,
+        tutor,
         paymentOptions,
         selectedPaymentMethod,
-        selectedIndex
+        selectedIndex,
+        convertMilliSecsToMins,
+        appendCurreny,
+        processingFee: 2.00,
+        totalPrice: 0
       }
     },
     methods: {
@@ -104,21 +111,43 @@ export default {
         this.selectedPaymentMethod = this.paymentOptions[this.selectedIndex];
       },
       submitEvent() {
-        this.$store.dispatch('submitEvent');
+        this.$store.dispatch('createevent', this.bookingInfo)
+        .then(()=> {
+          this.$router.push('/booking-payment/success');
+        })
+        .catch((error)=> {
+          console.log(error.response);
+        });
+      },
+      fetchTutor() {
+        this.$store.dispatch('fetchtutor', this.bookingInfo.tutorname)
+        .then((tutor)=> {
+          this.tutor = tutor;
+        })
+        .catch(()=> {
+          console.log('There was an error fetching tutor');
+        });
+      },
+      calcTotal() {
+        this.totalPrice = appendCurreny(this.bookingInfo.lesson.price + this.processingFee);
       }
     },
     async beforeMount() {
-      this.bookingInfo = this.$store.state.bookingInfo;
+      this.bookingInfo = this.$store.state.bookingInfo || JSON.parse(localStorage.getItem('bookinginfo'));
+      
+      this.fetchTutor();
+      this.calcTotal();
     }
 }
 </script>
 
 <style scoped>
   .booking_payment {
-    width: 100%;
+    width: 90%;
     display: flex;
     align-items: flex-start;
-    margin-top: 2%;
+    justify-content: space-between;
+    margin: 2% auto;
     position: relative;
   }
   .booking_payment > * {
@@ -127,7 +156,6 @@ export default {
   }
   .payment_methods {
     width: 40%;
-    margin-left: 16%;
   }
   .div_title {
     height: 60px;
@@ -140,7 +168,7 @@ export default {
   }
   .check_out {
     width: 25%;
-    position: absolute;
+    /* position: absolute; */
     right: 16%;
     top: 0;
   }
@@ -213,6 +241,7 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 2%;
+    height: 100px;
   }
   .tutor_info img {
     width: 60px;
@@ -222,29 +251,46 @@ export default {
     object-fit: cover;
     object-position: top;
   }
-  .tutor_info div.tutor_name {
+  .user_info {
+    width: calc(calc(100% - 60px) - 5%);
     margin-left: 5%;
+  }
+  .tutor_info div.tutor_name {
     font-size: 110%;
     font-weight: 600;
+    text-transform: capitalize;
   }
   .checkout_summary .info {
     margin-top: 2%;
     margin-left: auto;
     width: 90%;
   } 
-  .lesson_title {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1%;
-  }
-  .lesson_title_middle {
-    display: flex;
-    align-items: center;
+  .info > div {
     margin-bottom: 5%;
   }
-  .lesson_title_middle .dot{
-    margin: 4%;
+  .info .icon {
+    color: grey;
+  } 
+  .lesson_item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1%;
   }
+  .lesson_title {
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+
+  .lesson_date {
+    
+  }
+
+  .lesson_title_middle {
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+  }
+ 
   .label {
     margin-left: 5%;
   }
@@ -254,6 +300,10 @@ export default {
     background: black;
     border-radius: 50%;
     margin:  1%;
+  }
+
+  .total_price {
+    font-weight: 600;
   }
 </style>
 

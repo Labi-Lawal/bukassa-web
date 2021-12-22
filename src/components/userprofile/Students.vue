@@ -28,7 +28,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import GridList from "@/components/lists/grid-list.vue";
+import GridList from "@/components/Lists/grid-list.vue";
 import ButtonIconText from "@/components/buttons/ButtonIconText.vue";
 
 export default defineComponent({

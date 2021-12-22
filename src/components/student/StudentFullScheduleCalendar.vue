@@ -10,17 +10,6 @@
                     <div class="dot"></div>
                     <div>Booked</div>
                 </div>
-                <div 
-                    class="booked_by_you"
-                    v-if="showingTo !== 'tutor'"
-                >
-                    <div class="dot"></div>
-                    <div>Booked by you</div>
-                </div>
-                <div class="not_available">
-                    <div class="dot"></div>
-                    <div>Not available</div>
-                </div>
             </div>
             <div class="all_days_of_month">
                 <div 
@@ -64,23 +53,14 @@
                             v-for="(date, dateIndex) in dates"
                             :key="dateIndex"
                             class="day event_cell"
-                        >
-                            <div
-                                class="cell_content event_set_others"
-                                v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'booked'"
-                            ></div>
+                        >  
                             <div
                                 class="cell_content event_set_you"
                                 v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'bookedbyyou'"
                             ></div>
                             <div
-                                class="cell_content event_not_available"
-                                v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'unavailable'"
-                            ></div>
-                             <div
                                 class="cell_content available"
                                 v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'available'"
-                                @click="selectCell(`${date.value} - ${timeIndex-1}:00`)"
                             ></div>
                         </div>
                     </div>
@@ -94,8 +74,8 @@
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
-    name:"tutor-full-schedule-calendar",
-    props:['events', 'showingTo'],
+    name:"student-full-schedule-calendar",
+    props:['events'],
     data() {
         var daysInMonth, day, month, year, daysLimit = 7, currentDate,
         isEventSet = null,
@@ -119,12 +99,8 @@ export default defineComponent({
     beforeMount(){  
         for(var i=0; i<this.events.length; i++) {
             const eventDate = new Date(this.events[i].datetime).getTime();
-
-            if(this.events[i].type.toLowerCase() == "lesson")
-                if(this.events[i].studentId == this.$store.getters.userData._id) this.allUserEventDates.push(eventDate)
-                else this.allBookedEventDates.push(eventDate);
-
-            if(this.events[i].type.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
+            this.allBookedEventDates.push(eventDate)
+                
         }
         this.load();
     },
@@ -172,9 +148,7 @@ export default defineComponent({
             eventCellDate = new Date(year, month, day, hour, min),
             eventCellTime = eventCellDate.getTime();
 
-            if(this.allBookedEventDates.includes(eventCellTime)) return 'booked';
-            if(this.allUserEventDates.includes(eventCellTime)) return 'bookedbyyou';
-            if(this.allUnavailableEventDates.includes(eventCellTime)) return 'unavailable';
+            if(this.allBookedEventDates.includes(eventCellTime)) return 'bookedbyyou';
             else return 'available';
         },
         selectCell(datetime) {
@@ -195,22 +169,22 @@ export default defineComponent({
     }
     .status_outline {
         display: flex;
-        width: 75%;
-        height: 6%;
-        margin: 0 auto;
+        align-content: flex-start;
+        width: 50%;
+        margin-left: 12%;
+        height: 40px;
     }
     .status_outline > div {
         margin-right: 5%;
         display: flex;
         align-items: center;
-        width: calc(100%/4);
-        font-size: 80%;
+        font-size: 90%;
         color: grey;
     }
     .status_outline div.dot {
         border-radius: 50%;
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         margin-right: 1%;
     }
     .available .dot {
@@ -235,7 +209,7 @@ export default defineComponent({
         justify-content: space-between;
         padding-left: 9.9%;
         padding-right: 15px;
-        height: 7%;
+        height: 40px;
         border-bottom: 1px solid lightgrey;
     }
     .day {
@@ -300,18 +274,8 @@ export default defineComponent({
         width: 100%;
         height: 100%;
     }
-    .cell_content:hover {
-        background: rgba(195, 243, 239, 0.521);
-    }
     .event_set_you {
         background: #7ec937;
-    }
-    .event_set_others {
-        background: #7ec937;
-        background-image: repeating-linear-gradient(45deg ,transparent,transparent 1px,#eee 0,#7ec937 3px);
-    }
-    .event_not_available {
-        background: grey;
     }
 </style>
 

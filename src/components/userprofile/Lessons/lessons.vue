@@ -2,41 +2,53 @@
     <section class="lessons_frame">
         <div class="head">
             <div class="section_title"> Lessons </div>
-            <div class="create_new_wrapper">
-                <ButtonIcon
-                    iconName="plus"
-                    @buttonAction="createNewLesson()"
-                />
-            </div>
         </div>
 
-        <div class="lessons_list" v-if="userLessons.length > 0">
-            <VerticalList :lessons="userLessons" />
-        </div>
-        
-        <div class="no_lesson" v-else>
-            <div>
-                <div class="icon">
-                    <img src="" />
-                </div>
+        <div class="lessons_list">
+           
+            <VerticalList 
+                v-if="
+                        user.role === 'tutor' &&
+                        tutor.lessons.length > 0 
+                    "
+                :lessons="tutor.lessons" 
+            />
+           
+            <StudentLessonsList
+                v-else-if="
+                        user.role === 'student' &&
+                        user.classes.length > 0
+                    "
+                :lessons="user.classes" 
+            />
+           
+            <div class="no_lesson" v-else>
+                <div>
+                    <div class="icon">
+                        <img src="@/assets/icons/empty.png" />
+                    </div>
                 <div class="label">You have not added any lesson</div>
             </div>
+        </div>
         </div>
     </section>
 </template>
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import VerticalList from "@/components/lists/VerticalList.vue";;
+import VerticalList from "@/components/Lists/VerticalList.vue";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
+import StudentLessonsList from "@/components/student/StudentLessonsList.vue";
 
 export default defineComponent({
     name:"lessons",
-    components: { VerticalList, ButtonIcon },
+    components: { VerticalList, ButtonIcon, StudentLessonsList },
     data()  {
-        console.log(this.$store.getters.tutorData);
+        var user, tutor;
+
         return {
-            userLessons: this.$store.getters.tutorData.lessons
+            user,
+            tutor
         }
     },
     methods: {
@@ -44,6 +56,13 @@ export default defineComponent({
             this.$router.push('lessons/create');
         }
     },
+    beforeMount() {
+        this.user = this.$store.getters.userData;
+
+        if(this.user.role == 'tutor') {
+            this.tutor = this.$store.getters.tutorData
+        }
+    }
 });
 </script>
 
@@ -80,8 +99,8 @@ export default defineComponent({
         text-align: center;
     }
     .no_lesson  .icon{
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         margin: 0 auto;
     }
     .no_lesson .label {

@@ -4,7 +4,7 @@
             <div class="section_title"> Create New Lesson </div>
             <div class="cancel_btn_wrapper">
                 <ButtonIcon
-                    iconName="times"
+                    buttonIcon="times"
                     @buttonAction="closeCreate"
                 />
             </div>
@@ -22,26 +22,33 @@
                     </div>
                 </div>
                 <div class="field_wrapper">
-                    <div class="field one_third">
-                        <InputField 
-                            label="Lesson Language"
-                            :model="languageModel"
+                    <div class="dropdown_wrapper one_third">
+                        <div class="label">Lesson Languauge</div>
+                        <DropDown
+                            :dropdownIndex=0
+                            :options="languageModel.options"
+                            :selected="languageModel.selected"
+                            :selectedIndex="languageModel.selectedIndex"
+                            :isOptionsVisible="showOptions[0]"
+                            :hideBorder=false
+                            @showOptions="toggleDropdownOptions"
+                            @optionSelect="selectDropDownOption"
                         />
                     </div>
                     <div class="field one_fifth">
                         <div class="label">Duration</div>
-                        <div class="input_field duration">
+                        <div class="duration">
                             <input
                                 :type="durationModel.type"
                                 v-model="durationModel.value"
                                 @keyup="convertToMilliSecs()"
                             />
-                            <drop-down 
-                                :dropdownIndex=0
+                            <DropDown
+                                :dropdownIndex=1
                                 :options="durationModel.options"
                                 :selected="durationModel.selected"
                                 :selectedIndex="durationModel.selectedIndex"
-                                :isOptionsVisible="showOptions[0]"
+                                :isOptionsVisible="showOptions[1]"
                                 :hideBorder=true
                                 @showOptions="toggleDropdownOptions"
                                 @optionSelect="selectDropDownOption"
@@ -71,7 +78,7 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import InputField from "@/components/InputField.vue";
-import DropDown from "@/components/drop-down/drop-down.vue";
+import DropDown from "@/components/DropDown/DropDown.vue";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
 import ButtonPlainText from "@/components/buttons/ButtonPlainText.vue";
 
@@ -80,6 +87,8 @@ export default defineComponent({
     components: { InputField, DropDown, ButtonIcon, ButtonPlainText },
     data()  {
         
+        console.log(this.$store.getters.tutorData.languages);
+
         return {
             titleModel: {
                 type: 'email',
@@ -91,7 +100,10 @@ export default defineComponent({
                 type: 'text',
                 value: '',
                 error: '',
-                readonly: false
+                readonly: false,
+                options: [],
+                selected: true,
+                selectedIndex: 0,
             },
             durationModel: {
                 type: 'number',
@@ -100,15 +112,15 @@ export default defineComponent({
                 readonly: false,
                 options: [
                     {
-                        display_name: 'Secs',
+                        display_name: 'Seconds',
                         value: 'secs'
                     },
                     {
-                        display_name: 'Mins',
+                        display_name: 'Minutes',
                         value: 'mins'
                     },
                     {
-                        display_name: 'Hrs',
+                        display_name: 'Hours',
                         value: 'hrs'
                     }
                 ],
@@ -135,7 +147,7 @@ export default defineComponent({
 
             var body = {
                 title: this.titleModel.value.toLowerCase(),
-                language: this.languageModel.value.toLowerCase(),
+                language: this.languageModel.value,
                 duration: this.durationModel.inMilliSecs,
                 price: this.priceModel.value
             };
@@ -176,7 +188,12 @@ export default defineComponent({
             }
         },
         selectDropDownOption(selected) {
-            if(selected.dropDownIndex == 0) {
+            if(selected.dropdownIndex == 0) {
+                this.languageModel.selectedIndex = selected.optionIndex;
+                this.languageModel.value = this.languageModel.options[selected.optionIndex].value;
+            }
+
+            if(selected.dropdownIndex == 1) {
                 this.durationModel.selectedIndex = selected.optionIndex;
                 this.convertToMilliSecs();
             }
@@ -184,6 +201,16 @@ export default defineComponent({
             this.hideAllDropDownOptions();
         }
     },
+    beforeMount() {
+        this.$store.getters.tutorData.languages.forEach(element => {
+            this.languageModel.options.push({
+                display_name: element,
+                value: element
+            });
+        });
+
+        this.languageModel.value = this.languageModel.options[0].value;
+    }
 });
 </script>
 
@@ -231,18 +258,6 @@ export default defineComponent({
         font-size: 110%;
         outline: none;
     }
-    .input_field {
-        display: flex;
-    }
-    .input_field input {
-        width: 60%;
-    }
-    .input_field .select {
-        width: 40%;
-        border-left: 1px solid var(--paper-grey-400);
-        height: 40px;
-        border-radius: 0; 
-    }
 
     .title textarea {
         padding: 2%;
@@ -259,15 +274,33 @@ export default defineComponent({
         color: var(--paper-grey-400);
     }
 
+    .dropdown_wrapper {
+        height: 40px;
+    }
+
     .duration {
+        display: flex;
         border-radius: 5px;
         border: 1px solid var(--paper-grey-400);
-        /* overflow: hidden; */
-        padding: 5px;
+        padding: 1px;
+        height: 43px;
+        width: 100%;
+    }
+    .duration > * {
+        height: 100% !important;
     }
     .duration input {
         border: none;
+        width: 60%;
+        font-weight: 800;
+        font-size: 150%;
+        text-align: center;
+        border-right: 1px solid var(--paper-grey-400);
     }
+    .duration select {
+        width: 30%;
+    }
+
     .label {
         height: 20px;
         color: var(--paper-grey-700);

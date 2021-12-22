@@ -24,7 +24,8 @@
             <div class="no_tutors" v-else>
                 <EmptyList 
                     text="No tutor found"
-                    image="../../assets/icons/tutor.png"
+                    image="empty"
+                    position="center"
                 />
             </div>
         </section>
@@ -36,16 +37,13 @@
 <script>
 import { defineComponent } from '@vue/runtime-core';
 import Header from '@/components/Header.vue';
-import VerticalList from '@/components/lists/VerticalList.vue';
-import GridList from '@/components/lists/grid-list.vue';
+import VerticalList from '@/components/Lists/VerticalList.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
-import net from '@/services/http.js';
-import Subheading from '@/components/title/subheading.vue';
-import EmptyList from "@/components/lists/EmptyList.vue";
+import EmptyList from "@/components/Lists/EmptyList.vue";
 
 export default defineComponent({
     name: 'Home',
-    components: { Header, GridList, VerticalList, EmptyList, Subheading, SiteFooter },
+    components: { Header, VerticalList, EmptyList, SiteFooter },
     data() {
         let searchModel = {
             type: 'text',

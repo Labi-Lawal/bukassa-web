@@ -9,7 +9,7 @@
             ></video>
         </div>
         <div class="upload_btn_wrapper">
-            <FileSelectorButton 
+            <FileSelectorButton
                 buttonText="Choose Video" 
                 @input="saveAndPreviewFile"
             />
@@ -31,12 +31,10 @@ export default defineComponent({
     },
     methods: {
         saveAndPreviewFile(result) {
-            const file = result;
-            
             this.source = URL.createObjectURL(result.file);
             URL.revokeObjectURL(result);
 
-            this.$emit('video-saved', file);
+            this.$emit('video-saved', result.file);
         }
     }
 

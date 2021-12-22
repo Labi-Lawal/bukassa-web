@@ -4,11 +4,11 @@
         <section class="body" v-if="!isLoading">
             <div class="details">
                 <div class="intro-vid">
-                    <TutorIntroVideo :videoLink="tutor.intro_vid"/>
+                    <TutorIntroVideo :videoLink="tutor.introVideo"/>
                 </div>
                 <div class="tutor-profile">
                     <div class="left">
-                        <img :src="tutor.image" alt="">
+                        <img :src="tutor.profilePicture">
                         <div class="buttons">
                             <button @click="openContactModal">
                                 <font-awesome-icon :icon="['fas', 'comments']" />
@@ -23,7 +23,7 @@
                             <div class="lang"> {{ tutor.languages.join(',') }} </div>
                         </div>
                         <div class="ratings">
-                            <TutorRatingsIcon :rating="tutor.rating" :showDigit="false"/>
+                            <TutorRatingsIcon :rating="tutor.ratings" :showDigit="false"/>
                         </div>
                         <div class="metrics">
                             <div>
@@ -32,7 +32,7 @@
                             </div>
                             <div>
                                 <div class="title">Ratings</div>
-                                <div class="number">{{ tutor.rating }}</div>
+                                <div class="number">{{ tutor.ratings }}</div>
                             </div>
                             <div>
                                 <div class="title">Reviews</div>
@@ -42,7 +42,7 @@
                         <div class="bio">
                             <div class="section-title">About Me</div>
                             <div class="content">
-                                {{ tutor.bio.substr(0, 1).toUpperCase() + tutor.bio.substr(1, tutor.bio.length) }}
+                                {{ tutor.aboutMe.substr(0, 1).toUpperCase() + tutor.aboutMe.substr(1, tutor.aboutMe.length) }}
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,10 @@
                 <div class="package-box">
                     <div class="section-title">Lessons</div>
                     <div class="all-packages">
-                        <div class="package">
+                        <VerticalList 
+                            :lessons="tutor.lessons"
+                        />
+                        <!-- <div class="package">
                             <div class="package-details">
                                 <div class="duration">50 mins</div>
                                 <div class="lang">English Class</div>
@@ -65,17 +68,27 @@
                                 <div class="lang">Spanish Class</div>
                             </div>
                             <div class="price">{{ appendCurreny(250) }}</div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="calendar">
-                    <div class="section-title">Schedule</div>
-                    <TutorScheduleCalendar @buttonAction="openBookingModal" />
+                    <div class="section-title">Schedule For The Day</div>
+                    <TutorScheduleCalendar 
+                        :events="tutor.events" 
+                        @buttonAction="openBookingModal" 
+                    w/>
                 </div>
             </div> 
             <div class="modals" v-if="showModals">
 
-                <TutorBookingModal v-if="showBookingModal" :tutorEvents="tutor.events" :tutorname="tutor.tutor_name" @setNewTutorEventAction="setNewEvent" @buttonAction="closeBookingModal" />
+                <TutorBookingModal 
+                    v-if="showBookingModal" 
+                    :tutorEvents="tutor.events" 
+                    :tutorname="tutor.tutorName"
+                    :lessons="tutor.lessons"
+                    @setNewTutorEventAction="setNewEvent" 
+                    @buttonAction="closeBookingModal" 
+                />
                 
                 <TutorContactModal v-if="showContactModal" @buttonAction="closeContactModal" />
                 
@@ -98,6 +111,7 @@
     import SiteFooter from '../components/SiteFooter.vue';
     import net from '../services/http';
     import appendCurreny  from "../helper/currency.js";
+    import VerticalList from '../components/Lists/VerticalList.vue';
 
     export default {
         name: 'Tutor',
@@ -110,6 +124,7 @@
             TutorBookingModal,
             BackDrop,
             SiteFooter,
+            VerticalList
         },  
         data() {
             return {
@@ -122,7 +137,13 @@
             }
         },
         methods: {
+            checkSessionStatus() {
+                if(this.$store.getters.token == '') {
+                    this.$router.push('/login');
+                }
+            },
             openContactModal() {
+                this.checkSessionStatus();
                 this.showModals = true;
                 this.showContactModal = true;
             },
@@ -131,6 +152,7 @@
                 this.showContactModal = false;
             },
             openBookingModal(date) {
+                this.checkSessionStatus();
                 this.showModals = true;
                 this.showBookingModal = true;
             },
@@ -152,6 +174,7 @@
                 .catch((error)=> { console.log(error.response) });
             },
             async setNewEvent(eventInfo) {
+                this.checkSessionStatus();
                 console.log(eventInfo);
                 try {
                     const response = await net.httpSec.post(
@@ -175,7 +198,7 @@
 <style scoped>
     section.body {
         width: 90%;
-        margin: 2% auto 0%;
+        margin: 2% auto;
         display: flex;
         justify-content: space-between; 
     }
@@ -203,8 +226,8 @@
         /* text-align: center; */
     }
     div.left img {
-        width: 120px;
-        height: 120px;
+        width: 80px;
+        height: 80px;
         border-radius: 50%;
         object-fit: cover;
         object-position: top;
@@ -313,11 +336,10 @@
     }
     div.package-box {
         margin-top: 5%;
-        border: 1px solid lightgrey;
         border-radius: 5px;
     }
     div.all-packages {
-        
+        font-size: 90%;
     }
     div.package {
         display: flex;

@@ -1,32 +1,73 @@
 <template>
     <div class="calendar-component">
-        
-        <div class="month-name">{{ monthName }}</div>
-        
-        <div id="weekdays">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
-        </div>
-
-        <div id="calendar">
-            <div 
-                v-for="(box, index) in totalMonthBoxes" 
-                :key="index"
-                :class="{ 
-                    day: true,
-                    hide: ((index - paddingDays) >= 1) ? true : false
-                }"
-                @click="$emit('button-action', `${month + 1}/${index - paddingDays}/${year}`)"
-            >
-                {{ (index > paddingDays) ? index - paddingDays : '' }}
+        <div 
+            v-for="(date, dateIndex) in dates"
+            :key="dateIndex"
+            class="day event_cell"
+        >
+            <div class="month-name">
+                <div class="title">Today</div>
+                <div>
+                    {{ date.string }}
+                </div>
             </div>
-        </div>
-    
+            
+            <div 
+                class="schedule_body" 
+                @click="$emit('button-action')"
+            >
+                <div class="time">
+                    <div>
+                        <div>00:00</div>
+                    </div>
+                    <div>01:00</div>
+                    <div>02:00</div>
+                    <div>03:00</div>
+                    <div>04:00</div>
+                    <div>05:00</div>
+                    <div>06:00</div>
+                    <div>07:00</div>
+                    <div>08:00</div>
+                    <div>09:00</div>
+                    <div>10:00</div>
+                    <div>11:00</div>
+                    <div>12:00</div>
+                    <div>13:00</div>
+                    <div>14:00</div>
+                    <div>15:00</div>
+                    <div>16:00</div>
+                    <div>17:00</div>
+                    <div>18:00</div>
+                    <div>19:00</div>
+                    <div>20:00</div>
+                    <div>21:00</div>
+                    <div>22:00</div>
+                    <div>23:00</div>
+                </div>
+                <div class="events_box">
+                    <div class="event_box_row" v-for="timeIndex in 24" :key="timeIndex">
+
+                        <div
+                            class="cell_content event_set_others"
+                            v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'booked'"
+                        ></div>
+                        <div
+                            class="cell_content event_set_you"
+                            v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'bookedbyyou'"
+                        ></div>
+                        <div
+                            class="cell_content event_not_available"
+                            v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'unavailable'"
+                        ></div>
+                        <div
+                            class="cell_content available"
+                            v-if="isDateSet(`${date.value} - ${timeIndex-1}:00`) == 'available'"
+                        ></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>    
     </div>
 </template>
 
@@ -38,146 +79,82 @@ import TutorBookingModal from "@/components/tutor/TutorBookingModal.vue";
 export default defineComponent({
     name: "tutor-schedule-calendar",
     components: { BackDrop, TutorBookingModal },
+    props:['events'],
     data() {
-        const currentSection = 1;
-        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-        var nav = 0, clicked = null,
-        events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [],
-        day, month, year, monthName, paddingDays, daysInMonth, totalMonthBoxes, currentDate, i = 0;
+        var day, month;
         
-        
-
         return { 
-            weekdays, 
-            nav, 
-            clicked, 
-            events, 
-            currentSection, 
-            hideNewEventModal: true,
-            daysInMonth, 
-            totalMonthBoxes,
-            month,
-            monthName,
-            paddingDays,
-            currentDate,
             day,
-            year,
-            i
+            dayName: '',
+            month,
+            dayName: '',
+            dates: [],
+            allBookedEventDates: [],
+            allUserEventDates: [],
+            allUnavailableEventDates: []
         };
     },
     beforeMount(){
-        this.initButtons();
+        for(var i=0; i<this.events.length; i++) {
+            const eventDate = new Date(this.events[i].datetime).getTime();
+
+            if(this.events[i].type.toLowerCase() == "lesson")
+                if(this.events[i].studentId == this.$store.state.user._id) this.allUserEventDates.push(eventDate)
+                else this.allBookedEventDates.push(eventDate);
+
+            if(this.events[i].type.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
+        }
         this.load();
     },
-    methods : {
+    methods: {
         load() {
             const date = new Date();
-
-            if(this.nav != 0) date.setMonth( new Date().getMonth() + this.nav );
             
             this.day = date.getDate();
             this.month = date.getMonth();
             this.year = date.getFullYear();
-            
-            this.daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
-            const firstDayOfMonth = new Date(this.year, this.month, 1);
 
-            const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
+            this.currentDate = this.day;
+            
+            const dayofMonth = new Date(this.year, this.month, this.currentDate);
+            
+            const dateString = dayofMonth.toLocaleDateString('en-us', {
+                weekday: 'short',
+                month: 'short',
                 day: 'numeric'
             });
 
-            this.monthName = dateString.split(', ')[1].split(' ')[0];
-            this.paddingDays = this.weekdays.indexOf(dateString.split(', ')[0]);
+            this.dates.push({
+                string: dateString,
+                value: `${this.currentDate}/${this.month+1}/${this.year}`
+            });
 
-            this.totalMonthBoxes = this.paddingDays + this.daysInMonth;
+            console.log(this.dates);
 
         },
-        initButtons() { },
-        detBorderStyle (x) {
-            // if(i == 1 || i == 8 || i == 15 || i == 22 || i == 29) { return true; }
-            // if(this.totalMonthBoxes)
-
-            for(this.i; this.i < this.totalMonthBoxes; this.i+=5) {
-                if(this.i == 0) return true;
-            }
-
-            if(x > this.paddingDays) return false;
-
-            return false;
-        },
-        openModal(date) {
-            this.clicked = date;
-            const eventForDay = this.events.find(e => e.date === this.clicked);
+        isDateSet(datetime) {
+    
+            var date = datetime.split(' - ')[0];
+            var time = datetime.split(' - ')[1];
             
-            if (eventForDay) {
-                console.log('Event already exists');
-            } else {
-                this.hideNewEventModal = false;
-            }
+            var day = date.split('/')[0],
+            month = date.split('/')[1]-1,
+            year = date.split('/')[2],
+            hour = time.split(':')[0],
+            min = time.split(':')[1],
+            eventCellDate = new Date(year, month, day, hour, min),
+            eventCellTime = eventCellDate.getTime();
+
+            if(this.allBookedEventDates.includes(eventCellTime)) return 'booked';
+            if(this.allUserEventDates.includes(eventCellTime)) return 'bookedbyyou';
+            if(this.allUnavailableEventDates.includes(eventCellTime)) return 'unavailable';
+            else return 'available';
+        },
+        openModal() {
+            this.hideNewEventModal = false;
         },
         closeModal() {
             this.hideNewEventModal = true;
-        },
-        showNextModal() {
-            this.currentSection++;
-
-            const sectionOne = document.getElementById("sectionone");
-            const sectionTwo = document.getElementById("sectiontwo");
-
-            if(this.currentSection == 1) {
-                sectionOne.style.display = "block";
-                sectionTwo.style.display = "none";
-            }
-            if(this.currentSection == 2) {
-                sectionOne.style.display = "none";
-                sectionTwo.style.display = "block";
-                this.loadCalendarDetails()
-            }
-        },
-        loadCalendarDetails() {
-            const date = new Date();
-
-            if(this.nav != 0) {
-                date.setMonth( new Date().getMonth() + this.nav );
-            }
-
-            const hours = 24;
-            const day = date.getDate();
-            const month = date.getMonth();
-            const year = date.getFullYear();
-
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const firstDayOfMonth = new Date(year, month, 1);
-
-            const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-
-            const monthName = dateString.split(', ')[1].split(' ')[0];
-            const paddingDays = this.weekdays.indexOf(dateString.split(', ')[0]);
-            const daysOfTheMonth = document.getElementById("daysofthemonth");
-            const hoursOfTheDay = document.getElementById("all-hours");
-
-            for(var i = 1; i <= paddingDays + daysInMonth; i++) {
-                const dayContainer = document.createElement('div');
-                dayContainer.classList.add('day');
-
-                if(i > paddingDays) {
-                    dayContainer.innerText = `${monthName} ${i - paddingDays}`;
-                    dayContainer.addEventListener('click', ()=> this.openModal(`${month + 1}/${i - paddingDays}/${year}`));
-                } else {
-                    dayContainer.classList.add('padding');
-                }
-
-                daysOfTheMonth.appendChild(dayContainer);
-            };
         }
     }
 });
@@ -189,42 +166,79 @@ export default defineComponent({
         padding: 2% 5%;
         font-weight: 600;
         color: grey;
+        display: flex;
+        justify-content: space-between;
     }
-    div#weekdays {
+    
+    .schedule_body {
+        padding: 0 5%;
+        height: 300px;
+        overflow-y: auto;
         display: flex;
     }
-    div#weekdays > div {
-        color: grey;
-        border-left: none;
-        width: calc(100% / 7);
-        height: 25px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+
+    .schedule_body::-webkit-scrollbar {
+        width: 15px;
     }
-    div#calendar {
-        width: 100%;
-        margin: auto;
-        display: flex;
-        flex-wrap: wrap;
+    .schedule_body::-webkit-scrollbar-track {
+        background: rgb(242, 242, 242);
     }
-    div#calendar div.day {
-        width: calc(calc(100% - 7px)  / 7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .schedule_body::-webkit-scrollbar-thumb {
+        background: lightgrey;
+    }
+    
+    .time{
+        width: 10%;
+    }
+    .time > div {
         height: 35px;
-        font-size: 80%;
-        color: grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .events_box {
+        width: 85%;
+        margin-left: auto;
+    }
+    .event_box_row {
+        border-top: 1px solid var(--paper-grey-200);
+        height: 35px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .event {
+        border: 1px solid black;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        height: 100%;
+        width: calc(100% / 7);
+    }
+    .text {
+        margin: auto;
+    }
+    .event_cell {
+        border: 1px solid rgb(242, 242, 242);
+        border-top: none;
+        border-right: none;
         cursor: pointer;
-    } 
-    div#calendar div.day:last-child {
-        border-bottom: none;
     }
-    div#calendar .day:hover {
-        background-color: #c0eecd;
+    .cell_content {
+        width: 100%;
+        height: 100%;
     }
-    .hide {
-        display: none;
+    .cell_content:hover {
+        background: rgba(195, 243, 239, 0.521);
+    }
+    .event_set_you {
+        background: #7ec937;
+    }
+    .event_set_others {
+        background: #7ec937;
+        background-image: repeating-linear-gradient(45deg ,transparent,transparent 1px,#eee 0,#7ec937 3px);
+    }
+    .event_not_available {
+        background: grey;
     }
 </style>

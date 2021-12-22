@@ -1,12 +1,12 @@
 <template>
-  <div class="nested_drop_down_frame" @mouseover=showNestedOptions @mouseleave=hideNestedOptions>
+  <div class="nested_drop_down_frame" @click=toggleNestedOptions>
         <div class="display">
           <div class="lang">{{ allLanguages[selectedLangIndex].display_name }} . {{ allCurrencies[selectedCurrencyIndex].display_name }} </div>
           <font-awesome-icon :icon="['fas', 'caret-up']" class="icon" v-if=!isCollapsed[0] />
           <font-awesome-icon :icon="['fas', 'caret-down']" class="icon" v-if=isCollapsed[0] />
         </div>
 
-        <div class="options" v-if=!isCollapsed[0]>
+        <div class="options" v-if="!isCollapsed[0]">
             <div class="langauge" @mouseover="showLangOptions" @mouseleave="hideLangOptions">
                 Site Language
                 <font-awesome-icon :icon="['fas', 'caret-right']" class="icon"/>
@@ -32,7 +32,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import DropDown from "./drop-down.vue";
+import DropDown from "./DropDown.vue";
 import SelectOptions from "./SelectOptions.vue";
 
 export default defineComponent({
@@ -87,8 +87,8 @@ export default defineComponent({
         }
     },
     methods: {
-        showNestedOptions() {
-            this.isCollapsed[0] = false;
+        toggleNestedOptions() {
+            this.isCollapsed[0] = !this.isCollapsed[0];
         },
         showLangOptions() {
             this.isCollapsed[1] = false;
@@ -186,6 +186,7 @@ export default defineComponent({
 }
 .options {
     position: absolute;
+    z-index: 100000;
     left: -1%;
     background: white;
     width: 100%;

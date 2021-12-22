@@ -2,15 +2,27 @@
     <div id="newEventsModal">
 
         <div class="modal_head">
-            <aProgressIndicator :sections="bookingSections" :currentSectionIndex="currentSection" @prevSectionButtonAction="goToPrevSection"/>
+            <ProgressIndicator 
+                :sections="bookingSections" 
+                :currentSectionIndex="currentSection" 
+                @prevSectionButtonAction="goToPrevSection"
+            />
         </div>
 
         <div class="modal_content">
-            <TutorLessonsList :lessons="lessons" :selectedIndex="selectedIndex" @buttonAction="selectLesson" v-if="currentSection == 0"/>
+            <TutorLessonsList 
+                v-if="currentSection == 0"
+                :lessons="lessons" 
+                :selectedIndex="selectedIndex" 
+                @buttonAction="selectLesson" 
+            />
 
-            <TutorFullScheduleCalendar v-if="currentSection == 1" :events="tutorEvents" @buttonAction="createEvent" />
-
-            <TutorCommunicationTools :commTools="commtools" :selectedIndex="selectedToolIndex" @buttonAction="selectTool"  v-if="currentSection == 2"/>
+            <TutorFullScheduleCalendar 
+                v-if="currentSection == 1" 
+                :events="tutorEvents"
+                :tutorname="tutorname"
+                @buttonAction="createEvent"
+            />
         </div>
 
         <div class="modal_floor" v-if="showBtn">
@@ -22,53 +34,15 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import ProgressIndicator from "../ProgressIndicator.vue";
-import TutorLessonsList from "../lists/TutorLessonsList.vue";
+import TutorLessonsList from "../Lists/TutorLessonsList.vue";
 import TutorFullScheduleCalendar from "./TutorFullScheduleCalendar.vue";
 import TutorCommunicationTools from "./TutorCommunicationTools.vue";
 
 export default defineComponent({
     name:"tutor-booking-modal",
     components: { ProgressIndicator, TutorLessonsList, TutorFullScheduleCalendar, TutorCommunicationTools },
-    props: ['tutorEvents', 'tutorname'],
+    props: ['tutorEvents', 'tutorname', 'lessons'],
     data() {
-        var lessons = [
-            {   
-                _id: 1,
-                title: 'Professional English Speaking',
-                language: 'english',
-                duration: '50 mins',
-                price: 50
-            },
-            {   
-                _id: 2,
-                title: 'Casual English Speaking',
-                language: 'english',
-                duration: '50 mins',
-                price: 50
-            },
-            {   
-                _id: 3,
-                title: 'Everyday Greetings',
-                language: 'english',
-                duration: '50 mins',
-                price: 50
-            },
-            {   
-                _id: 4,
-                title: 'Everyday Greetings',
-                language: 'english',
-                duration: '50 mins',
-                price: 50
-            },
-            {   
-                _id: 5,
-                title: 'Everyday Greetings',
-                language: 'english',
-                duration: '50 mins',
-                price: 50
-            }
-        ]; 
-
         var commtools = [
             {   
                 image: 'https://res.cloudinary.com/labilawal/image/upload/v1635031631/5e8ce423664eae0004085465_sjppb7.png',
@@ -100,13 +74,8 @@ export default defineComponent({
                 {
                     title: "Schedule Your Lesson",
                     status: 'uncompleted'
-                },
-                {
-                    title: "Pick Communication Tool",
-                    status: 'uncompleted'
                 }
             ],
-            lessons,
             selectedIndex,
             selectedLesson,
             currentSection: 0,
@@ -138,6 +107,8 @@ export default defineComponent({
             this.showNextBtn();
         },
         createEvent(datetime) {
+            console.log(datetime);
+
             var date = datetime.split(' - ')[0];
             var time = datetime.split(' - ')[1];
             
@@ -149,14 +120,13 @@ export default defineComponent({
 
             this.newEvent = {
                 tutorname: this.tutorname,
-                type:"Lesson",
+                type: "Lesson",
                 datetime: new Date(year, month, day, hour, min),    
-                studentId: "",
-                lesson: this.selectedLesson,
-                communication_tool: ''
+                studentId: this.$store.getters.userData._id || '',
+                lesson: this.selectedLesson
             };
 
-            this.showNextBtn();
+            this.goToNextSection();
         },
         setEvent() {
             this.$emit('set-new-tutor-event-action', this.newEvent);
@@ -164,7 +134,7 @@ export default defineComponent({
         goToNextSection() {
             if(this.currentSection < this.bookingSections.length-1) this.currentSection++
             else {
-                this.$store.commit('setNewEvent', this.newEvent);
+                this.$store.dispatch('storenewevent', this.newEvent);
                 this.$router.push({path: '/booking-payment'});
             }
             this.hideNextBtn();

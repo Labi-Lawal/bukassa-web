@@ -1,8 +1,9 @@
 <template>
     <div class="video">
-        <iframe :src="videoLink"
+        <video :src="videoLink"
+                controls
                 allowfullscreen>
-        </iframe>
+        </video>
     </div>
 </template>
 
@@ -11,7 +12,13 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'tutor-intro-video',
-    props: ['videoLink']
+    props: ['videoLink'],
+    data() {
+        console.log(this.videoLink);
+        return {
+
+        }
+    }
 })
 </script>
 

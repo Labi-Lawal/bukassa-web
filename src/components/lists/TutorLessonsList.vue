@@ -41,13 +41,13 @@ export default defineComponent({
 
 <style scoped>
     .all-lessons {
-        padding: 5% 0;   
+        padding: 5% 0;
     }
     .package{
         box-shadow: 0px 0px 10px 2px rgb(241, 241, 241);
         width: 60%;
         height: 100px;
-        margin: 0% 0% 2% 0%;
+        margin: 0% auto 2%;
         border-radius: 5px;
         padding: 2%;
         display: flex;

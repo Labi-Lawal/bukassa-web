@@ -2,14 +2,21 @@
     <div class="select" >
         <div
             tabindex=0
-            class="display" 
-            :class="(hideBorder)?'hide-border':''" 
+            :class="{
+                display: true,
+                hide_border: (hideBorder) ?true :false,
+                open: (isOptionsVisible) ?true :false
+            }"
+            :style="{
+               'z-index': raiseBy
+            }" 
             @click="$emit('show-options', dropdownIndex)"
             @keypress.enter="$emit('show-options', dropdownIndex)"
         >
             <div class="placeholder-option" v-if="placeholder!=undefined && !selected">{{placeholder}}</div>
             <div class="selected-option" v-if="placeholder!=undefined && selected">{{options[selectedIndex].display_name}}</div>
             <div class="selected-option" v-if="placeholder==undefined && selected">{{options[selectedIndex].display_name}}</div>
+            
             <div class="icon" v-if="!hideIcon">
                 <font-awesome-icon :icon="['fas', 'caret-down']" v-if="!isOptionsVisible"/>
                 <font-awesome-icon :icon="['fas', 'caret-up']" v-if="isOptionsVisible"/>
@@ -17,12 +24,8 @@
         </div>
         <div 
             class="options"
-            :class="{
-                raise_by_1_level: (raiseByOne == 1) ? true : false,
-                raise_by_2_level: (raiseByOne == 2) ? true : false,
-                raise_by_3_level: (raiseByOne == 3) ? true : false,
-                raise_by_4_level: (raiseByOne == 4) ? true : false,
-                raise_by_5_level: (raiseByOne == 5) ? true : false
+            :style="{
+               'z-index': raiseBy
             }" 
             v-if="isOptionsVisible"
         >
@@ -44,7 +47,7 @@
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
-    name: 'Drop-Down',
+    name: 'drop-down',
     props: [
         'placeholder', 
         'options', 
@@ -53,7 +56,7 @@ export default defineComponent({
         'selectedIndex', 
         'hideIcon', 
         'hideBorder', 
-        'raiseByOne',
+        'raiseBy',
         'dropdownIndex'
     ],
     data(){
@@ -61,25 +64,26 @@ export default defineComponent({
     },
     methods: {
         optionSelected (index){
-            this.$emit('option-select', { dropDownIndex: this.dropdownIndex, optionIndex: index });
+            this.$emit('option-select', { dropdownIndex: this.dropdownIndex, optionIndex: index });
         }
     }
 });
 </script>
 
 <style scoped>
-    div.select {
-        height: 80%;
+    .select {
+        height: 100%;
         width: 100%;
         cursor: pointer;
         position: relative;
     }
-    div.select *::selection {
+    .select *::selection {
         background: none;
     }
-    div.display {
+    .display {
         height: 100%;
-        padding: 1% 6%;
+        width: 100%;
+        padding: 1% 0;
         display: flex;
         text-align: start;
         border: 1px solid lightgrey;
@@ -91,58 +95,50 @@ export default defineComponent({
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    div.display:focus {
+    .display:focus {
         outline-color: var(--paper-light-blue-500);
     }
-    div.display.hide-border {
+    .display.hide_border {
         border: none;
     }
-    div.display > div {
+    .display > div {
         display: flex;
         align-items: center;
-    }
-    div.display div.selected-option, div.display div.placeholder-option {
-        width: 90%;
         margin: auto 0;
+        margin-left: 5%;
+    }
+    .display div.selected-option, div.display div.placeholder-option {
+        width: 90%;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 1;
         line-clamp: 1;
         -webkit-box-orient: vertical;
     }
-    div.display div.placeholder-option {
+    .display div.placeholder-option {
         color: rgba(146, 146, 146, 0.705);
     }
-    div.icon {
+    .icon {
         width: 10%;
         justify-content: center;
     }
-    div.options {
+    .open {
+        border-radius: 5px 5px 0px 0px;
+    }
+
+    .options {
         border: 1px solid lightgrey;
         background: white;
         position: absolute;
-        width: 99.2%;
+        width: 100%;
+        max-height: 300px;
+        overflow-y: auto;
         left: 0;
-        top: 115%;
+        top: 120%;
         padding: 2% 0%;
         border-radius: 0 0 5px 5px;
     }
-    .raise_by_1_level {
-        z-index: 1;
-    }
-    .raise_by_2_level {
-        z-index: 2;
-    }
-    .raise_by_3_level {
-        z-index: 3;
-    }
-    .raise_by_4_level {
-        z-index: 4;
-    }
-    .raise_by_5_level {
-        z-index: 5;
-    }
-    div.option {
+    .option {
         display: flex;
         align-items: center;
         text-align: start;
@@ -150,7 +146,7 @@ export default defineComponent({
         padding: 3% 6%;
         text-transform: capitalize;
     }
-    div.option:hover {
+    .option:hover {
         background: rgb(216, 216, 216);
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="input_field">
-    <label>{{ label }}</label>
+    <label v-if="label != ''">{{ label }}</label>
     <input 
         :type="model.type" 
         v-model="model.value"
@@ -28,11 +28,8 @@ export default defineComponent({
 
 <style scoped>
 .input_field {
-    display: flex;
-    flex-wrap: wrap;
     width: 100%;
-    /* height: 80px; */
-    padding: 1% 0;
+    height: 100%;
 }
 .input_field > * {  
     width: 100%;
@@ -45,7 +42,8 @@ input {
     border: 1px solid var(--paper-grey-400);
     color: var(--paper-grey-700);
     padding: 0% 3%;
-    height: 40px;
+    width: 94% !important;
+    height: 45px;
     font-size: 110%;
     border-radius: 5px;
     outline: none;

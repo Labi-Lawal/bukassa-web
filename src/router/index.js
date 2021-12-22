@@ -48,7 +48,10 @@ const routes = [
     component: ()=> import('../views/BecomeTutor.vue'),
     meta: {
       requiresAuth: true
-    }
+    },
+    beforeEnter(to, from, next) {
+      if(store.getters.userData.role !== 'tutor') next()
+    },
   },
   {
     path: '/profile',
@@ -58,7 +61,7 @@ const routes = [
     children: [
       {
         path: 'schedule', alias: '', name: 'UserSchedule',
-        component:  ()=> import('../components/schedule/schedule.vue'),
+        component:  ()=> import('../components/userprofile/Schedule/schedule.vue'),
       },
       {
         path: 'lessons', name: 'UserLessons',
@@ -86,7 +89,7 @@ const routes = [
         path: 'edit', name: 'EditProfile',
         component:  ()=> import('../components/userprofile/edit-profile.vue'),
       },
-    ]
+    ],
   },
   {
     path: '/community',
@@ -104,23 +107,25 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 });
 
 router.beforeEach ( async (to, from, next)=> {
-
+  
   if(to.matched.some(record=> record.meta.requiresAuth)) {
     if(store.getters.token) {
       if(store.getters.userData != '') {
         if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
           await store.dispatch('fetchtutordata')
-          .then((response)=> {
-            next('/profile');
-          })
+          .then(()=> next())
           .catch(()=> next('/logout'))
 
         } else next();
       } else {
+    
         // fetch user data
         await store.dispatch('fetchuserdata')
         .then(async ()=> {
@@ -128,12 +133,19 @@ router.beforeEach ( async (to, from, next)=> {
             await store.dispatch('fetchtutordata')
             .then(()=> next())
             .catch(()=> next('/logout'))
+          
           } 
+          else next()
         })
         .catch(()=> next('/logout'));
       }
     }
     else next('/login');
+  }
+
+  else if(to.matched.some(record=> record.meta.isNotTutor)) {
+    console.log(store.getters.userData.role);
+    if(store.getters.userData.role !== 'tutor') next();
   }
 
   else next();

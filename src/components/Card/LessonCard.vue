@@ -29,7 +29,7 @@ export default defineComponent({
 <style scoped>
     .lesson_card{
         box-shadow: 0px 0px 10px 2px rgb(241, 241, 241);
-        width: 60%;
+        width: 96%;
         height: 100px;
         margin: 0% 0% 2% 0%;
         border-radius: 5px;
