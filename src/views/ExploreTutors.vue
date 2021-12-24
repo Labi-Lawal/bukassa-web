@@ -33,7 +33,7 @@
 <script>
 import { defineComponent } from '@vue/runtime-core';
 import Header from '@/components/Header.vue';
-import VerticalList from '../components/Lists/VerticalList.vue';
+import VerticalList from '../components/lists/VerticalList.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
 
 export default defineComponent({

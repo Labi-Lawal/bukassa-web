@@ -117,7 +117,7 @@
     import SiteFooter from '../components/SiteFooter.vue';
     import net from '../services/http';
     import appendCurreny  from "../helper/currency.js";
-    import VerticalList from '../components/Lists/VerticalList.vue';
+    import VerticalList from '../components/lists/VerticalList.vue';
 
     export default {
         name: 'Tutor',

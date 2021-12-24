@@ -34,7 +34,7 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import ProgressIndicator from "../ProgressIndicator.vue";
-import TutorLessonsList from "../Lists/TutorLessonsList.vue";
+import TutorLessonsList from "../lists/TutorLessonsList.vue";
 import TutorFullScheduleCalendar from "./TutorFullScheduleCalendar.vue";
 import TutorCommunicationTools from "./TutorCommunicationTools.vue";
 
