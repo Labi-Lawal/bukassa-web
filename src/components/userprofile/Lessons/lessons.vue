@@ -37,7 +37,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import VerticalList from "../..y/lists/VerticalList.vue";
+import VerticalList from "../../lists/VerticalList.vue";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
 import StudentLessonsList from "@/components/student/StudentLessonsList.vue";
 
