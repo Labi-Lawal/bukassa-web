@@ -23,7 +23,6 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 
-
 export default defineComponent({
     name: 'empty-list',
     props: ['text', 'image', 'position']
