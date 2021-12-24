@@ -22,7 +22,11 @@
                 <VerticalList :tutors="allTutors"/>
             </div>
             <div class="no_tutors" v-else>
-               
+                <EmptyList 
+                    text="No tutor found"
+                    image="empty"
+                    position="center"
+                />
             </div>
         </section>
 
@@ -33,12 +37,13 @@
 <script>
 import { defineComponent } from '@vue/runtime-core';
 import Header from '@/components/Header.vue';
-import VerticalList from '../components/lists/VerticalList.vue';
+import VerticalList from '@/components/Lists/VerticalList.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
+import EmptyList from "@/components/lists/EmptyList.vue";
 
 export default defineComponent({
     name: 'Home',
-    components: { Header, VerticalList, SiteFooter },
+    components: { Header, VerticalList, EmptyList, SiteFooter },
     data() {
         let searchModel = {
             type: 'text',
