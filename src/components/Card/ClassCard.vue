@@ -6,14 +6,22 @@
         <div class="lesson_card_details">
             <div class="tutor">
                 <div class="image">
-                    <img :src="tutorImage" >
+                    <img :src="tutorImage" v-if="tutorImage" >
+                    <img src="@/assets/userimage.png" v-else>
                 </div>
-                <div class="name">{{ tutorName }}</div>
+                <div class="name" v-if="tutorName != ''"> {{ tutorName }}  </div>
+                <div class="name" v-else> {{ studentName }} </div>
             </div>
-            <div class="title">{{ title }}</div>
+            <div class="title"> {{ title }} </div>
             <div class="bottom">
                 <div class="lang">
                     {{ language }}
+                </div>
+                <div class="attend_btn_wrapper" v-if="liveClass">
+                    <ButtonPlainText 
+                        buttonText="Attend"
+                        @buttonAction="gotoClass()"
+                    />
                 </div>
                 <div class="date_time">
                     {{ calctimeRemaining(datetime) }}
@@ -27,19 +35,59 @@
 import { defineComponent } from "@vue/runtime-core";
 import  appendCurreny  from "../../helper/currency.js";
 import duration  from "../../helper/duration.js";
+import ButtonPlainText from "@/components/buttons/ButtonPlainText.vue";
 
 export default defineComponent({
     name: 'lesson-card',
-    props: ['title', 'tutorImage', 'tutorName', 'datetime', 'status', 'language'],
+    components: { ButtonPlainText },
+    props: ['title', 'tutorImage', 'tutorId', 'tutorName', 'studentId', 'datetime', 'status', 'language', 'duration'],
     data() {
-        console.log(duration);
         return {
-            appendCurreny
+            appendCurreny,
+            studentName: '',
+            liveClass: false
         }
     },
     methods: {
         calctimeRemaining(datetime) {
-            return duration.timeRemaning(datetime);
+
+            const result = duration.timeRemaning(datetime, this.duration);
+
+            if(result.toLowerCase() == 'in session') this.liveClass = true;
+            console.log(this.liveClass);
+            return result
+        },
+        gotoClass() {
+            
+            var studentID, tutorID, 
+            classData = {
+                id: '', 
+                title: ''
+            };
+            
+            if(this.$store.getters.userData.role == 'student') {
+                studentID = this.$store.getters.userData._id;
+                tutorID = this.tutorId;
+
+            } else {
+                studentID = this.studentId;
+                tutorID = this.$store.getters.tutorData._id;
+            }
+
+            classData.id = studentID + '-' + tutorID;
+            classData.title = this.title;
+
+            this.$store.dispatch('setupclass', classData)
+            .then(()=> this.$router.push('/live-class'))
+        }
+    },
+    beforeMount() {
+        if(this.studentId) {
+
+            this.$store.dispatch('fetchuser', this.studentId)
+            .then((studentDetails)=> this.studentName = studentDetails.fullname )
+            .catch((error)=> console.log(error.response) );
+        
         }
     }
 });
@@ -53,20 +101,18 @@ export default defineComponent({
         height: 360px;
         border-radius: 5px;
         cursor: pointer;
+        position: relative;
     }
     .image_wrapper {
-        height: 200px;
-    }
-    .lesson_card_details {
-        padding: 2%;
+        height: 180px;
     }
     .tutor  {
         display: flex;
         align-items: center;
     }
     .tutor .image {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         overflow: hidden;
     }
@@ -75,9 +121,14 @@ export default defineComponent({
         margin-left: 1%;
         font-weight: 700;
     }
+
+    .lesson_card_details {
+        height: calc(180px - 4%);
+        padding: 2%;
+    }
     .title {
         text-transform: capitalize;
-        height: 28%;
+        height: 52%;
         margin: 4% 0;
         color: var(--paper-grey-700); 
         font-weight: 500;
@@ -99,15 +150,33 @@ export default defineComponent({
         color: var(--burgundy-400);
         font-weight: 500;
         font-size: 90%;
+        margin-right: auto;
     }
     .bottom {
+        height: 30px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
     }
+    .attend_btn_wrapper {
+        margin-right: 5px;
+        height: 100%;
+        width: 30%;
+    }
+    .attend_btn_wrapper button {
+        font-size: 90%;
+        font-weight: 500;
+        border: 2px solid var(--burgundy-400);
+        color: white;
+        background: var(--burgundy-400);
+        border-radius: 5px;
+    }
+
+   
     .date_time {
         font-weight: 600;
         text-transform: capitalize;
         color: var(--paper-grey-700); 
     }
+
+ 
 </style>

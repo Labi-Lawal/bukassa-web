@@ -4,11 +4,13 @@
             v-for="(lesson, index) in allLessons"
             :key="index"
             :title="lesson.lessonTitle"
+            :tutorId="lesson.tutorId"
             :tutorImage="lesson.tutorImage"
             :tutorName="lesson.tutorName"
             :datetime="lesson.datetime"
             :status="lesson.status"
             :language="lesson.language"
+            :duration="lesson.duration"
         />
     </div>
 </template>
@@ -41,10 +43,12 @@ export default defineComponent({
                 const mainLesson = await tutor.lessons.filter(element => element._id == lesson.lessonId);
 
                 this.allLessons.push({
+                    tutorId: tutor._id,
                     tutorImage: tutor.profilePicture,
                     tutorName: tutor.tutorName,
                     lessonTitle: mainLesson[0].title,
                     language: mainLesson[0].language,
+                    duration: mainLesson[0].durationInMilliSecs,
                     datetime: lesson.datetime,
                     status: lesson.status
                 });

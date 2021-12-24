@@ -1,7 +1,22 @@
 <template>
     <section class="lessons_frame">
         <div class="head">
-            <div class="section_title"> Lessons </div>
+            <div class="section_title"> Classes </div>
+        </div>
+
+        <div class="sub_nav">
+            <div
+                v-for="(subnav, index) in subnavs"
+                :key="index"
+                class="sub_menu_item"
+            >
+                <router-link
+                    class="menu_item_link"
+                    :to="subnav.path"
+                >
+                    <div class="label"> {{ subnav.label }} </div>
+                </router-link>
+            </div>
         </div>
 
         <div class="lessons_list">
@@ -49,7 +64,17 @@ export default defineComponent({
 
         return {
             user,
-            tutor
+            tutor,
+            subnavs: [
+                {
+                    label: 'coming up',
+                    path: '/profile/classes'
+                },
+                {
+                    label: 'saved',
+                    path: '/profile/saved'
+                },
+            ]
         }
     },
     methods: {
@@ -82,6 +107,42 @@ export default defineComponent({
 
     .tutor_lessons {
         width: 60%;
+    }
+
+    .sub_nav {
+        display: flex;
+        width: 100%;
+        margin-top: 3%;
+    }
+    .sub_menu_item {
+        height: 50px;
+    }
+    .sub_menu_item:hover {
+        background: var(--paper-grey-100);
+    }
+    .sub_menu_item .icon {
+        width: 25px;
+        height: 25px;
+    }
+    .sub_menu_item .icon img {
+        filter: grayscale(100%);
+    }
+    .sub_menu_item .label {
+        text-transform: capitalize;
+        font-weight: 600;
+        color: var(--paper-grey-700);
+    }
+    .menu_item_link {
+        border-bottom: 2px solid black;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: max-content;
+        padding-left: 5px;
+        padding-right: 10px;
+    }
+    .menu_item_link.router-link-active {
+        background: var(--paper-grey-100);
     }
 
     .create_new_wrapper {

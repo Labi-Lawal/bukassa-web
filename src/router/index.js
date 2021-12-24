@@ -83,11 +83,25 @@ const routes = [
       },
       {
         path: 'students', name: 'UserStudents',
-        component:  ()=> import('../components/userprofile/tutors.vue'),
+        component:  ()=> import('../components/userprofile/Students.vue'),
       },
       {
         path: 'edit', name: 'EditProfile',
         component:  ()=> import('../components/userprofile/edit-profile.vue'),
+      },
+      {
+        path: 'classes', name: 'UserClasses',
+        component:  ()=> import('../components/userprofile/Classes/Index.vue'),
+        children: [
+          {
+            path: '', name: 'All Classes',
+            component:  ()=> import('@/components/userprofile/Classes/classes.vue'),
+          },
+          {
+            path: 'saved', name: 'Saved',
+            component:  ()=> import('@/components/userprofile/Classes/liveclass.vue'),
+          }
+        ]
       },
     ],
   },
@@ -101,8 +115,11 @@ const routes = [
     component: ()=> import('../views/BookingPayment.vue'),
     name: 'BookingPayment',
     props: true
-  }
-  
+  },
+  {
+    path: '/live-class', name: 'Live Class',
+    component:  ()=> import('@/views/LiveClass.vue'),
+  },
 ]
 
 const router = createRouter({

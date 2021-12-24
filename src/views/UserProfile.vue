@@ -98,6 +98,11 @@
                     source: require('../assets/icons/schedule.png')
                 },
                 {
+                    label: 'my classes',
+                    path: '/profile/classes',
+                    source: require('../assets/icons/online-lesson.png')
+                },
+                {
                     label: 'my lessons',
                     path: '/profile/lessons',
                     source: require('../assets/icons/online-lesson.png')

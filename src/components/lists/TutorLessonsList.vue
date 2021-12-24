@@ -10,7 +10,7 @@
             <div class="package-details">
                 <div class="title">{{ lesson.title }}</div>
                 <div class="lang">{{ lesson.language }}</div>
-                <div class="duration">{{ convertMilliSecsToMins(lesson.durationInMilliSecs) }} Minutes </div>
+                <div class="duration">{{ convertDuration(lesson.durationInMilliSecs) }} Minutes </div>
             </div>
             <div class="price">{{ appendCurreny(lesson.price) }}</div>
         </div>
@@ -20,20 +20,19 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import  appendCurreny  from "../../helper/currency.js";
-import  convertMilliSecsToMins  from "../../helper/duration.js";
+import  duration  from "../../helper/duration.js";
 
 export default defineComponent({
     name:"tutor-lessons-list",
     props: ['lessons', 'selectedIndex'],
     data() {
         return {
-            appendCurreny,
-            convertMilliSecsToMins
+            appendCurreny
         }
     },
     methods: {
-        selectLesson() {
-
+        convertDuration() {
+            duration.convertMilliSecsToMins();
         }
     }
 });

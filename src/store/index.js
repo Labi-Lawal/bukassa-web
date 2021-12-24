@@ -15,7 +15,8 @@ export default createStore({
         prefLanguage: localStorage.getItem('language'),
         bookingInfo: '',
         counter: 0,
-        tempRoute: ''
+        tempRoute: '',
+        class: ''
     },
     mutations: {
         changePrefCurrency(state, payload){
@@ -59,6 +60,9 @@ export default createStore({
         store_token(state, payload) {
             localStorage.setItem('access-token', payload);
             state.token = payload;
+        },
+        save_class_info(state, payload) {
+            state.class = payload;
         },
         clear_user(state) {
             state.user = {};
@@ -124,7 +128,13 @@ export default createStore({
         },
         fetchuserdata({commit}) {
             return new Promise(async (resolve, reject)=> {
-                net.httpSec.get('/user/profile/me')
+                
+                const headers = { 'x-access-token':`Bearer ${this.state.token}` }
+                
+                axios.get(
+                    `${baseURL}/user/profile/me`,
+                    { headers: headers }
+                )
                 .then((response)=> {
                     const user = response.data.user;
                     commit('store_user', user);
@@ -240,6 +250,63 @@ export default createStore({
 
                 });
             });
+        },
+        sendmessage({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const headers= {
+                    'x-access-token':`Bearer ${this.state.token}`
+                };
+
+
+                await axios.post(`${baseURL}/chat/sendmessage`, payload,
+                    { headers: headers }
+                ).then((response)=> {
+                    resolve(response.data.messages);
+
+                }).catch((error)=> {
+                    console.log(error);
+                    reject(error)
+
+                });
+            });
+        },
+        fetchmessages({commit}, payload) {
+            return new Promise(async (resolve, reject) => {
+                const headers = { 'x-access-token':`Bearer ${this.state.token}` }
+                
+                await axios.get(`${baseURL}/chat/${payload}`,
+                    { headers: headers }
+                ).then((response)=> {
+                    resolve(response.data.messages);
+
+                }).catch((error)=> {
+                    console.log(error);
+                    reject(error)
+
+                });
+            });
+        },
+        fetchuser({commit}, payload) {
+            return new Promise( async (resolve, reject)=> {
+                const headers = { 'x-access-token':`Bearer ${this.state.token}` };
+
+                await axios.get(
+                    `${baseURL}/user/profile/${payload}`,
+                    { headers: headers }
+                )
+                .then((response)=> {
+                    resolve(response.data.user);
+                })
+                .catch((error)=> {
+                    reject(error);
+                });
+            });
+        },
+        setupclass({commit}, payload) {
+            return new Promise((resolve, reject)=> {
+                commit('save_class_info', payload);
+                resolve();
+            })
         }
     },
     getters: { 
@@ -248,7 +315,8 @@ export default createStore({
         tutorData: state => state.tutor,
         tutors: state => state.tutors,
         token: state => state.token,
-        bookingData: state => (state.bookingInfo == '') ?JSON.parse(localStorage.getItem('bookinginfo')) : state.bookingInfo
+        bookingData: state => (state.bookingInfo == '') ?JSON.parse(localStorage.getItem('bookinginfo')) : state.bookingInfo,
+        classData: state => state.class
     }
 
 });

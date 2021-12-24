@@ -1,36 +1,26 @@
 <template>
     <section class="lessons_frame">
         <div class="head">
-            <div class="section_title"> Lessons </div>
+            <div class="section_title"> Classes </div>
+        </div>
+
+        <div class="sub_nav">
+            <div
+                v-for="(subnav, index) in subnavs"
+                :key="index"
+                class="sub_menu_item"
+            >
+                <router-link
+                    class="menu_item_link"
+                    :to="subnav.path"
+                >
+                    <div class="label"> {{ subnav.label }} </div>
+                </router-link>
+            </div>
         </div>
 
         <div class="lessons_list">
-           
-            <VerticalList 
-                class="tutor_lessons"
-                v-if="
-                        user.role === 'tutor' &&
-                        tutor.lessons.length > 0 
-                    "
-                :lessons="tutor.lessons" 
-            />
-           
-            <StudentLessonsList
-                v-else-if="
-                        user.role === 'student' &&
-                        user.classes.length > 0
-                    "
-                :lessons="user.classes" 
-            />
-           
-            <div class="no_lesson" v-else>
-                <div>
-                    <div class="icon">
-                        <img src="@/assets/icons/empty.png" />
-                    </div>
-                <div class="label">You have not added any lesson</div>
-            </div>
-        </div>
+            <router-view />
         </div>
     </section>
 </template>
@@ -49,7 +39,17 @@ export default defineComponent({
 
         return {
             user,
-            tutor
+            tutor,
+            subnavs: [
+                {
+                    label: 'coming up',
+                    path: '/profile/classes'
+                },
+                {
+                    label: 'saved',
+                    path: '/profile/classes/saved'
+                },
+            ]
         }
     },
     methods: {
@@ -82,6 +82,42 @@ export default defineComponent({
 
     .tutor_lessons {
         width: 60%;
+    }
+
+    .sub_nav {
+        display: flex;
+        width: 100%;
+        margin-top: 3%;
+    }
+    .sub_menu_item {
+        height: 50px;
+    }
+    .sub_menu_item:hover {
+        border-bottom: 2px solid var(--paper-grey-200);
+    }
+    .sub_menu_item .icon {
+        width: 25px;
+        height: 25px;
+    }
+    .sub_menu_item .icon img {
+        filter: grayscale(100%);
+    }
+    .sub_menu_item .label {
+        text-transform: capitalize;
+        font-weight: 600;
+    }
+    .menu_item_link {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: max-content;
+        padding-left: 5px;
+        padding-right: 20px;
+        color: var(--paper-grey-600);
+    }
+    .menu_item_link.router-link-exact-active {
+        border-bottom: 2px solid var(--burgundy-300);
+        color: var(--burgundy-300) !important;
     }
 
     .create_new_wrapper {

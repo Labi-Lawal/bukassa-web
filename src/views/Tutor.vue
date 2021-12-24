@@ -90,7 +90,13 @@
                     @buttonAction="closeBookingModal" 
                 />
                 
-                <TutorContactModal v-if="showContactModal" @buttonAction="closeContactModal" />
+                <TutorContactModal 
+                    v-if="showContactModal" 
+                    :tutorimage="tutor.profilePicture"
+                    :tutorname="tutor.tutorName"
+                    :tutoruserId="tutor.userId"
+                    @buttonAction="closeContactModal" 
+                />
                 
                 <BackDrop @buttonAction="closeModal"/>
 

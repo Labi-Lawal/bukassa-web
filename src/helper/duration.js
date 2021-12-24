@@ -2,29 +2,29 @@ const convertMilliSecsToMins = (durationInMs)=> {
     return durationInMs / 60000;
 };
 
-const timeRemaning = (datetime)=> {
-    console.log(datetime);
+const timeRemaning = (datetime, duration)=> {
 
     var timeRemains = '',
 
-    eventDate = new Date(datetime),
+    eventDateStart = new Date(datetime).getTime(),
+    classDuration = eventDateStart + duration,
     today = new Date().getTime(),
 
-    diffInSecs = Math.floor((eventDate.getTime() - today) / 1000),
+    diffInMilliSecs = Math.floor(eventDateStart - today),
+    diffInSecs = Math.floor(diffInMilliSecs / 1000),
     diffInMins = Math.floor(diffInSecs / 60),
     diffInHrs = Math.floor(diffInMins / 60),
     diffInDays = Math.floor(diffInHrs / 24),
     diffInWeeks = Math.floor(diffInDays / 7);
 
-    console.log(diffInWeeks);
-    
-
-    if(diffInWeeks == 0) {
-        if(diffInDays == 0) {
-            if(diffInHrs == 0) {
-                if(diffInMins == 0) {
-                    if(diffInSecs == 0) timeRemains = `Live`;
-                    else timeRemains = `in ${diffInSecs} seconds`;
+    if(diffInWeeks <= 0) {
+        if(diffInDays <= 0) {
+            if(diffInHrs <= 0) {
+                if(diffInMins <= 0) {
+                    if(diffInSecs <= 0) {
+                        if(Math.floor(classDuration - today) <= 0) timeRemains = `Done`;
+                        else timeRemains = `In Session`;
+                    } else timeRemains = `in ${diffInSecs} seconds`;
                 } else timeRemains = `in ${diffInMins} minutes`;
             } else timeRemains = `in ${diffInHrs} hours`;
         } else timeRemains = `in ${diffInDays} days`;

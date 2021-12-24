@@ -33,7 +33,7 @@
               <div class="lesson_title_middle">
                 {{ bookingInfo.lesson.language }} 
                 <div class="dot"> </div> 
-                {{ convertMilliSecsToMins(bookingInfo.lesson.durationInMilliSecs) }} mins
+                {{ convertDuration(bookingInfo.lesson.durationInMilliSecs) }} mins
             </div>
             </div>
           </div>
@@ -76,7 +76,7 @@
 <script>
 import Header from '@/components/Header.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
-import convertMilliSecsToMins  from "@/helper/duration.js";
+import duration  from "@/helper/duration.js";
 import appendCurreny  from "@/helper/currency.js";
 
 export default {
@@ -99,7 +99,6 @@ export default {
         paymentOptions,
         selectedPaymentMethod,
         selectedIndex,
-        convertMilliSecsToMins,
         appendCurreny,
         processingFee: 2.00,
         totalPrice: 0
@@ -130,6 +129,9 @@ export default {
       },
       calcTotal() {
         this.totalPrice = appendCurreny(this.bookingInfo.lesson.price + this.processingFee);
+      },
+      convertDuration(datetime) {
+        return duration.convertMilliSecsToMins(datetime);
       }
     },
     async beforeMount() {

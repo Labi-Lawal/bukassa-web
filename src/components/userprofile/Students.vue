@@ -2,20 +2,18 @@
     <section class="students">
         <div class="head">
             <div class="section_title"> Students </div>
-            <div class="create_new_wrapper">
-                <ButtonIconText 
-                    buttonText="Create New Lesson"
-                    buttonIcon="plus"
-                />
-            </div>
         </div>
-        <div class="lessons_list">
-            <GridList
-                v-if="userLessons.length > 0"
-                :list-items="userLessons"
+        <div 
+            class="lessons_list grid_list" 
+            v-if="students.length > 0"
+        >
+            <UserCard
+                v-for="(student, index) in students"
+                :key="index"
+                :name="student.fullname"
             />
         </div>
-        <div class="no_lesson">
+        <div class="no_lesson" v-else>
             <div>
                 <div class="icon">
                     <img src="" />
@@ -28,21 +26,31 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import GridList from "@/components/Lists/grid-list.vue";
-import ButtonIconText from "@/components/buttons/ButtonIconText.vue";
+import UserCard from "@/components/Card/UserCard.vue";
 
 export default defineComponent({
     name:"students",
-    components: { GridList, ButtonIconText },
+    components: { UserCard },
     data() {
         console.log(this.$store.getters.tutorData);
         return {
-            students: this.$store.getters.tutorData.lessons
+            students: []
         }
     },
     methods: {
-        
+        fetchStudentDetails() {            
+            this.$store.getters.tutorData.students.forEach(async student => {
+                
+                await this.$store.dispatch('fetchuser', student)
+                .then((studentDetails)=> this.students.push(studentDetails))
+                .catch((error)=> console.log(error.response));
+
+            });
+        }
     },
+    beforeMount() {
+        this.fetchStudentDetails();
+    }
 });
 </script>
 
@@ -57,6 +65,16 @@ export default defineComponent({
     .section_title {
         font-size: 150%;
     }
+
+    .lessons_list {
+        margin-top: 5%;
+    }
+    .grid_list {
+        --gap: 10px;
+        display: grid;
+        grid-template-columns: calc(calc(100% - var(--gap))/3) calc(calc(100% - var(--gap))/3) calc((100% - var(--gap))/3);
+    }
+
     .create_new_wrapper {
         margin-left: auto;
         width: 15%;

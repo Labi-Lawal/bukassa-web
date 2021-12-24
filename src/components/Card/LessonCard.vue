@@ -3,7 +3,7 @@
         <div class="lesson_card_details">
             <div class="title">{{ title }}</div>
             <div class="lang">{{ language }}</div>
-            <div class="duration">{{ convertMilliSecsToMins(duration) }} Minutes </div>
+            <div class="duration">{{ convertTime(duration) }} Minutes </div>
         </div>
         <div class="price">{{ appendCurreny(price) }}</div>
     </div>
@@ -12,17 +12,21 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import  appendCurreny  from "../../helper/currency.js";
-import  convertMilliSecsToMins  from "../../helper/duration.js";
+import  duration  from "../../helper/duration.js";
 
 export default defineComponent({
     name: 'lesson-card',
     props: ['title', 'price', 'duration', 'language'],
     data() {
         return {
-            appendCurreny,
-            convertMilliSecsToMins
+            appendCurreny
         }
-    }
+    },
+    methods: {
+        convertTime(time) {
+            return duration.convertMilliSecsToMins(time);
+        }
+    },
 });
 </script>
 
