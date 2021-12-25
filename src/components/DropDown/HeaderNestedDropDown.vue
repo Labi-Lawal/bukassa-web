@@ -198,6 +198,7 @@ export default defineComponent({
     justify-content: space-between;
     cursor: pointer;
     transition: 0.2s;
+    color: var(--paper-grey-800);
 }
 .options > div:hover {
     background: var(--black-100);
@@ -207,5 +208,6 @@ export default defineComponent({
 .options > div {
     position: relative;
 }
+
 
 </style>

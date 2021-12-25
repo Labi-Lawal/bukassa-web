@@ -82,8 +82,8 @@ export default createStore({
     actions: { 
         signin({commit}, payload) {    
             return new Promise( async (resolve, reject)=>{
-                try {
-                    const response = await net.http.post('/user/auth', payload),
+                await axios.post('/user/auth',  payload)
+                .then((response)=> {
                     token = response.data.token,
                     user = response.data.user;
 
@@ -91,10 +91,11 @@ export default createStore({
 
                     resolve();
 
-                } catch (error) { 
+                })
+                .catch((error)=> {
                     commit('clear_user');
                     reject(error);
-                }
+                });
             });
         },
         updatesigninstatus({commit}, payload){
@@ -105,19 +106,20 @@ export default createStore({
         },
         register({commit}, payload) {    
             return new Promise( async (resolve, reject)=>{
-                try {
-                    const response = await net.http.post('/user/register', payload),
+                await axios.post('/user/register', payload)
+                .then((response)=> {
                     token = response.data.token,
                     user = response.data.user;
 
                     commit('auth_success', { token, user });
 
                     resolve();
-    
-                } catch (error) { 
+
+                })
+                .catch((error)=> {
                     commit('clear_user');
                     reject(error);
-                }
+                });
             });
         },
         signout({commit}) {
@@ -310,6 +312,7 @@ export default createStore({
         }
     },
     getters: { 
+        tempRoute: state => state.tempRoute,
         isSignedIn: state => state.isSignedIn,
         userData: state => state.user,
         tutorData: state => state.tutor,

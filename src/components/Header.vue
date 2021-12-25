@@ -1,41 +1,83 @@
 <template>
     <header>
+        <font-awesome-icon 
+            :icon="['fas', 'bars']" 
+            class="menu_bar" 
+            @click="toggleSideBar()"
+        />
+        
         <div class="logo">
             <router-link to="/">
                 Bukassa
             </router-link>
         </div>
+     
         <div class="drop-down">
             <HeaderNestedDropDown />            
         </div>
+       
         <nav>
             <router-link to="/tutors/explore">Find a tutor</router-link>
             <router-link to="/community">Community</router-link>
             <router-link to="/become-tutor" v-if="userRole !== 'tutor'">Become a tutor</router-link>
         </nav>
+       
         <div class="user-nav" v-show="isLoggedIn" @click="toggleProfileMenu">
             <div class="user-image">
                 <img src="../assets/userimage.png">
             </div>
             <UserProfileMenu v-if="showUserMenu" :nav="nav" />
         </div>
-        <div class="no-user-nav" v-show="!isLoggedIn">
-            <div class="login-btn">
-                <router-link to="/login">
-                    <div class="login-btn-text">Login</div>
-                </router-link>
-            </div>
-            <div class="register-btn">
-                <router-link to="/register">
-                    <div class="register-btn-text">Join Us Now</div>
-                </router-link>
+            
+        <router-link to="/login" class="login_btn">Login</router-link>
+        
+        <router-link to="/register" class="register_btn">
+            Join Us Now
+        </router-link>
+    
+        <router-link to="/register" class="become_tutorial_btn">
+            Become Translator
+        </router-link>
+
+    
+        
+        <div class="mobile_nav_container" v-if="showSideBar">
+            <div class="layer" @click="toggleSideBar()"></div>
+            <div class="mobile_nav_wrapper">
+                <div class="user">
+                    <router-link to="/login" class="mobile_login_btn">
+                        <div class="nav">
+                            Login
+                        </div>
+                    </router-link>
+                </div>
+
+                <div class="mobile_nav_list_frame">
+                    
+                    <router-link to="/tutors/explore">
+                        <div class="nav">
+                            Find a tutor
+                        </div>
+                    </router-link>
+                    
+                    <router-link to="/community">
+                        <div class="nav">
+                            Community
+                        </div>
+                    </router-link>
+
+                    <router-link to="/become-tutor" v-if="userRole !== 'tutor'">
+                        <div class="nav">
+                            Become a tutor
+                        </div>
+                    </router-link>
+
+                </div>
+
+                <div class="copyright">&copy; 2021 Bukassa, All rights reserved.</div>
             </div>
         </div>
-        <div class="become-translator-btn">
-            <router-link to="/register">
-                <div class="register-btn-text">Become A Translator</div>
-            </router-link>
-        </div>
+
     </header>
 </template>
 
@@ -121,7 +163,8 @@ export default {
                     path: '/logout',
                     icon: ''
                 }
-            ]
+            ],
+            showSideBar: false
         }
     },
     methods: { 
@@ -162,6 +205,9 @@ export default {
         },
         toggleProfileMenu() {
             this.showUserMenu = !this.showUserMenu;
+        },
+        toggleSideBar() {
+            this.showSideBar = !this.showSideBar;
         }
     },
     beforeMount() {
@@ -205,6 +251,9 @@ export default {
         height: 80px;
         padding: 0% 5%;
     }
+    .menu_bar {
+        display: none;
+    }
     div.logo {
         font-weight: 700;
         font-size: 200%;
@@ -243,35 +292,155 @@ export default {
         overflow: hidden;
         background: rgb(238, 238, 238);
     }
-    div.no-user-nav {
+
+    div.no_user_nav {
         display: flex;
         justify-content: space-between;
+        height: 100%;
     }
-    div.no-user-nav > div {
+    div.no_user_nav > div {
         border-radius: 5px;
         font-weight: 600;
         font-size: 100%;
     }
-    div.login-btn {
+    .login_btn {
         font-weight: 700;
+        margin: auto 0;
+        margin-right: 1%;
+        width: max-content;
     }
-    div.login-btn-text {
-        padding: 15px 20px;
-    }
-    div.register-btn, .become-translator-btn {
+    
+    .become_tutorial_btn,
+    .register_btn {
         background: var(--burgundy-100);
         color: white;
         overflow: hidden;
-    }
-    div.register-btn-text{
-        padding: 15px 20px;
-    }
-
-    .become-translator-btn {
-        margin-left: 2%;
         border-radius: 5px;
         font-weight: 600;
-        font-size: 100%;
+        font-size: 90%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        margin: auto 0;
+        padding: 0 1%;
+    }
+
+    .become_tutorial_btn {
+        margin-left: 2%;
+    }
+
+    .mobile {
+        display: none; 
+    }
+
+    @media screen and (max-width: 1280px) {
+        div.drop-down {
+            width: 12%;
+        }
+            
+    } 
+
+    @media screen and (max-width: 1100px) {
+        div.logo {
+            font-size: 150%;
+        }
+        div.drop-down {
+            width: 15%;
+            font-size: 80%;
+        }
+        nav > * {
+            padding: 0px 10px 0px 0px;
+            font-size: 90%;
+        }  
+
+        .login_btn {
+            display: none;
+        }
+        .register_btn {
+            display: none;
+        }
+
+        .become_translator_btn {
+            font-size: 85%;
+            height: 40%;
+        }
+    } 
+
+    @media screen and (max-width: 750px) {
+        .menu_bar {
+            display: block;
+            font-size: 140%;
+            margin-right: 2%;
+        }
+        .drop-down, 
+        nav, 
+        .user-nav,
+        .notmobile {
+            display: none;
+        }
+        .logo {
+            margin-right: auto;
+        }
+
+        .mobile {
+            display: block;
+        }
+
+        .mobile_nav_container {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        .mobile_nav_container .layer {
+            background: rgba(0, 0, 0, 0.568);
+            width: 100%;
+            height: 100%;
+        }
+        .mobile_nav_container .mobile_nav_wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: white;
+            width: 40%;
+            height: 100%;
+            padding: 5% 0;
+            z-index: 1;
+        }
+        .user {
+            height: 10%;
+        }
+        .mobile_login_btn .nav {
+            background: black;
+            color: white;
+            border-radius: 5px;
+            width: 70%;
+            margin: 0 auto;
+        }
+        .mobile_nav_list_frame {
+            height: 80%;
+        }
+        .nav {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding-left: 10%;
+            font-weight: 700;
+            color: var(--paper-grey-700);
+        }
+
+        .copyright {
+            color: var(--paper-grey-600);
+            font-size: 75%;
+            width: 80%;
+            height: 5%;
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+        }
+
     }
 
 </style>

@@ -1,44 +1,74 @@
 <template>
-    <body>
+    <div class="header_wrapper">
         <Header />
-        <section class="body">
-            <div class="image-box">
+    </div>
+    <section class="body">
+        <div class="image_wrapper">
+            <img src="@/assets/class1.jpg" />
+            <div class="overlay"></div>
+        </div>
+        <div class="form-box-frame">
+            <div class="form-box">
+                <div class="heading">Create A New Account To Get Started Connecting With The Best Tutors</div>
+                <div class="form">
+                
+                <div class="error-msg" v-if="formModel.error != ''">{{ formModel.error }}</div>
 
-            </div>
-            <div class="form-box-frame">
-                <div class="form-box">
-                    <div class="heading">Create A New Account To Get Started Connecting With The Best Tutors</div>
-                    <div class="form">
-                    
-                    <div class="error-msg" v-if="formModel.error != ''">{{ formModel.error }}</div>
+                <form @submit.prevent="signInButtonPressed">
+                    <input 
+                        v-model="fullnameModel.value" 
+                        @keyup="validateFullname()" 
+                        :type="fullnameModel.type" 
+                        class="fullname" 
+                        placeholder="Fullname" 
+                        autocomplete="off"
+                        :class="{
+                            error: (fullnameModel.error != '') ?true :false
+                        }"
+                    >
+                    <div class="error-message" v-if="fullnameModel.error != ''">{{ fullnameModel.error }}</div>
 
-                    <form @submit.prevent="signInButtonPressed">
-                        <input v-model="fullnameModel.value" @keyup="validateFullname()" :type="fullnameModel.type" class="fullname" placeholder="Fullname" autocomplete="off">
-                        <div class="error-message" v-if="fullnameModel.error != ''">{{ fullnameModel.error }}</div>
+                    <input 
+                        v-model="emailModel.value" 
+                        @keyup="validateEmail()" 
+                        :type="emailModel.type" 
+                        class="email" 
+                        placeholder="Email" 
+                        autocomplete="off"
+                        :class="{
+                            error: (emailModel.error != '') ?true :false
+                        }"
+                    >
+                    <div class="error-message" v-if="emailModel.error != ''">{{ emailModel.error }}</div>
 
-                        <input v-model="emailModel.value" @keyup="validateEmail()" :type="emailModel.type" class="email" placeholder="Email" autocomplete="off">
-                        <div class="error-message" v-if="emailModel.error != ''">{{ emailModel.error }}</div>
+                    <input 
+                        v-model="passwordModel.value" 
+                        @keyup="validatePassword()" 
+                        :type="passwordModel.type" 
+                        placeholder="Password" 
+                        autocomplete="off"
+                        :class="{
+                            error: (emailModel.error != '') ?true :false
+                        }"
+                    >
+                    <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
-                        <input v-model="passwordModel.value" @keyup="validatePassword()" :type="passwordModel.type" placeholder="Password" autocomplete="off">
-                        <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
-
-                        <div class="register_btn_wrapper">
-                            <ButtonPlainText buttonText="CREATE NEW ACCOUNT" :isLoading="isLoading" @button-action="registerUser" /> 
-                        </div>
-
-                        <div class="legal">
-                            By signing up, you agree to our Terms, Data Policy and Cookie Policy.
-                        </div>
-
-                        <div class="orsignin">
-                            Already have an account? <a href='/signin'>Sign In</a>
-                        </div>
-                    </form>
+                    <div class="register_btn_wrapper">
+                        <ButtonPlainText buttonText="CREATE NEW ACCOUNT" :isLoading="isLoading" @button-action="registerUser" /> 
                     </div>
+
+                    <div class="legal">
+                        By signing up, you agree to our Terms, Data Policy and Cookie Policy.
+                    </div>
+
+                    <div class="orsignin">
+                        Already have an account? <a href='/login'>Sign In</a>
+                    </div>
+                </form>
                 </div>
             </div>
-        </section>
-    </body>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -46,7 +76,6 @@
 import Header from '@/components/Header.vue';
 import AccountTypes from '@/components/account-types.vue';
 import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
-import net from '@/services/http';
 
 export default {
     components: { Header, AccountTypes, ButtonPlainText },
@@ -162,22 +191,62 @@ export default {
 </script>
 
 <style scoped>
-  section.body {
-        display: flex;
-        padding: 0% 5%;
-        height: calc(100vh - 71px);
+    .header_wrapper {
+        position: absolute;
+        width: 100%;
+        z-index: 10000;
     }
+    .header_wrapper header {
+        box-shadow: none;
+    }
+    .header_wrapper header:deep > * {
+        color: white !important;
+    }
+    .header_wrapper header:deep nav > * {
+        color: white !important;
+    }
+
+    section.body {
+        display: flex;
+        padding: 0;
+        height: 100vh;
+    }
+
+    div.image_wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    .overlay {
+        background: linear-gradient(to right, rgba(18, 18, 18, 0.432),  rgba(18, 18, 18, 0.808));
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
     div.image-box {
         width: 45%;
         height: 80vh;
         margin: auto 0;
     }
     div.form-box-frame {
-        width: 100%;
-        height: 100%;
+        width: 40%;
+        height: 80%;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: absolute;
+        right: 10%;
+        bottom: 5%;
+        background: rgba(255, 255, 255, 0.16);
+        border-radius: 10px;
     }
 
     div.error-message{
@@ -187,41 +256,39 @@ export default {
         font-size: 90%;
     }
     div.form-box {
-        width: 40%;
+        width: 70%;
         text-align: center;
     }
     div.heading {
-        margin: 0 auto;
-        width: 80%;
-        font-weight: 500;
-        color: grey;
-        font-size: 110%;
+        padding: 0% 5%;
+        font-weight: 700;
+        color: var(--paper-grey-100);
+        font-size: 160%;
         margin-bottom: 5%;
+        /* width: 75%; */
+        text-align: center;
     }
-    div.form-box input, div.form-box select {
+    div.form-box input {
         width: 80%;
         height: 40px;
         font-weight: 500;
         padding: 1% 5%;
         font-size: 110%;
-        border: 1px solid lightgrey;
-        color: rgb(83, 83, 83);
+        border: 1px solid var(--paper-grey-100);
+        background: none;
+        color: white;
         outline: none;
         margin-top: 10px;
         border-radius: 5px;
     }
-    div.form-box select {
-        width: 91%;
-        height: 50px;
-        color: rgb(146, 146, 146);
-    }
+    
     div.form-box input::placeholder {
-        color: rgb(146, 146, 146);
+        color: var(--paper-grey-400);
     }
     div.form-box input.error {
-        border: 1px solid red;
+        border: 1px solid rgb(255, 86, 86);
     }
-    div.form-box input.error ~ div.error-message{
+    div.form-box input.error ~ div.error-message {
         display: block;
     }
     .register_btn_wrapper {
@@ -231,6 +298,7 @@ export default {
         margin-top: 5%;
     }
     .register_btn_wrapper button {
+        border-radius: 5px;
         border: none;
         background: var(--paper-grey-900);
         color: white;
@@ -238,7 +306,7 @@ export default {
     div.legal{
         text-align: center;
         padding: 8% 0%;
-        color: grey;
+        color: var(--paper-grey-400);
         width: 90%;
         margin: 0 auto;
     }
@@ -247,14 +315,37 @@ export default {
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        color: grey;
+        color: var(--paper-grey-300);
     }
     div.orsignin a{
         font-weight: 700;
         font-size: 110%;
-        color: #AE1919;
+        color: var(--paper-grey-200);
     }
     .hidden {
         display: none;
+    }
+
+    @media screen and (max-width: 1200px) {
+        div.form-box-frame {
+            width: 80%;
+            right: 10%;
+        }
+    }
+
+    @media screen and (max-width: 630px) {
+        div.form-box {
+            width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        div.form-box-frame {
+            width: 90%;
+            right: 5%;
+        }
+        div.form-box {
+            width: 100%;
+        }
     }
 </style>
