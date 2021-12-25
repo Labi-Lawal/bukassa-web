@@ -2,12 +2,14 @@
     <div class="header_wrapper">
         <Header />
     </div>
+
     <section class="body">
         <div class="image_wrapper">
             <img src="@/assets/class1.jpg" />
             <div class="overlay"></div>
         </div>
-        <div class="form-box-frame">
+        
+        <div class="form-box-frame" v-if="roleSelected">
             <div class="form-box">
                 <div class="heading">Create A New Account To Get Started Connecting With The Best Tutors</div>
                 <div class="form">
@@ -62,13 +64,43 @@
                     </div>
 
                     <div class="orsignin">
-                        Already have an account? <a href='/login'>Sign In</a>
+                        Already have an account? <router-link to='/login'>Sign In</router-link>
                     </div>
                 </form>
                 </div>
             </div>
         </div>
+
+        <section class="select_role_container" v-else> 
+                <div class="title">Select Your Purpose</div>
+
+                <div class="role_options grid_list col_3">
+                    <div 
+                        class="option" 
+                        v-for="(role, index) in roles"
+                        :key="index"
+                        @click="selectRole(role.value)"
+                    >
+                        <div class="img_wrapper">
+                            <img :src="role.image" />
+                        </div>
+                        <div class="content_wrapper">
+                            <div class="text_wrapper">
+                                <div class="title">
+                                    <div class="large">{{ role.title }}</div>
+                                </div>
+                                <div class="desc">
+                                    {{ role.desc }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+        </section>
     </section>
+    
 </template>
 
 <script>
@@ -93,7 +125,29 @@ export default {
             fullnameModel,
             formModel,
             typeSelected,
-            isLoading: false
+            isLoading: false,
+            roleSelected: (this.$store.getters.registrationRole != '') ?true :false,
+            role: this.$store.getters.registrationRole,
+            roles: [
+                {
+                    title: 'student',
+                    value: 'student',
+                    desc: 'Excited to explore and learn new languages from the experts',
+                    image: require("../assets/class_student.jpg")
+                },
+                {
+                    title: 'Parent',
+                    value: 'parent',
+                    desc: 'Manage lessons and payments for your child',
+                    image: require("../assets/class_student.jpg")
+                },
+                {
+                    title: 'tutor',
+                    value: 'tutor',
+                    desc: 'Excited to explore and learn new languages from the experts',
+                    image: require("../assets/class_tutor.jpg")
+                }
+            ]
         }
     },
     methods: {
@@ -185,6 +239,12 @@ export default {
             
             if(emailRegExp.test(email)) return true;
             else false;
+        },
+        selectRole(value) {
+
+            this.role = value;
+            this.$store.dispatch('storerole', this.role)
+            .then(()=> this.roleSelected = true );
         }
     }
 }
@@ -215,7 +275,7 @@ export default {
     div.image_wrapper {
         width: 100%;
         height: 100%;
-        position: relative;
+        position: fixed;
     }
     img {
         height: 100%;
@@ -223,7 +283,7 @@ export default {
         object-fit: cover;
     }
     .overlay {
-        background: linear-gradient(to right, rgba(18, 18, 18, 0.432),  rgba(18, 18, 18, 0.808));
+        background: linear-gradient(to right, rgba(18, 18, 18, 0.753),  rgba(18, 18, 18, 0.911));
         top: 0;
         left: 0;
         width: 100%;
@@ -322,20 +382,176 @@ export default {
         font-size: 110%;
         color: var(--paper-grey-200);
     }
+    
+    .select_role_container {
+        margin-top: 7%;
+        padding: 2% 0;
+        height: 70vh;
+        background: rgba(255, 255, 255, 0.203);
+        position: absolute;
+        width: 80%;
+        left: 10%;
+        border-radius: 10px;
+    }   
+    .select_role_container > .title {
+        margin-left: 10%;
+        color: white;
+        font-size: 300%;
+        font-weight: 400;
+    }
+    .role_options {
+        width: 80%;
+        margin: 8% auto 0;
+    }
+    
+    .grid_list {
+        display: grid;
+        --div: 3.3;
+        grid-template-columns: calc(100% / var(--div)) calc(100% / var(--div)) calc(100% / var(--div));
+        justify-content: space-between;
+    }
+    .option {
+        border-radius: 15px;
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+        transition: 0.2s;
+    }
+    .option:hover {
+        transform: scale(1.1);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+    }
+    .option:active {
+        transform: scale(1);
+    }
+    .option .img_wrapper {
+        width: 100%;
+        height: 100%;
+    }
+    .option .content_wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.694);
+        padding: 5%;
+    }
+    .option .text_wrapper {
+        position: absolute;
+        bottom: 5%;
+        width: 100%;
+        height: 40%;
+    }
+    .text_wrapper .title {
+        color: var(--paper-grey-100);
+        display: flex;
+        align-items: center;
+        font-size: 180%;
+        text-transform: capitalize;
+    }
+    .text_wrapper .title .small {
+        font-size: 80%;
+    }
+    .text_wrapper .title .large {
+        font-size: 150%;
+    }
+    .text_wrapper .desc {
+        color: var(--paper-grey-200);
+        width: 70%;
+        font-size: 140%;
+        font-weight: 400;
+    }
+   
+
     .hidden {
         display: none;
     }
 
     @media screen and (max-width: 1200px) {
-        div.form-box-frame {
+        .form-box-frame {
             width: 80%;
             right: 10%;
+        }
+        .select_role_container {
+            margin-top: 10%;
+            min-height: 70vh;
+            height: unset;
+            width: 90%;
+            left: 5%;
+        }
+        .select_role_container > .title {
+            margin-left: 5%;
+            font-size: 250%;
+        }
+        .role_options {
+            width: 90%;
+            margin: 5% auto 0;
+        }
+        .grid_list {
+            --div: 3.2;
+        }
+
+        .text_wrapper .title {
+            color: var(--paper-grey-100);
+            display: flex;
+            align-items: center;
+            font-size: 130%;
+            text-transform: capitalize;
+        }
+        .text_wrapper .desc {
+            width: 85%;
+            font-size: 130%;
+            font-weight: 400;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+
+        .select_role_container {
+            margin-top: 20vh;
+        }
+        .option .text_wrapper {
+            width: 90%;
+        }
+        .text_wrapper .title .small {
+            font-size: 80%;
+        }
+        .text_wrapper .title .large {
+            font-size: 140%;
+        }
+        .text_wrapper .desc {
+            width: 90%;
+            font-size: 130%;
+            font-weight: 400;
         }
     }
 
     @media screen and (max-width: 630px) {
         div.form-box {
             width: 90%;
+        }
+        .select_role_container {
+            margin-top: 15vh;
+        }
+
+        .select_role_container > .title {
+            margin: 0 0 0;
+            text-align: center;
+            font-size: 150%;
+        }
+        .grid_list {
+            display: block;
+        }
+        .option {
+            height: 200px;
+            margin-bottom: 3%;
+        }
+        .option .text_wrapper {
+            position: absolute;
+            bottom: 5%;
+            height: 60%;
         }
     }
 
@@ -346,6 +562,17 @@ export default {
         }
         div.form-box {
             width: 100%;
+        }
+
+        .option .text_wrapper {
+            height: 50%;
+        }
+        .text_wrapper .title {
+            font-size: 150%;
+        }
+        .text_wrapper .desc {
+            font-size: 100%;
+            font-weight: 400;
         }
     }
 </style>

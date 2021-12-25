@@ -16,7 +16,8 @@ export default createStore({
         bookingInfo: '',
         counter: 0,
         tempRoute: '',
-        class: ''
+        class: '',
+        role: ''
     },
     mutations: {
         changePrefCurrency(state, payload){
@@ -77,9 +78,18 @@ export default createStore({
             this.commit('store_token', payload.token);
             this.commit('store_user', payload.user);
             this.commit('update_auth_status', true);
+        },
+        store_user(state, payload) {
+            state.role = payload;
         }
     },
     actions: { 
+        storerole({commit}, payload){
+            return new Promise((resolve)=> {
+                commit('store_user', payload);
+                resolve();
+            })
+        },
         signin({commit}, payload) {    
             return new Promise( async (resolve, reject)=>{
                 await axios.post('/user/auth',  payload)
@@ -312,6 +322,7 @@ export default createStore({
         }
     },
     getters: { 
+        registrationRole: state => state.role,
         tempRoute: state => state.tempRoute,
         isSignedIn: state => state.isSignedIn,
         userData: state => state.user,
