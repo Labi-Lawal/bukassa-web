@@ -50,7 +50,7 @@
                         placeholder="Password" 
                         autocomplete="off"
                         :class="{
-                            error: (emailModel.error != '') ?true :false
+                            error: (passwordModel.error != '') ?true :false
                         }"
                     >
                     <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
@@ -137,9 +137,9 @@ export default {
                 },
                 {
                     title: 'Parent',
-                    value: 'parent',
+                    value: 'student',
                     desc: 'Manage lessons and payments for your child',
-                    image: require("../assets/class_student.jpg")
+                    image: require("../assets/class_parent.jpg")
                 },
                 {
                     title: 'tutor',
@@ -156,21 +156,22 @@ export default {
                 var body = {
                     fullname: this.fullnameModel.value,
                     email: this.emailModel.value,
-                    password: this.passwordModel.value
+                    password: this.passwordModel.value,
+                    role: this.$store.getters.registrationRole
                 };
 
                 this.isLoading = true;
             
-                this.$store.dispatch('register', body)
+                await this.$store.dispatch('register', body)
                 .then(()=> {
                     if(this.$store.state.tempRoute != '') 
-                        this.$router.push({ path: `/${this.$store.state.tempRoute}`})
-                    else 
-                        this.$router.push({ path: '/profile' })
+                        this.$router.push(`/${this.$store.state.tempRoute}`)
+
+                    else this.$router.push('/profile')
                 })
                 .catch((error)=> {
                     this.isLoading = false;
-
+                  
                     if( error.response.status == 409 )
                         this.emailModel.error = error.response.data.message
                     if (error.response.status == 422 )
@@ -298,13 +299,14 @@ export default {
     }
     div.form-box-frame {
         width: 40%;
-        height: 80%;
+        height: 60%;
+        padding: 5% 0;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
         right: 10%;
-        bottom: 5%;
+        top: 15vh;
         background: rgba(255, 255, 255, 0.16);
         border-radius: 10px;
     }
@@ -557,11 +559,18 @@ export default {
 
     @media screen and (max-width: 500px) {
         div.form-box-frame {
+            margin-bottom: 5%;
             width: 90%;
             right: 5%;
+            height: unset;
+            min-height: 80%;
+            text-align: start;
         }
         div.form-box {
             width: 100%;
+        }
+        div.heading {
+            font-size: 130%;
         }
 
         .option .text_wrapper {
@@ -573,6 +582,14 @@ export default {
         .text_wrapper .desc {
             font-size: 100%;
             font-weight: 400;
+        }
+
+        div.legal{
+            font-size: 90%;
+        }
+        div.orsignin {
+            width: 90%;
+            font-size: 90%;
         }
     }
 </style>

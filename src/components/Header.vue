@@ -29,23 +29,27 @@
             <UserProfileMenu v-if="showUserMenu" :nav="nav" />
         </div>
             
-        <router-link to="/login" class="login_btn">Login</router-link>
+        <router-link to="/login" class="login_btn" v-if="!isLoggedIn">Login</router-link>
         
-        <router-link to="/register" class="register_btn">
+        <router-link to="/register" class="register_btn" v-if="!isLoggedIn">
             Join Us Now
         </router-link>
     
-        <router-link to="/register" class="become_tutorial_btn">
-            Become Translator
-        </router-link>
-
-    
         
-        <div class="mobile_nav_container" v-if="showSideBar">
+        <div class="mobile_nav_container mobile" v-if="showSideBar">
             <div class="layer" @click="toggleSideBar()"></div>
             <div class="mobile_nav_wrapper">
                 <div class="user">
-                    <router-link to="/login" class="mobile_login_btn">
+                    <div class="profile_min" v-if="isLoggedIn">
+                        <div class="user-image">
+                            <img src="../assets/userimage.png">
+                        </div>
+                        <div class="name">
+                            {{ fullname }}
+                        </div>
+                    </div>
+
+                    <router-link to="/login" class="mobile_login_btn" v-else>
                         <div class="nav">
                             Login
                         </div>
@@ -138,8 +142,9 @@ export default {
         const userRole = this.$store.getters.userData.role;
 
         return {
+            fullname: this.$store.getters.userData.fullname,
             userRole,
-            allCurrencies, 
+            allCurrencies,
             allLanguages, 
             isOptionsVisible, 
             selectedCurrencyIndex, 
@@ -151,11 +156,6 @@ export default {
                 {
                     label: 'Profile',
                     path: '/profile',
-                    icon: ''
-                },
-                {
-                    label: 'schedule',
-                    path: '/schedule',
                     icon: ''
                 },
                 {
@@ -336,8 +336,7 @@ export default {
     @media screen and (max-width: 1280px) {
         div.drop-down {
             width: 12%;
-        }
-            
+        }   
     } 
 
     @media screen and (max-width: 1100px) {
@@ -350,7 +349,6 @@ export default {
         }
         nav > * {
             padding: 0px 10px 0px 0px;
-            font-size: 90%;
         }  
 
         .login_btn {
@@ -371,12 +369,13 @@ export default {
             display: block;
             font-size: 140%;
             margin-right: 2%;
+            color: var(--burgundy-100);
         }
         .drop-down, 
         nav, 
         .user-nav,
         .notmobile {
-            display: none;
+            display: none !important;
         }
         .logo {
             margin-right: auto;
@@ -387,7 +386,7 @@ export default {
         }
 
         .mobile_nav_container {
-            position: absolute;
+            display: unset;
             width: 100%;
             height: 100vh;
             position: fixed;
@@ -411,6 +410,10 @@ export default {
         }
         .user {
             height: 10%;
+        }
+        .profile_min {
+            width: 90%;
+            margin: 0 auto;
         }
         .mobile_login_btn .nav {
             background: black;
@@ -441,6 +444,12 @@ export default {
             margin: 0 auto;
         }
 
+    }
+
+    @media screen and (max-width: 600px) {
+        .mobile_nav_container .mobile_nav_wrapper {
+            width: 60%;
+        }
     }
 
 </style>

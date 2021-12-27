@@ -92,10 +92,12 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
+import CompleteReg from "./CompleteRegModal.vue";
 
 export default defineComponent({
     name:"tutor-full-schedule-calendar",
     props:['events', 'showingTo'],
+    components: { CompleteReg },
     data() {
         var daysInMonth, day, month, year, daysLimit = 7, currentDate,
         isEventSet = null,
@@ -117,16 +119,18 @@ export default defineComponent({
         }
     },
     beforeMount(){  
-        for(var i=0; i<this.events.length; i++) {
-            const eventDate = new Date(this.events[i].datetime).getTime();
+        if(this.isTutor) {
+            for(var i=0; i<this.events.length; i++) {
+                const eventDate = new Date(this.events[i].datetime).getTime();
 
-            if(this.events[i].type.toLowerCase() == "lesson")
-                if(this.events[i].studentId == this.$store.getters.userData._id) this.allUserEventDates.push(eventDate)
-                else this.allBookedEventDates.push(eventDate);
+                if(this.events[i].type.toLowerCase() == "lesson")
+                    if(this.events[i].studentId == this.$store.getters.userData._id) this.allUserEventDates.push(eventDate)
+                    else this.allBookedEventDates.push(eventDate);
 
-            if(this.events[i].type.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
+                if(this.events[i].type.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
+            }
+            this.load();
         }
-        this.load();
     },
     methods: {
         load() {

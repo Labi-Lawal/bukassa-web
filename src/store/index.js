@@ -50,6 +50,8 @@ export default createStore({
             state.user = payload;
         },
         store_user(state, payload) {
+            
+            console.log(payload);
             state.user = payload;
         },
         store_tutor(state, payload) {
@@ -79,22 +81,25 @@ export default createStore({
             this.commit('store_user', payload.user);
             this.commit('update_auth_status', true);
         },
-        store_user(state, payload) {
+        store_user_role(state, payload) {
             state.role = payload;
+        },
+        clear_user_role(state, payload) {
+            state.role = '';
         }
     },
     actions: { 
         storerole({commit}, payload){
             return new Promise((resolve)=> {
-                commit('store_user', payload);
+                commit('store_user_role', payload);
                 resolve();
             })
         },
         signin({commit}, payload) {    
             return new Promise( async (resolve, reject)=>{
-                await axios.post('/user/auth',  payload)
+                await axios.post(`${baseURL}/user/auth`,  payload)
                 .then((response)=> {
-                    token = response.data.token,
+                    const token = response.data.token,
                     user = response.data.user;
 
                     commit('auth_success', { token, user });
@@ -116,18 +121,21 @@ export default createStore({
         },
         register({commit}, payload) {    
             return new Promise( async (resolve, reject)=>{
-                await axios.post('/user/register', payload)
+                await axios.post(`${baseURL}/user/register`, payload)
                 .then((response)=> {
-                    token = response.data.token,
+                    const token = response.data.token,
                     user = response.data.user;
 
                     commit('auth_success', { token, user });
+                    commit('clear_user_role');
 
                     resolve();
 
                 })
                 .catch((error)=> {
                     commit('clear_user');
+                    commit('clear_user_role');
+
                     reject(error);
                 });
             });
@@ -135,6 +143,8 @@ export default createStore({
         signout({commit}) {
             return new Promise( resolve=> {
                 commit('clear_user');
+                commit('clear_user_role');
+                
                 resolve();
             });
         },
@@ -143,14 +153,17 @@ export default createStore({
                 
                 const headers = { 'x-access-token':`Bearer ${this.state.token}` }
                 
-                axios.get(
+                await axios.get(
                     `${baseURL}/user/profile/me`,
                     { headers: headers }
                 )
                 .then((response)=> {
+              
                     const user = response.data.user;
                     commit('store_user', user);
-                    
+
+                    console.log(this.state.user);
+
                     resolve(user);
                 })
                 .catch((error)=> {
@@ -160,7 +173,13 @@ export default createStore({
         },
         fetchtutordata({commit}) {
             return new Promise(async (resolve, reject)=> {
-                await net.httpSec.get(`/tutors/me/${this.state.user.email}`)
+
+                const headers = { 'x-access-token':`Bearer ${this.state.token}` };
+
+                await axios.get(
+                    `${baseURL}/tutors/me/${this.state.user.email}`,
+                    { headers: headers }
+                )
                 .then((response)=> {
                     const tutor = response.data.data;
                     commit('store_tutor', tutor);
@@ -177,10 +196,11 @@ export default createStore({
             return new Promise(async (resolve, reject)=> {
                 
                 const headers = {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'x-access-token':`Bearer ${this.state.token}`
                 };
                 
-                await net.httpSec.post('/tutors/becometutor', payload, headers)
+                await axios.post(`${baseURL}/tutors/becometutor`, payload, headers)
                 .then((response)=> {
                     const tutor = response.data.tutor,
                     user = response.data.user;
@@ -198,7 +218,12 @@ export default createStore({
         },
         createlesson({commit}, payload) {
             return new Promise(async (resolve, reject)=> {
-                await net.httpSec.post('/tutors/createlesson', payload)
+                const headers = { 'x-access-token':`Bearer ${this.state.token}` };
+
+                await axios.post(
+                    `${baseURL}/tutors/createlesson`, payload,
+                    { headers: headers }
+                )
                 .then((response)=> {
                     const tutor = response.data.tutor;
                     commit('store_tutor', tutor);
@@ -209,10 +234,9 @@ export default createStore({
             });
         },
         fetchtutors({commit}) {
-            return new Promise((resolve, reject)=> {
-                net.http.get("/tutors/explore")
-                .then((response)=> {
-                    
+            return new Promise(async (resolve, reject)=> {
+                await axios.get(`${baseURL}/tutors/explore`)
+                .then((response)=> {                
                     const tutors = response.data.data;
                     commit('store_tutors', tutors);
 
@@ -225,8 +249,8 @@ export default createStore({
             });
         },
         fetchtutor({commit}, payload) {
-            return new Promise((resolve, reject)=> {
-                net.http.get(`/tutors/explore/${payload}`)
+            return new Promise(async (resolve, reject)=> {
+                await axios.get(`${baseURL}/tutors/explore/${payload}`)
                 .then((response)=> {
                     const tutor = response.data.data;
                     resolve(tutor);
@@ -242,11 +266,7 @@ export default createStore({
         },
         createevent({commit}, payload) {
             return new Promise(async (resolve, reject)=> {
-                
-                
-                const headers= {
-                    'x-access-token':`Bearer ${this.state.token}`
-                };
+                const headers= { 'x-access-token':`Bearer ${this.state.token}` };
                 
                 await axios.post(
                     `${baseURL}/tutors/${payload.tutorname}/newevent`, 
@@ -265,12 +285,10 @@ export default createStore({
         },
         sendmessage({commit}, payload) {
             return new Promise(async (resolve, reject)=> {
-                const headers= {
-                    'x-access-token':`Bearer ${this.state.token}`
-                };
+                const headers= {'x-access-token':`Bearer ${this.state.token}`};
 
-
-                await axios.post(`${baseURL}/chat/sendmessage`, payload,
+                await axios.post(
+                    `${baseURL}/chat/sendmessage`, payload,
                     { headers: headers }
                 ).then((response)=> {
                     resolve(response.data.messages);
@@ -284,7 +302,7 @@ export default createStore({
         },
         fetchmessages({commit}, payload) {
             return new Promise(async (resolve, reject) => {
-                const headers = { 'x-access-token':`Bearer ${this.state.token}` }
+                const headers = {'x-access-token':`Bearer ${this.state.token}`}
                 
                 await axios.get(`${baseURL}/chat/${payload}`,
                     { headers: headers }
@@ -300,7 +318,7 @@ export default createStore({
         },
         fetchuser({commit}, payload) {
             return new Promise( async (resolve, reject)=> {
-                const headers = { 'x-access-token':`Bearer ${this.state.token}` };
+                const headers = {'x-access-token':`Bearer ${this.state.token}`};
 
                 await axios.get(
                     `${baseURL}/user/profile/${payload}`,

@@ -51,6 +51,9 @@ const routes = [
     },
     beforeEnter(to, from, next) {
       if(store.getters.userData.role !== 'tutor') next()
+      else {
+        if(store.getters.tutorData == '') next()
+      }
     },
   },
   {
@@ -138,7 +141,7 @@ router.beforeEach ( async (to, from, next)=> {
         if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
           await store.dispatch('fetchtutordata')
           .then(()=> next())
-          .catch(()=> next('/logout'))
+          .catch(()=> next())
 
         } else next();
       } else {
@@ -149,7 +152,7 @@ router.beforeEach ( async (to, from, next)=> {
           if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
             await store.dispatch('fetchtutordata')
             .then(()=> next())
-            .catch(()=> next('/logout'))
+            .catch(()=> next())
           
           } 
           else next()

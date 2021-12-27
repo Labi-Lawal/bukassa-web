@@ -55,7 +55,7 @@
                     </form>
                     <div class="orsignup">
                         Don't have an account? 
-                        <router-link to="/register"> Create an account </router-link>
+                        <router-link to="/register"> Create account </router-link>
                     </div>
                 </div>
             </div>
@@ -104,13 +104,15 @@
                         password: this.passwordModel.value
                     };
 
-                    this.$store.dispatch("signin", body)
+                    await this.$store.dispatch("signin", body)
                     .then(()=> {
                         if(this.$store.getters.tempRoute)
                             this.$router.push(`/${this.$store.getters.tempRoute}`)
                         else this.$router.push('/profile')
                     })
                     .catch(error => {
+
+                        console.log(error);
                         this.isLoading = false;
 
                         if(error.response.status == 404)
@@ -304,6 +306,11 @@
         }
         div.form-box {
             width: 100%;
+        }
+
+        div.orsignup {
+            width: 90%;
+            font-size: 90%;
         }
     }
 </style>

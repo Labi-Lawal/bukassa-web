@@ -49,7 +49,14 @@
                 
             </div>
             <div class="profile_content">
-                <router-view />
+                <router-view 
+                    v-if="userInfo.role == 'tutor' && isTutor"
+                />
+                <div class="complete_registration_wrapper" v-else >
+                    <CompleteReg 
+                        text="To access this you have to complete your tutor registration"
+                    />
+                </div>
             </div>
         </section>
         <SiteFooter />
@@ -59,10 +66,11 @@
 <script>
     import Header from '../components/Header.vue';
     import SiteFooter from '../components/SiteFooter.vue';
+    import CompleteReg from '../components/tutor/CompleteRegModal.vue'
     
     export default {
-        components: { Header, SiteFooter },
-        data(){
+        components: { Header, SiteFooter, CompleteReg },
+        data() {
 
             const studentMenu = [
                 {
@@ -126,15 +134,16 @@
 
             var nav = [];
 
-            if(this.$store.getters.userData.role == 'student') 
+            if(this.$store.getters.userData.role == 'student')
                 nav = studentMenu;
-            if(this.$store.getters.userData.role == 'tutor') 
+            if(this.$store.getters.userData.role == 'tutor')
                 nav = tutorMenu;
 
             return { 
                 userInfo: this.$store.getters.userData,
                 nav,
-                currentNav: 0
+                currentNav: 0,
+                isTutor: (this.$store.getters.tutorData == '') ?false :true
             }
         },
         methods: { },
@@ -225,6 +234,10 @@
 
     .profile_content {
         width: 80%;
+        height: 70vh; 
         padding: 0 1%;
+    }
+    .complete_registration_wrapper {
+        margin-top: 10%;
     }
 </style>

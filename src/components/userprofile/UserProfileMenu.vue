@@ -6,7 +6,6 @@
       :key="index"
       :to="navItem.path"
     >
-      
       <div class="label"> {{ navItem.label }} </div>
     </router-link>
   </div>
@@ -19,8 +18,6 @@ export default defineComponent({
     name: "user-profile-menu",
     props: ["hide", "nav"],
     data() {
-      console.log(this.nav);
-
       return {
       
       }

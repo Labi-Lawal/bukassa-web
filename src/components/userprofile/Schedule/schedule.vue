@@ -2,6 +2,7 @@
     <section class="schedule">
         <TutorFullScheduleCalendar 
             v-if="user.role === 'tutor'"
+            :isTutor="tutorStatus"
             :events="tutor.events"
             showingTo="tutor"
         />
@@ -23,11 +24,12 @@ export default defineComponent({
     name: 'schedule',
     components: { TutorFullScheduleCalendar, StudentFullScheduleCalendar },
     data() {
-        var user, tutor;
+        var user, tutor, tutorStatus;
 
         return {
             user,
-            tutor
+            tutor,
+            tutorStatus
         }
     },
     beforeMount() {
@@ -35,6 +37,8 @@ export default defineComponent({
 
         if(this.user.role == 'tutor') {
             this.tutor = this.$store.getters.tutorData
+            if(this.tutor == '') this.tutorStatus = false;
+            else this.tutorStatus = true;
         }
     }
 });
