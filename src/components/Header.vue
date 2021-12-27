@@ -18,7 +18,7 @@
        
         <nav>
             <router-link to="/tutors/explore">Find a tutor</router-link>
-            <router-link to="/community">Community</router-link>
+            <!-- <router-link to="/community">Community</router-link> -->
             <router-link to="/become-tutor" v-if="userRole !== 'tutor'">Become a tutor</router-link>
         </nav>
        
@@ -64,11 +64,11 @@
                         </div>
                     </router-link>
                     
-                    <router-link to="/community">
+                    <!-- <router-link to="/community">
                         <div class="nav">
                             Community
                         </div>
-                    </router-link>
+                    </router-link> -->
 
                     <router-link to="/become-tutor" v-if="userRole !== 'tutor'">
                         <div class="nav">

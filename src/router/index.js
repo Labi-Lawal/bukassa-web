@@ -108,11 +108,11 @@ const routes = [
       },
     ],
   },
-  {
-    path: '/community',
-    name: 'Community',
-    component: ()=> import('../views/BecomeTutor.vue'),
-  },
+  // {
+  //   path: '/community',
+  //   name: 'Community',
+  //   component: ()=> import('../views/BecomeTutor.vue'),
+  // },
   {
     path: '/booking-payment',
     component: ()=> import('../views/BookingPayment.vue'),

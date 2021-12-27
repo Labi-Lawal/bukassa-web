@@ -234,7 +234,7 @@
 
     .profile_content {
         width: 80%;
-        height: 70vh; 
+        min-height: 70vh; 
         padding: 0 1%;
     }
     .complete_registration_wrapper {
