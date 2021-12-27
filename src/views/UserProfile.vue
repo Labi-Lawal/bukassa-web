@@ -50,7 +50,10 @@
             </div>
             <div class="profile_content">
                 <router-view 
-                    v-if="userInfo.role == 'tutor' && isTutor"
+                    v-if="userInfo.role != 'tutor'"
+                />
+                <router-view 
+                    v-else-if="userInfo.role == 'tutor'  && isTutor"
                 />
                 <div class="complete_registration_wrapper" v-else >
                     <CompleteReg 
