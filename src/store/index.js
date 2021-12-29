@@ -50,8 +50,6 @@ export default createStore({
             state.user = payload;
         },
         store_user(state, payload) {
-            
-            console.log(payload);
             state.user = payload;
         },
         store_tutor(state, payload) {
@@ -161,8 +159,6 @@ export default createStore({
               
                     const user = response.data.user;
                     commit('store_user', user);
-
-                    console.log(this.state.user);
 
                     resolve(user);
                 })
@@ -338,18 +334,19 @@ export default createStore({
                 resolve();
             })
         },
-        editprofile({commit}, payload) {
+        edittutorprofile({commit}, payload) {
             return new Promise( async (resolve, reject)=> {
                 const headers = {'x-access-token':`Bearer ${this.state.token}`};
 
                 await axios.post(
-                    `${baseURL}/user/profile/edit/`, payload,
+                    `${baseURL}/tutors/edit/`, payload,
                     { headers: headers }
                 )
                 .then((response)=> {
                     resolve(response.data.user);
                 })
                 .catch((error)=> {
+                    console.log(error.response);
                     reject(error);
                 });
             });

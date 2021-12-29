@@ -328,7 +328,7 @@
 
                 </div>
 
-                <div class="section_bottom">
+                <div class="section_bottom" v-if="tutor">
                     <div class="form_message">
                         <div class="edit_response success_edit" v-if="success">
                             <font-awesome-icon :icon="['fas', 'check-circle']" />
@@ -429,30 +429,19 @@ export default {
                     selected: false,
                 }
             ],
-            selectedTeachingMaterials: [],
             success: '',
             error: ''
         }
     },
     methods: {
         submitEdits() {
-            if(this.tutor) {
-                this.$store.dispatch('editprofile', this.tutor)
-                .then((response)=> {
-                    this.success = 'Profile edit submitted successfully';
-                })
-                .catch((error) => {
-                    this.error = 'There was an error submitting edit';
-                });
-            } else {
-                this.$store.dispatch('editprofile', this.user)
-                .then((response)=> {
-                    this.success = 'Profile Edit Submitted Successfully';
-                })
-                .catch((error) => {
-                    this.error = 'There was an error submitting edit';
-                });
-            }
+            this.$store.dispatch('edittutorprofile', this.tutor)
+            .then((response)=> {
+                this.success = 'Profile edit submitted successfully';
+            })
+            .catch((error) => {
+                this.error = 'There was an error submitting edit';
+            });
         },
         selectCheckBoxItem(index) { 
             if(index == 0) {
@@ -462,14 +451,14 @@ export default {
             else {
                 const selectedBox = this.allTeachingMaterials[index-1];
 
-                if(this.selectedTeachingMaterials.includes(selectedBox.value)) {
-                var indexof = this.selectedTeachingMaterials.indexOf(selectedBox.value);
+                if(this.tutor.teachingMat.includes(selectedBox.value)) {
+                var indexof = this.tutor.teachingMat.indexOf(selectedBox.value);
 
-                this.selectedTeachingMaterials.splice(this.selectedTeachingMaterials.indexOf(selectedBox.value), 1);
+                this.tutor.teachingMat.splice(this.tutor.teachingMat.indexOf(selectedBox.value), 1);
                 selectedBox.selected = false;
 
                 } else {
-                    this.selectedTeachingMaterials.push(selectedBox.value);
+                    this.tutor.teachingMat.push(selectedBox.value);
                     selectedBox.selected = true;
                 }
             }
@@ -479,14 +468,10 @@ export default {
         for(var i=0; i < this.allTeachingMaterials.length; i++) { 
             const item = this.allTeachingMaterials[i]; 
             
-            console.log(item);
-            console.log(this.tutor.teachingMat);
             if(this.tutor.teachingMat.includes(item.value)) { 
                 this.allTeachingMaterials[i].selected = true;
             } 
         } 
-
-        console.log(this.allTeachingMaterials);
     } 
 }
 </script>
