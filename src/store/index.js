@@ -337,6 +337,22 @@ export default createStore({
                 commit('save_class_info', payload);
                 resolve();
             })
+        },
+        editprofile({commit}, payload) {
+            return new Promise( async (resolve, reject)=> {
+                const headers = {'x-access-token':`Bearer ${this.state.token}`};
+
+                await axios.post(
+                    `${baseURL}/user/profile/edit/`, payload,
+                    { headers: headers }
+                )
+                .then((response)=> {
+                    resolve(response.data.user);
+                })
+                .catch((error)=> {
+                    reject(error);
+                });
+            });
         }
     },
     getters: { 

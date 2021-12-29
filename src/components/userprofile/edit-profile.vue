@@ -327,6 +327,26 @@
                     </div>
 
                 </div>
+
+                <div class="section_bottom">
+                    <div class="form_message">
+                        <div class="edit_response success_edit" v-if="success">
+                            <font-awesome-icon :icon="['fas', 'check-circle']" />
+                            <div class="msg">{{ success }}</div>
+                        </div>
+
+                        <div class="edit_response error_edit" v-if="error">
+                            <font-awesome-icon :icon="['fas', 'times-circle']" />
+                            <div class="msg">{{ error }}</div>
+                        </div>
+                    </div>
+                    <div class="form_btn_wrapper">
+                        <ButtonPlainText 
+                            buttonText="SUBMIT"
+                            @buttonAction="submitEdits()"
+                        />
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -335,10 +355,11 @@
 
 <script>
 import CheckBox from "../checkbox/CheckBox.vue";
+import ButtonPlainText from "../buttons/ButtonPlainText.vue";
 
 export default {
     name: 'EditProfile',
-    components: { CheckBox },
+    components: { CheckBox, ButtonPlainText },
     data() {
         const user = this.$store.getters.userData,
               tutor = this.$store.getters.tutorData;
@@ -408,7 +429,9 @@ export default {
                     selected: false,
                 }
             ],
-            selectedTeachingMaterials: []
+            selectedTeachingMaterials: [],
+            success: '',
+            error: ''
         }
     },
     methods: {
@@ -416,12 +439,18 @@ export default {
             if(this.tutor) {
                 this.$store.dispatch('editprofile', this.tutor)
                 .then((response)=> {
-                    this.success = 'Profile Edit Submitted Successfully';
+                    this.success = 'Profile edit submitted successfully';
+                })
+                .catch((error) => {
+                    this.error = 'There was an error submitting edit';
                 });
             } else {
                 this.$store.dispatch('editprofile', this.user)
                 .then((response)=> {
                     this.success = 'Profile Edit Submitted Successfully';
+                })
+                .catch((error) => {
+                    this.error = 'There was an error submitting edit';
                 });
             }
         },
@@ -531,6 +560,57 @@ export default {
     .input_field input, .tag_field input {
         width: 60%;
         border: none;
+        outline: none;
+    }
+
+    .section_bottom {
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+        padding: 1%;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .form_message {
+        height: 100%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        font-size: 130%;
+    }
+    .edit_response {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 3%;
+        border-radius: 5px;
+    }
+    .edit_response .msg {
+        margin-left: 2%;
+    }
+    .success_edit {
+        color: green;
+        background: rgba(196, 240, 196, 0.4);
+    }
+    .error_edit {
+        color: red;
+        background: rgba(255, 174, 174, 0.438);
+    }
+
+    .form_btn_wrapper {
+        margin-left: auto;
+        width: 25%;
+        height: 50px;
+    }
+    .form_btn_wrapper button {
+        border-radius: 25px;
+        border: none;
+        background: var(--burgundy-100);
+        color: white;
         outline: none;
     }
 </style>
