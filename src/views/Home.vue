@@ -81,11 +81,11 @@
             <img src="../assets/sec1.png">
           </div>
           <div class="details">
-            <div class="title">1-on-1 lessons in more than 50 African languages</div>
+            <div class="title">One-to-one lessons in more than 60 African languages with flexible learning</div>
             <ul class="list">
-              <li>Learn from certified teachers with proven experience </li>
-              <li>Find teachers from all over the world sharing their languages, dialects, and cultures</li>
-              <li>Learn from certified teachers with proven experience </li>
+              <li>Develop your language skills by building a connection with your chosen tutor</li>
+              <li>Nurture your language development</li>
+              <li>Gain knowledge of Africa and its cultures in a native learning environment</li>
             </ul>
             <div class="btn_wrapper">
               <ButtonPlainText buttonText="Find A Tutor" />
@@ -95,11 +95,11 @@
 
          <div class="break_down_sec">
           <div class="details">
-            <div class="title">Take learning beyond the classroom</div>
+            <div class="title">How it works</div>
             <ul class="list">
-              <li>Test your level with a free language assessment </li>
-              <li>Get a little help creating topics with language prompts</li>
-              <li>Motivate yourself by taking part in the italki Language Challenge </li>
+              <li>Choosing an African language lesson</li>
+              <li>Browse a native speaking tutor</li>
+              <li>Join the best online African language class</li>
             </ul>
             <div class="btn_wrapper">
               <ButtonPlainText buttonText="Find A Language" />
@@ -115,14 +115,14 @@
             <img src="../assets/sec3.png">
           </div>
           <div class="details">
-            <div class="title">Join the largest language learning community</div>
+            <div class="title">Join our community and practice the language with Africans from all over the world for free</div>
             <ul class="list">
-              <li>Learn from certified teachers with proven experience </li>
-              <li>Find teachers from all over the world sharing their languages, dialects, and cultures</li>
-              <li>Study at your own pace without worrying about rigid schedules or fixed fees </li>
+              <li>Learn from qualified teachers around the globe </li>
+              <li>Find African teachers from all over the world and learn the African cultures</li>
+              <li>Study at your own pace, in the comfort of your own home</li>
             </ul>
             <div class="btn_wrapper">
-              <ButtonPlainText buttonText="Find A Tutor" />
+              <ButtonPlainText buttonText="Explore Our Community" />
             </div>
           </div>
         </div>

@@ -4,7 +4,11 @@
         <section class="body" v-if="!isLoading">
             <div class="details">
                 <div class="intro-vid">
-                    <TutorIntroVideo :videoLink="tutor.introVideo"/>
+                    <TutorIntroVideo 
+                        :videoLink="tutor.introVideo"
+                        :controls=true
+                        :fullscreen=true
+                    />
                 </div>
                 <div class="tutor-profile">
                     <div class="left">
@@ -20,7 +24,7 @@
                         <div class="title">TUTOR</div>
                         <div class="tutor-name">{{ tutor.tutorName }}</div>
                         <div class="languages">
-                            <div class="lang"> {{ tutor.languages.join(',') }} </div>
+                            <div class="lang"> {{ tutor.languages.join(', ') }} </div>
                         </div>
                         <div class="ratings">
                             <TutorRatingsIcon :rating="tutor.ratings" :showDigit="false"/>
@@ -28,7 +32,7 @@
                         <div class="metrics">
                             <div>
                                 <div class="title">Total Students</div>
-                                <div class="number">5</div>
+                                <div class="number"> {{ tutor.students.length }} </div>
                             </div>
                             <div>
                                 <div class="title">Ratings</div>
@@ -76,7 +80,7 @@
                     <TutorScheduleCalendar 
                         :events="tutor.events" 
                         @buttonAction="openBookingModal" 
-                    w/>
+                    />
                 </div>
             </div> 
             <div class="modals" v-if="showModals">
@@ -319,6 +323,7 @@
         margin-top: 4%;
     }
     div.bio div.content{
+        padding: 0 2%;
         font-size: 110%;
         font-weight: 300;
         color: rgb(63, 63, 63);

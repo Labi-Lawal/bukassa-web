@@ -45,16 +45,28 @@ const routes = [
   {
     path: '/become-tutor',
     name: 'BecomeTutor',
-    component: ()=> import('../views/BecomeTutor.vue'),
-    meta: {
-      requiresAuth: true
-    },
-    beforeEnter(to, from, next) {
-      if(store.getters.userData.role !== 'tutor') next()
-      else {
-        if(store.getters.tutorData == '') next()
+    component: ()=> import('../views/BecomeTutor/Index.vue'),
+    children: [
+      {
+        path: '', name: 'Become Tutor Welcome',
+        component: ()=> import('../views/BecomeTutor/Welcome.vue')
+      },
+      {
+        path: 'application', name: 'Become Tutor Application',
+        component: ()=> import('../views/BecomeTutor/Application.vue'),
+        async beforeEnter(to, from, next) {
+          if(store.getters.userData) {
+            if(store.getters.userData.role !== 'tutor') next()
+            else {
+              if(store.getters.tutorData == '') next()
+            }
+          } else {
+            await store.dispatch('storerole', 'tutor')
+            .then(()=> next('/register'));
+          }
+        },
       }
-    },
+    ]
   },
   {
     path: '/profile',

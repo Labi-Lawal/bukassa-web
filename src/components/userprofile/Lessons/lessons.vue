@@ -28,9 +28,16 @@
                     <div class="icon">
                         <img src="@/assets/icons/empty.png" />
                     </div>
-                <div class="label">You have not added any lesson</div>
+                    <div class="label">You have not added any lesson</div>
+                </div>
             </div>
-        </div>
+
+            <div class="create_new_wrapper">
+                <ButtonIcon 
+                    buttonIcon="plus" 
+                    @buttonAction="createNewLesson()"
+                />
+            </div>
         </div>
     </section>
 </template>

@@ -18,6 +18,9 @@
             :tutorName="tutor.tutorName"
             :work="tutor.work.position"
             :languages="tutor.languages"
+            :gender="tutor.gender"
+            :introVideo="tutor.introVideo"
+            :events="tutor.events"
         />
     </section>
 </template>

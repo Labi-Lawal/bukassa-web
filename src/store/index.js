@@ -336,20 +336,16 @@ export default createStore({
         },
         edittutorprofile({commit}, payload) {
             return new Promise( async (resolve, reject)=> {
-                const headers = {'x-access-token':`Bearer ${this.state.token}`};
-
-                await axios.post(
-                    `${baseURL}/tutors/edit/`, payload,
-                    { headers: headers }
-                )
-                .then((response)=> {
-                    resolve(response.data.user);
-                })
-                .catch((error)=> {
-                    console.log(error.response);
-                    reject(error);
-                });
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                endpoint = `${baseURL}/tutors/edit/`;
+                
+                await axios.post(endpoint, payload, { headers: headers })
+                .then((response)=> resolve(response.data.user))
+                .catch((error)=> reject(error));
             });
+        },
+        clearrole({commit}){
+            commit('clear_user_role');
         }
     },
     getters: { 

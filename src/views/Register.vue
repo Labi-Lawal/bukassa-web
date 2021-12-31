@@ -5,7 +5,7 @@
 
     <section class="body">
         <div class="image_wrapper">
-            <img src="@/assets/class1.jpg" />
+            <img src="@/assets/class3.jpg" />
             <div class="overlay"></div>
         </div>
         
@@ -17,18 +17,45 @@
                 <div class="error-msg" v-if="formModel.error != ''">{{ formModel.error }}</div>
 
                 <form @submit.prevent="signInButtonPressed">
+                  
                     <input 
-                        v-model="fullnameModel.value" 
-                        @keyup="validateFullname()" 
-                        :type="fullnameModel.type" 
+                        v-model="firstnameModel.value" 
+                        @keyup="validateFirstname()" 
+                        :type="firstnameModel.type" 
                         class="fullname" 
-                        placeholder="Fullname" 
+                        placeholder="Firstname" 
                         autocomplete="off"
                         :class="{
-                            error: (fullnameModel.error != '') ?true :false
+                            error: (firstnameModel.error != '') ?true :false
                         }"
                     >
-                    <div class="error-message" v-if="fullnameModel.error != ''">{{ fullnameModel.error }}</div>
+                    <div class="error-message" v-if="firstnameModel.error != ''">{{ firstnameModel.error }}</div>
+
+                    <input 
+                        v-model="lastnameModel.value" 
+                        @keyup="validateLastname()" 
+                        :type="lastnameModel.type" 
+                        class="fullname" 
+                        placeholder="Lastname" 
+                        autocomplete="off"
+                        :class="{
+                            error: (lastnameModel.error != '') ?true :false
+                        }"
+                    >
+                    <div class="error-message" v-if="lastnameModel.error != ''">{{ lastnameModel.error }}</div>
+
+                    <input 
+                        v-model="dobModel.value" 
+                        @change="validateDOB()"
+                        :type="dobModel.type"
+                        class="fullname"
+                        placeholder="DOB"
+                        autocomplete="off"
+                        :class="{
+                            error: (dobModel.error != '') ?true :false
+                        }"
+                    >
+                    <div class="error-message" v-if="dobModel.error != ''">{{ dobModel.error }}</div>
 
                     <input 
                         v-model="emailModel.value" 
@@ -64,7 +91,7 @@
                     </div>
 
                     <div class="orsignin">
-                        Already have an account? <router-link to='/login'>Sign In</router-link>
+                        Already have an account? <router-link to='/login'>Login</router-link>
                     </div>
                 </form>
                 </div>
@@ -114,7 +141,9 @@ export default {
     data() {
         var emailModel = { type: 'email', value: '', error: '' },
         passwordModel = { type: 'password', value: '', error: '' },
-        fullnameModel = { type: 'text', value: '', error: '' },
+        firstnameModel = { type: 'text', value: '', error: '' },
+        lastnameModel = { type: 'text', value: '', error: '' },
+        dobModel = { type: 'date', value: '', error: '' },
         formModel = { error: '' },
 
         typeSelected = false;
@@ -122,7 +151,9 @@ export default {
         return { 
             emailModel,
             passwordModel,
-            fullnameModel,
+            firstnameModel,
+            lastnameModel,
+            dobModel,
             formModel,
             typeSelected,
             isLoading: false,
@@ -144,7 +175,7 @@ export default {
                 {
                     title: 'tutor',
                     value: 'tutor',
-                    desc: 'Excited to explore and learn new languages from the experts',
+                    desc: 'Use your tutoring talents to teach languages to students',
                     image: require("../assets/class_tutor.jpg")
                 }
             ]
@@ -154,9 +185,10 @@ export default {
         async registerUser() {
             if(this.validateInput()) {
                 var body = {
-                    fullname: this.fullnameModel.value,
+                    fullname: this.firstnameModel.value + ' ' + this.lastnameModel.value,
                     email: this.emailModel.value,
                     password: this.passwordModel.value,
+                    dob: this.dobModel.value,
                     role: this.$store.getters.registrationRole
                 };
 
@@ -180,20 +212,49 @@ export default {
             }
         },
         validateInput() {
-            if(this.validateFullname() && this.validateEmail() && this.validatePassword()) return true;
+            if(this.validateFirstname() && this.validateLastname() && this.validateDOB() && this.validateEmail() && this.validatePassword()) return true;
             else return false;
         },
-        validateFullname() { 
-            if(this.fullnameModel.value.trim() == '') {
-                this.fullnameModel.error = 'Fullname field cannot be empty';
+        validateFirstname() { 
+            if(this.firstnameModel.value.trim() == '') {
+                this.firstnameModel.error = 'Firstname field cannot be empty';
                 return false;
             }
-            if(this.fullnameModel.value.trim().split(' ').length != 2) {
-                this.fullnameModel.error = 'Please seperate your first and last name with a space';
+            // if(this.fullnameModel.value.trim().split(' ').length != 2) {
+            //     this.fullnameModel.error = 'Please seperate your first and last name with a space';
+            //     return false;
+            // }
+
+            this.firstnameModel.error = '';
+            return true;
+        },
+        validateLastname() { 
+            if(this.lastnameModel.value.trim() == '') {
+                this.lastnameModel.error = 'Lastname field cannot be empty';
+                return false;
+            }
+            // if(this.fullnameModel.value.trim().split(' ').length != 2) {
+            //     this.fullnameModel.error = 'Please seperate your first and last name with a space';
+            //     return false;
+            // }
+
+            this.lastnameModel.error = '';
+            return true;
+        },
+        validateDOB() {
+            if(this.dobModel.value.trim() == '') {
+                this.dobModel.error = 'Date Of Birth cannot be empty';
                 return false;
             }
 
-            this.fullnameModel.error = '';
+            if(!this.dateIsEligible(this.dobModel.value)) {
+                if(this.role == 'tutor') this.dobModel.error = `You need to be at least 18 years to be a ${this.role}`;
+                else this.dobModel.error = `You need to be at least 18 to handle your ${this.role} account yourself, please get your parent or guardian to create one for you.`;
+                
+                return false;
+            }
+
+            this.dobModel.error = '';
             return true;
         },
         validateEmail() { 
@@ -246,7 +307,22 @@ export default {
             this.role = value;
             this.$store.dispatch('storerole', this.role)
             .then(()=> this.roleSelected = true );
+        },
+        dateIsEligible(value) {
+            const dateofbirth = new Date(value).getTime(),
+            today = new Date().getTime(),
+            diffInMs = today - dateofbirth,
+
+            // convert to years 
+            years = parseInt(diffInMs / (1000 *  60 * 60 * 24 * 365));
+
+            if(years <= 18) return false;
+            return true;
         }
+    },
+    beforeRouteLeave (to, from, next) {
+        this.$store.dispatch('clearrole')
+        .then(()=> next());
     }
 }
 </script>
@@ -271,6 +347,7 @@ export default {
         display: flex;
         padding: 0;
         height: 100vh;
+        padding-bottom: 10%;
     }
 
     div.image_wrapper {
@@ -299,7 +376,7 @@ export default {
     }
     div.form-box-frame {
         width: 40%;
-        height: 60%;
+        min-height: 60%;
         padding: 5% 0;
         display: flex;
         align-items: center;

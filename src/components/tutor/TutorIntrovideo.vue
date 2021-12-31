@@ -1,8 +1,10 @@
 <template>
     <div class="video">
         <video :src="videoLink"
-                controls
-                allowfullscreen>
+                :controls=controls
+                :allowfullscreen=fullscreen
+                controlList="nodownload"
+        >
         </video>
     </div>
 </template>
@@ -12,7 +14,7 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'tutor-intro-video',
-    props: ['videoLink'],
+    props: ['videoLink', 'controls', 'allowfullscreen'],
     data() {
         console.log(this.videoLink);
         return {

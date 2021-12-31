@@ -31,9 +31,7 @@
             
         <router-link to="/login" class="login_btn" v-if="!isLoggedIn">Login</router-link>
         
-        <router-link to="/register" class="register_btn" v-if="!isLoggedIn">
-            Join Us Now
-        </router-link>
+        <router-link to="/register" class="register_btn" v-if="!isLoggedIn"> Sign Up </router-link>
     
         
         <div class="mobile_nav_container mobile" v-if="showSideBar">

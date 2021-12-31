@@ -14,26 +14,60 @@
             <router-link :to="`/tutor/${tutorName}`"><div class="name"> {{ tutorName }} </div></router-link>
             <div class="career">{{ work }}</div>
             <div class="under"></div>
-            <div class="label">LANGUAGES</div>
-            <div class="lang-box">
-                <div class="lang"> {{ languages.join(',') }} </div>
+
+            <div class="field">
+                <div class="label">LANGUAGES</div>
+                <div class="lang-box">
+                    <div class="lang"> {{ languages.join(', ') }} </div>
+                </div>
             </div>
-            <div class="label">RATE FROM</div>
-            <div class="price">
-                USD {{ (lessons[0].price).toFixed(2) }}
+
+            <div class="double_field_equal">
+                <div class="field">
+                    <div class="label">GENDER</div>
+                    <div class="lang-box">
+                        <div class="lang"> {{ gender }} </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="label">RATE FROM</div>
+                    <div class="price">
+                        USD {{ (lessons[0].price).toFixed(2) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="engagement">
-            <!-- <div class="nav">
-                <div :class="{selected: oneSelected[index]}" @click="oneselected(index)">VIDEO</div>
-                <div :class="{selected: twoSelected[index]}" @click="twoselected(index)">SCHEDULE</div>
-            </div>
-            <div class="content"> 
-                <div class="video-content" v-if="oneSelected[index]"> -->
-                    <!-- <IntroVideo :videoLink="intro_vid"/> -->
-                <!-- </div>
-                <div class="schedule-content" v-if="twoSelected[index]"></div>
-            </div> -->
+           <div class="nav">
+                <div
+                    :class="{
+                        selected: (selectedIndex === 0) ?true :false
+                    }"
+                    @click="showIntroVid()"
+                >
+                    Introduction
+                </div>
+               <div
+                    :class="{
+                        selected: (selectedIndex === 1) ?true :false
+                    }"
+                    @click="showSchedule()"
+                >
+                    Schedule
+                </div>
+           </div>
+           <div class="nav_view">
+                <div class="video_wrapper" v-if="introvidVisible">
+                    <TutorIntroVideo 
+                        :videoLink="introVideo" 
+                        :controls=true
+                        :fullscreen=true
+                    />
+                </div>
+               <div class="schedule_wrapper" v-if="scheduleVisible">
+                   <TutorScheduleCalendar :events="events"/>
+               </div>
+           </div>
         </div>
     </div>
 </template>
@@ -41,18 +75,42 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import ButtonPlainText from "../buttons/ButtonPlainText.vue";
+import TutorIntroVideo from "../tutor/TutorIntrovideo.vue";
+import TutorScheduleCalendar from '../tutor/TutorScheduleCalendar.vue';
 
 export default defineComponent({
     name: 'tutor-card',
-    components: { ButtonPlainText },
+    components: { ButtonPlainText, TutorIntroVideo, TutorScheduleCalendar },
     props: [
         'image', 
         'rating',
         'lessons',
         'tutorName',
         'work',
-        'languages'
-    ]
+        'languages',
+        'gender',
+        'introVideo',
+        'events'
+    ],
+    data() {
+        return {
+            introvidVisible: true,
+            scheduleVisible: false,
+            selectedIndex: 0
+        }
+    },
+    methods: {
+        showIntroVid() {
+            this.selectedIndex = 0;
+            this.scheduleVisible = false;
+            this.introvidVisible = true;
+        },
+        showSchedule() {
+            this.selectedIndex = 1;
+            this.introvidVisible = false;
+            this.scheduleVisible = true;
+        }
+    }
 
 });
 </script>
@@ -121,6 +179,7 @@ div.details div.lang {
     text-transform: capitalize;
 }
 div.career {
+    color: var(--paper-grey-600);
     text-transform: uppercase;
     font-size: 120%;
     font-weight: 400;
@@ -134,7 +193,6 @@ div.under {
     background: crimson;
 }
 div.label {
-    margin-top: 6%;
     font-weight: 600;
     color: var(--paper-grey-500);
 }
@@ -156,6 +214,17 @@ div.engagement {
     height: 100%;
     width: 30%;
 }
+
+.double_field_equal {
+    display: flex;
+}
+.double_field_equal .field {
+    width: 50%;
+}
+.field {
+    margin-top: 4%;
+}
+
 div.nav {
     display: flex;
     justify-content: space-around;
@@ -163,26 +232,43 @@ div.nav {
 }
 div.nav > div {
     cursor: pointer;
+    height: 100%;
 }
 div.nav .selected {
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid var(--burgundy-100);
+    white-space: nowrap;
 }
-div.content {
+div.nav_view {
     margin-top: 2%;
     height: 85%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-div.content > div {
+.nav_view > div {
     height: 100%;
     width: 100%;
 }
-div.video-content {
-    
+.video_wrapper {
+    margin-top: 2px;
+    border-radius: 5px;
+    overflow: hidden;
 }
-div.schedule-content {
-    background: red;
+.schedule_wrapper {
+    overflow-y: auto;
+    font-size: 80%;
+}
+.schedule_wrapper::-webkit-scrollbar {
+    width: 10px;
+    background: rgba(242, 241, 241, 0.281);
+}
+.schedule_wrapper::-webkit-scrollbar-thumb {
+    background: var(--burgundy-100);
+    border-radius: 25px;
+}
+.schedule_wrapper:deep .schedule_body {
+    height: unset;
+    overflow-y: none !important;
 }
 
 </style>

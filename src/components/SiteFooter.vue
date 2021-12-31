@@ -44,6 +44,12 @@
                         </div>
                     </div>
                     <div class="contact list">
+                        <font-awesome-icon :icon="['fab', 'whataspp']" class="icon" />
+                        <div>
+                            <div>+44(0)7448621735</div>
+                        </div>
+                    </div>
+                    <div class="contact list">
                         <font-awesome-icon :icon="['fas', 'envelope']" class="icon" />
                         <div>
                             <div>hello@bukassa.com</div>

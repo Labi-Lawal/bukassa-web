@@ -1,763 +1,757 @@
-<template>
-    <section class="become_tutor">
-        <Header />
-        
-        <section class="become_tutor_body">
-            <div 
-                v-if="applicationSubmitted === false"
-            >
-                <div class="become_tutor_page_form">
-                    <form @submit.prevent="signInButtonPressed">
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">1.</div>
-                                    <FormTitle title="Basic Information" />
-                                </div>
+<template>        
+    <section class="become_tutor_body">
+        <div 
+            v-if="applicationSubmitted === false"
+        >
+            <div class="become_tutor_page_form">
+                <form @submit.prevent="signInButtonPressed">
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">1.</div>
+                                <FormTitle title="Basic Information" />
+                            </div>
 
+                            <div class="field">
+                                <InputField 
+                                    label="Display Name" 
+                                    :model="displayNameModel"
+                                    @inputAction=validateDisplayName()
+                                />
+                            </div>
+                            <div class="double_field_equal">
+                                <div class="field">
+                                    <label>Nationality</label>
+                                    <div class="dropdown_wrapper">
+                                        <DropDown
+                                            placeholder="-- Select Your Nationality --"
+                                            :dropdownIndex=0
+                                            :options=countries
+                                            :selected=dropdownSelected[0]
+                                            :selectedIndex=dropdownSelectedIndex[0]
+                                            :isOptionsVisible=optionsVisible[0]
+                                            :hideBorder=false
+                                            @showOptions=showOptions
+                                            @optionSelect=selectOption
+                                        />
+                                    </div>
+                                    <div class="field_error" v-if="selectedNativeCountryError != ''">
+                                        {{ selectedNativeCountryError }}
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Country Of Residence</label>
+                                    <div class="dropdown_wrapper">
+                                        <DropDown
+                                            placeholder="-- Select Option --"
+                                            :dropdownIndex=1
+                                            :options=countries
+                                            :selected=dropdownSelected[1]
+                                            :selectedIndex=dropdownSelectedIndex[1]
+                                            :isOptionsVisible=optionsVisible[1]
+                                            raiseBy=10
+                                            :hideBorder=false
+                                            @showOptions=showOptions
+                                            @optionSelect=selectOption
+                                        />
+                                    </div>
+                                    <div class="field_error" v-if="selectedResidentCountryError != ''">
+                                        {{ selectedResidentCountryError }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">2.</div>
+                                <FormTitle title="Private Information" />
+                            </div>
+                            <div class="sub_title">
+                                <div class="sub_title_main">Please make sure your information is identical to your government-issued ID.</div>
+                                <div class="sub_title_note">Note: You can’t change key information such as your name, birthday, and gender once you have finished onboarding.</div>
+                            </div>
+                            <div class="double_field_equal">
                                 <div class="field">
                                     <InputField 
-                                        label="Display Name" 
-                                        :model="displayNameModel"
-                                        @inputAction=validateDisplayName()
+                                        label="First Name" 
+                                        :model="firstNameModel"
+                                        @inputAction=validateFirstName()
                                     />
                                 </div>
-                                <div class="double_field_equal">
-                                    <div class="field">
-                                        <label>Nationality</label>
-                                        <div class="dropdown_wrapper">
-                                            <DropDown
-                                                placeholder="-- Select Your Nationality --"
-                                                :dropdownIndex=0
-                                                :options=countries
-                                                :selected=dropdownSelected[0]
-                                                :selectedIndex=dropdownSelectedIndex[0]
-                                                :isOptionsVisible=optionsVisible[0]
-                                                :hideBorder=false
-                                                @showOptions=showOptions
-                                                @optionSelect=selectOption
-                                            />
-                                        </div>
-                                        <div class="field_error" v-if="selectedNativeCountryError != ''">
-                                            {{ selectedNativeCountryError }}
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label>Country Of Residence</label>
-                                        <div class="dropdown_wrapper">
-                                            <DropDown
-                                                placeholder="-- Select Option --"
-                                                :dropdownIndex=1
-                                                :options=countries
-                                                :selected=dropdownSelected[1]
-                                                :selectedIndex=dropdownSelectedIndex[1]
-                                                :isOptionsVisible=optionsVisible[1]
-                                                raiseBy=10
-                                                :hideBorder=false
-                                                @showOptions=showOptions
-                                                @optionSelect=selectOption
-                                            />
-                                        </div>
-                                        <div class="field_error" v-if="selectedResidentCountryError != ''">
-                                            {{ selectedResidentCountryError }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">2.</div>
-                                    <FormTitle title="Private Information" />
-                                </div>
-                                <div class="sub_title">
-                                    <div class="sub_title_main">Please make sure your information is identical to your government-issued ID.</div>
-                                    <div class="sub_title_note">Note: You can’t change key information such as your name, birthday, and gender once you have finished onboarding.</div>
-                                </div>
-                                <div class="double_field_equal">
-                                    <div class="field">
-                                        <InputField 
-                                            label="First Name" 
-                                            :model="firstNameModel"
-                                            @inputAction=validateFirstName()
-                                        />
-                                    </div>
-                                    <div class="field">
-                                        <InputField 
-                                            label="Last Name" 
-                                            :model="lastNameModel"
-                                            @inputAction=validateLastName()
-                                        />
-                                    </div>
-                                </div>
-                                <div class="double_field_equal">
-                                    <div class="field">
-                                        <InputField 
-                                            label="Date Of Birth" 
-                                            :model="dobModel"
-                                            @inputAction=validateDOB()
-                                        />
-                                    </div>
-                                    <div class="field">
-                                        <label>Gender</label>
-                                        <div class="dropdown_wrapper">
-                                            <DropDown  
-                                                placeholder="-- Select Your Gender --"
-                                                :dropdownIndex=2
-                                                :options=gender
-                                                :selected=dropdownSelected[2]
-                                                :selectedIndex=dropdownSelectedIndex[2]
-                                                :isOptionsVisible=optionsVisible[2]
-                                                raiseBy=9
-                                                :hideBorder=false
-                                                @showOptions=showOptions
-                                                @optionSelect=selectOption
-                                            />
-                                        </div>
-                                        <div class="field_error" v-if="selectedGenderError != ''">
-                                            {{ selectedGenderError }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="double_field_right_lopsided">
-                                    <div class="field">
-                                        <InputField 
-                                            label="Street Address" 
-                                            :model="strAddModel"
-                                            @inputAction=validateStrAdd()
-                                        />
-                                    </div>
-                                    <div class="field">
-                                        <label>City</label>
-                                        <div class="dropdown_wrapper">
-                                            <DropDown  
-                                                placeholder="City"
-                                                :dropdownIndex=3
-                                                :options=cities
-                                                :selected=dropdownSelected[3]
-                                                :selectedIndex=dropdownSelectedIndex[3]
-                                                :isOptionsVisible=optionsVisible[3]
-                                                raiseBy=8
-                                                :hideBorder=false
-                                                @showOptions=showOptions
-                                                @optionSelect=selectOption
-                                            />
-                                        </div>
-                                        <div class="field_error" v-if="selectedCityError != ''">
-                                            {{ selectedCityError }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">3.</div>
-                                    <FormTitle title="Teacher Language Skills" />
-                                </div>
-                                <div class="sub_title">
-                                    <div class="sub_title_note">Note: You will not be able to change your teaching language.</div>
-                                </div>
-                                <div class="form_field_wrapper">
-                                    <div class="field">
-                                        <label>Languages</label>
-
-                                        <div
-                                            class="language_field"
-                                            v-for="(languageModel, index) in languagesModel"
-                                            :key="index"
-                                        >   
-                                            <div class="input">
-                                                <InputField 
-                                                    :model="languageModel"
-                                                    @inputAction="validateLanguages()"
-                                                />
-                                            </div>
-                                            <div 
-                                                class="remove_language_btn_wrapper"
-                                                v-if="index !== 0"
-                                            >
-                                                <ButtonIcon
-                                                    buttonIcon="times"
-                                                    @buttonAction="removeLanguage(index)"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="add_language_btn_wrapper">
-                                    <ButtonIconText 
-                                        buttonIcon="plus"
-                                        buttonText="Add Language"
-                                        @buttonAction="addLanguage()"
+                                <div class="field">
+                                    <InputField 
+                                        label="Last Name" 
+                                        :model="lastNameModel"
+                                        @inputAction=validateLastName()
                                     />
                                 </div>
-                                <div class="field_error" v-if="selectedLanguagesError != ''">
-                                    {{ selectedLanguagesError }}
-                                </div>
                             </div>
-                        </div>
-
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">4.</div>
-                                    <FormTitle title="Teacher Profile Picture" />
+                            <div class="double_field_equal">
+                                <div class="field">
+                                    <InputField 
+                                        label="Date Of Birth" 
+                                        :model="dobModel"
+                                        @inputAction=validateDOB()
+                                    />
                                 </div>
-                                <div class="body">
-                                    <div class="profile_picture_section">
-                                        <div class="profile_picture_wrapper">
-                                            <img 
-                                                :src="profilepicModel.source"
-                                            >
-                                        </div>
-                                        <div class="profile_picture_instructions">
-                                            <label for=profile_picture>
-                                                <div class="choose_photo_button">
-                                                    Choose Photo
-                                                </div>
-                                            </label>
-                                            <input 
-                                                type="file"
-                                                id="profile_picture"
-                                                accept="image/*"
-                                                @change="newPhotoSelected"
-                                                hidden
-                                            >
-
-                                            <div class="instructions">
-                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                <span class="text">
-                                                    At least 500 x 500 pixels
-                                                </span>
-                                            </div>
-                                            <div class="">
-                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                <span class="text">
-                                                    JPG and PNG formats only
-                                                </span>
-                                            </div>
-                                            <div class="">
-                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                <span class="text">
-                                                    Maximum size of 2MB
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div 
-                                        class="error"
-                                        v-if="profilepicModel.error != ''"
-                                    >
-                                        {{ profilepicModel.error }}
-                                    </div>
-                                    <div class="extra_instruction">
-                                        <div class="section_title">
-                                            Your photo has to respect the following characteristics: 
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text">
-                                                does not show other people
-                                            </span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text">
-                                                is not too close or too far away
-                                            </span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text">
-                                                shows my eyes and face clearly
-                                            </span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text">
-                                                is clear and has good lighting
-                                            </span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text">
-                                                is friendly and personable
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="agreement">
-                                        <CheckBox 
-                                            :label="agreementModel.label"
-                                            :selected="agreementModel.selected"
-                                            :index=0
-                                            @selectCheckBox="selectCheckBoxItem"
+                                <div class="field">
+                                    <label>Gender</label>
+                                    <div class="dropdown_wrapper">
+                                        <DropDown  
+                                            placeholder="-- Select Your Gender --"
+                                            :dropdownIndex=2
+                                            :options=gender
+                                            :selected=dropdownSelected[2]
+                                            :selectedIndex=dropdownSelectedIndex[2]
+                                            :isOptionsVisible=optionsVisible[2]
+                                            raiseBy=9
+                                            :hideBorder=false
+                                            @showOptions=showOptions
+                                            @optionSelect=selectOption
                                         />
-                                        <div class="error">
-                                            {{ agreementModel.error }}
-                                        </div>
+                                    </div>
+                                    <div class="field_error" v-if="selectedGenderError != ''">
+                                        {{ selectedGenderError }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="double_field_right_lopsided">
+                                <div class="field">
+                                    <InputField 
+                                        label="Street Address" 
+                                        :model="strAddModel"
+                                        @inputAction=validateStrAdd()
+                                    />
+                                </div>
+                                <div class="field">
+                                    <label>City</label>
+                                    <div class="dropdown_wrapper">
+                                        <DropDown  
+                                            placeholder="City"
+                                            :dropdownIndex=3
+                                            :options=cities
+                                            :selected=dropdownSelected[3]
+                                            :selectedIndex=dropdownSelectedIndex[3]
+                                            :isOptionsVisible=optionsVisible[3]
+                                            raiseBy=8
+                                            :hideBorder=false
+                                            @showOptions=showOptions
+                                            @optionSelect=selectOption
+                                        />
+                                    </div>
+                                    <div class="field_error" v-if="selectedCityError != ''">
+                                        {{ selectedCityError }}
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">3.</div>
+                                <FormTitle title="Teacher Language Skills" />
+                            </div>
+                            <div class="sub_title">
+                                <div class="sub_title_note">Note: You will not be able to change your teaching language.</div>
+                            </div>
+                            <div class="form_field_wrapper">
+                                <div class="field">
+                                    <label>Languages</label>
 
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">4.</div>
-                                    <FormTitle title="Professional Teaching Background" />
-                                </div>
-                                <div class="body">
-                                    <div class="sub_title">
-                                        <div class="sub_title_main">Please upload relevant documents showing your training or experience as a language teacher.</div>
-                                        <div class="sub_title_note">
-                                            Note: Uploaded files are ONLY visible to Bukassa staff.
+                                    <div
+                                        class="language_field"
+                                        v-for="(languageModel, index) in languagesModel"
+                                        :key="index"
+                                    >   
+                                        <div class="input">
+                                            <InputField 
+                                                :model="languageModel"
+                                                @inputAction="validateLanguages()"
+                                            />
+                                        </div>
+                                        <div 
+                                            class="remove_language_btn_wrapper"
+                                            v-if="index !== 0"
+                                        >
+                                            <ButtonIcon
+                                                buttonIcon="times"
+                                                @buttonAction="removeLanguage(index)"
+                                            />
                                         </div>
                                     </div>
-                                    <div class="body">
-                                        <div class="background_card">
-                                            <div class="label">Education</div>
+                                </div>
+                            </div>
+                            <div class="add_language_btn_wrapper">
+                                <ButtonIconText 
+                                    buttonIcon="plus"
+                                    buttonText="Add Language"
+                                    @buttonAction="addLanguage()"
+                                />
+                            </div>
+                            <div class="field_error" v-if="selectedLanguagesError != ''">
+                                {{ selectedLanguagesError }}
+                            </div>
+                        </div>
+                    </div>
 
-                                            <div class="double_field_equal">
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Institution"
-                                                        :model="institutionModel"
-                                                        @inputAction=validateEduInstitution()
-                                                    />
-                                                </div>
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Major / Course" 
-                                                        :model="courseModel"
-                                                        @inputAction=validateEduCourse()
-                                                    />
-                                                </div>
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">4.</div>
+                                <FormTitle title="Teacher Profile Picture" />
+                            </div>
+                            <div class="body">
+                                <div class="profile_picture_section">
+                                    <div class="profile_picture_wrapper">
+                                        <img 
+                                            :src="profilepicModel.source"
+                                        >
+                                    </div>
+                                    <div class="profile_picture_instructions">
+                                        <label for=profile_picture>
+                                            <div class="choose_photo_button">
+                                                Choose Photo
                                             </div>
-                                            
-                                            <div 
-                                                class="field"
-                                                :class="{
-                                                    double_field_equal: (selectedEduDegreeType == 'other') ?true :false
-                                                }"
-                                            >
-                                                <div class="field">
-                                                    <label>Degree</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="Please select an option"
-                                                            :dropdownIndex=5
-                                                            :options=degreeTypes
-                                                            :selected=dropdownSelected[5]
-                                                            :selectedIndex=dropdownSelectedIndex[5]
-                                                            :isOptionsVisible=optionsVisible[5]
-                                                            raiseBy=6
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedEduDegreeTypeError != ''">
-                                                        {{ selectedEduDegreeTypeError }}
-                                                    </div>
-                                                </div>
+                                        </label>
+                                        <input 
+                                            type="file"
+                                            id="profile_picture"
+                                            accept="image/*"
+                                            @change="newPhotoSelected"
+                                            hidden
+                                        >
 
-                                                <div class="field" v-if="selectedEduDegreeType == 'other'">
-                                                    <InputField 
-                                                        label="Enter your degree title"
-                                                        :model="otherDegreeModel"
-                                                        @inputAction=validateEduDegreeTypeOther()
-                                                    />
-                                                </div>
-                                            </div>
+                                        <div class="instructions">
+                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                            <span class="text">
+                                                At least 500 x 500 pixels
+                                            </span>
+                                        </div>
+                                        <div class="">
+                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                            <span class="text">
+                                                JPG and PNG formats only
+                                            </span>
+                                        </div>
+                                        <div class="">
+                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                            <span class="text">
+                                                Maximum size of 2MB
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="error"
+                                    v-if="profilepicModel.error != ''"
+                                >
+                                    {{ profilepicModel.error }}
+                                </div>
+                                <div class="extra_instruction">
+                                    <div class="section_title">
+                                        Your photo has to respect the following characteristics: 
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text">
+                                            does not show other people
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text">
+                                            is not too close or too far away
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text">
+                                            shows my eyes and face clearly
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text">
+                                            is clear and has good lighting
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text">
+                                            is friendly and personable
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="agreement">
+                                    <CheckBox 
+                                        :label="agreementModel.label"
+                                        :selected="agreementModel.selected"
+                                        :index=0
+                                        @selectCheckBox="selectCheckBoxItem"
+                                    />
+                                    <div class="error">
+                                        {{ agreementModel.error }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                            <div class="double_field_equal">
-                                                <div class="field date">
-                                                    <label>From</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="-- Select Date --"
-                                                            :dropdownIndex=6
-                                                            :options=years
-                                                            :selected=dropdownSelected[6]
-                                                            :selectedIndex=dropdownSelectedIndex[6]
-                                                            :isOptionsVisible=optionsVisible[6]
-                                                            raiseBy=5
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedEduYearFromError != ''">
-                                                        {{ selectedEduYearFromError }}
-                                                    </div>
-                                                </div>
-                                                <div class="field date">
-                                                    <label>To</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="-- Select Date --"
-                                                            :dropdownIndex=7
-                                                            :options=years
-                                                            :selected=dropdownSelected[7]
-                                                            :selectedIndex=dropdownSelectedIndex[7]
-                                                            :isOptionsVisible=optionsVisible[7]
-                                                            raiseBy=4
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedEduYearToError != ''">
-                                                        {{ selectedEduYearToError }}
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">4.</div>
+                                <FormTitle title="Professional Teaching Background" />
+                            </div>
+                            <div class="body">
+                                <div class="sub_title">
+                                    <div class="sub_title_main">Please upload relevant documents showing your training or experience as a language teacher.</div>
+                                    <div class="sub_title_note">
+                                        Note: Uploaded files are ONLY visible to Bukassa staff.
+                                    </div>
+                                </div>
+                                <div class="body">
+                                    <div class="background_card">
+                                        <div class="label">Education</div>
 
+                                        <div class="double_field_equal">
                                             <div class="field">
-                                                <TextareaField
-                                                    label="Description (Optional)"
-                                                    :model="eduDescModel"
+                                                <InputField 
+                                                    label="Institution"
+                                                    :model="institutionModel"
+                                                    @inputAction=validateEduInstitution()
                                                 />
                                             </div>
-
-                                            <div class="extra_instruction"></div>
-                                        </div>
-
-                                        <div class="background_card">
-                                            <div class="label">Work Experience</div>
-
-                                            <div class="double_field_equal">
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Company / Organization" 
-                                                        :model="companyModel"
-                                                        @inputAction=validateCompany()
-                                                    />
-                                                </div>
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Position" 
-                                                        :model="positionModel"
-                                                        @inputAction=validatePosition()
-                                                    />
-                                                </div>
+                                            <div class="field">
+                                                <InputField 
+                                                    label="Major / Course" 
+                                                    :model="courseModel"
+                                                    @inputAction=validateEduCourse()
+                                                />
                                             </div>
-                                            
-                                            <div class="field">                                 
-                                                <label>Country / Region</label>
+                                        </div>
+                                        
+                                        <div 
+                                            class="field"
+                                            :class="{
+                                                double_field_equal: (selectedEduDegreeType == 'other') ?true :false
+                                            }"
+                                        >
+                                            <div class="field">
+                                                <label>Degree</label>
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="Please select an option"
-                                                        :dropdownIndex=8
-                                                        :options=countries
-                                                        :selected=dropdownSelected[8]
-                                                        :selectedIndex=dropdownSelectedIndex[8]
-                                                        :isOptionsVisible=optionsVisible[8]
-                                                        raiseBy=3
+                                                        :dropdownIndex=5
+                                                        :options=degreeTypes
+                                                        :selected=dropdownSelected[5]
+                                                        :selectedIndex=dropdownSelectedIndex[5]
+                                                        :isOptionsVisible=optionsVisible[5]
+                                                        raiseBy=6
                                                         :hideBorder=false
                                                         @showOptions=showOptions
                                                         @optionSelect=selectOption
                                                     />
                                                 </div>
-                                                <div class="field_error" v-if="selectedWorkCountryFromError != ''">
-                                                    {{ selectedWorkCountryFromError }}
+                                                <div class="field_error" v-if="selectedEduDegreeTypeError != ''">
+                                                    {{ selectedEduDegreeTypeError }}
                                                 </div>
                                             </div>
 
-                                            <div class="double_field_equal">
-                                                <div class="field date">
-                                                    <label>From</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="-- Select Date --"
-                                                            :dropdownIndex=9
-                                                            :options=years
-                                                            :selected=dropdownSelected[9]
-                                                            :selectedIndex=dropdownSelectedIndex[9]
-                                                            :isOptionsVisible=optionsVisible[9]
-                                                            raiseBy=2
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedWorkYearFromError != ''">
-                                                        {{ selectedWorkYearFromError }}
-                                                    </div>
-                                                </div>
-                                                <div class="field date">
-                                                    <label>To</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="-- Select Date --"
-                                                            dropdownIndex="10"
-                                                            :options=years
-                                                            :selected=dropdownSelected[10]
-                                                            :selectedIndex=dropdownSelectedIndex[10]
-                                                            :isOptionsVisible=optionsVisible[10]
-                                                            raiseBy=1
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedWorkYearToError != ''">
-                                                        {{ selectedWorkYearToError }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="field">
-                                                <TextareaField
-                                                    label="Description (Optional)"
-                                                    :model="workDescModel"
+                                            <div class="field" v-if="selectedEduDegreeType == 'other'">
+                                                <InputField 
+                                                    label="Enter your degree title"
+                                                    :model="otherDegreeModel"
+                                                    @inputAction=validateEduDegreeTypeOther()
                                                 />
                                             </div>
-
-                                            <div class="extra_instruction"></div>
                                         </div>
 
-                                        <div class="background_card certificate">
-                                            <div class="label">Certificates</div>
-                                            
-                                            <div class="double_field_equal">
-                                                <div class="field date">
-                                                    <label>Date Awarded</label>
-                                                    <div class="dropdown_wrapper">
-                                                        <DropDown  
-                                                            placeholder="-- Select Date --"
-                                                            :dropdownIndex=11
-                                                            :options=years
-                                                            :selected=dropdownSelected[11]
-                                                            :selectedIndex=dropdownSelectedIndex[11]
-                                                            :isOptionsVisible=optionsVisible[11]
-                                                            raiseBy=0
-                                                            :hideBorder=false
-                                                            @showOptions=showOptions
-                                                            @optionSelect=selectOption
-                                                        />
-                                                    </div>
-                                                    <div class="field_error" v-if="selectedCertYearError != ''">
-                                                        {{ selectedCertYearError }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="double_field_equal">
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Certificate Title" 
-                                                        :model="certTitleModel"
-                                                        @inputAction=validateCertTitle
+                                        <div class="double_field_equal">
+                                            <div class="field date">
+                                                <label>From</label>
+                                                <div class="dropdown_wrapper">
+                                                    <DropDown  
+                                                        placeholder="-- Select Date --"
+                                                        :dropdownIndex=6
+                                                        :options=years
+                                                        :selected=dropdownSelected[6]
+                                                        :selectedIndex=dropdownSelectedIndex[6]
+                                                        :isOptionsVisible=optionsVisible[6]
+                                                        raiseBy=5
+                                                        :hideBorder=false
+                                                        @showOptions=showOptions
+                                                        @optionSelect=selectOption
                                                     />
                                                 </div>
-                                                <div class="field">
-                                                    <InputField 
-                                                        label="Institution" 
-                                                        :model="certInstitutionModel"
-                                                        @inputAction=validateCertInstitution
+                                                <div class="field_error" v-if="selectedEduYearFromError != ''">
+                                                    {{ selectedEduYearFromError }}
+                                                </div>
+                                            </div>
+                                            <div class="field date">
+                                                <label>To</label>
+                                                <div class="dropdown_wrapper">
+                                                    <DropDown  
+                                                        placeholder="-- Select Date --"
+                                                        :dropdownIndex=7
+                                                        :options=years
+                                                        :selected=dropdownSelected[7]
+                                                        :selectedIndex=dropdownSelectedIndex[7]
+                                                        :isOptionsVisible=optionsVisible[7]
+                                                        raiseBy=4
+                                                        :hideBorder=false
+                                                        @showOptions=showOptions
+                                                        @optionSelect=selectOption
                                                     />
                                                 </div>
+                                                <div class="field_error" v-if="selectedEduYearToError != ''">
+                                                    {{ selectedEduYearToError }}
+                                                </div>
                                             </div>
+                                        </div>
 
+                                        <div class="field">
+                                            <TextareaField
+                                                label="Description (Optional)"
+                                                :model="eduDescModel"
+                                            />
+                                        </div>
+
+                                        <div class="extra_instruction"></div>
+                                    </div>
+
+                                    <div class="background_card">
+                                        <div class="label">Work Experience</div>
+
+                                        <div class="double_field_equal">
                                             <div class="field">
-                                                <TextareaField 
-                                                    label="Description (Optional)"
-                                                    :model="certDescModel"
+                                                <InputField 
+                                                    label="Company / Organization" 
+                                                    :model="companyModel"
+                                                    @inputAction=validateCompany()
                                                 />
                                             </div>
-
                                             <div class="field">
-                                                <label>Attachment (Scanned and in color)</label>
-                                                <div class="">
-                                                    <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                    <span class="text"> Max 2MB </span>
-                                                </div>
-                                                <div class="">
-                                                    <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                    <span class="text"> PDF or JPG file </span>
-                                                </div>
-                                                <div class="">
-                                                    <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                                    <span class="text"> Visible to Bukassa staff only </span>
-                                                </div>
-                                            </div>
-
-                                            <label for="choose_cert">
-                                                <div class="choose_photo_button choose_cert_wrapper">
-                                                    Choose File
-                                                </div>
-                                                <input 
-                                                    type="file" 
-                                                    id="choose_cert"
-                                                    @change="selectCertFile"
-                                                    hidden 
+                                                <InputField 
+                                                    label="Position" 
+                                                    :model="positionModel"
+                                                    @inputAction=validatePosition()
                                                 />
-                                            </label>
-                                            <div class="cert_name">
-                                                {{ certFileModel.name }}
                                             </div>
-                                            <div 
-                                                class="error"
-                                                v-if="certFileModel.error != ''"
-                                            >
-                                                {{ certFileModel.error }}
+                                        </div>
+                                        
+                                        <div class="field">                                 
+                                            <label>Country / Region</label>
+                                            <div class="dropdown_wrapper">
+                                                <DropDown  
+                                                    placeholder="Please select an option"
+                                                    :dropdownIndex=8
+                                                    :options=countries
+                                                    :selected=dropdownSelected[8]
+                                                    :selectedIndex=dropdownSelectedIndex[8]
+                                                    :isOptionsVisible=optionsVisible[8]
+                                                    raiseBy=3
+                                                    :hideBorder=false
+                                                    @showOptions=showOptions
+                                                    @optionSelect=selectOption
+                                                />
                                             </div>
+                                            <div class="field_error" v-if="selectedWorkCountryFromError != ''">
+                                                {{ selectedWorkCountryFromError }}
+                                            </div>
+                                        </div>
+
+                                        <div class="double_field_equal">
+                                            <div class="field date">
+                                                <label>From</label>
+                                                <div class="dropdown_wrapper">
+                                                    <DropDown  
+                                                        placeholder="-- Select Date --"
+                                                        :dropdownIndex=9
+                                                        :options=years
+                                                        :selected=dropdownSelected[9]
+                                                        :selectedIndex=dropdownSelectedIndex[9]
+                                                        :isOptionsVisible=optionsVisible[9]
+                                                        raiseBy=2
+                                                        :hideBorder=false
+                                                        @showOptions=showOptions
+                                                        @optionSelect=selectOption
+                                                    />
+                                                </div>
+                                                <div class="field_error" v-if="selectedWorkYearFromError != ''">
+                                                    {{ selectedWorkYearFromError }}
+                                                </div>
+                                            </div>
+                                            <div class="field date">
+                                                <label>To</label>
+                                                <div class="dropdown_wrapper">
+                                                    <DropDown  
+                                                        placeholder="-- Select Date --"
+                                                        dropdownIndex="10"
+                                                        :options=years
+                                                        :selected=dropdownSelected[10]
+                                                        :selectedIndex=dropdownSelectedIndex[10]
+                                                        :isOptionsVisible=optionsVisible[10]
+                                                        raiseBy=1
+                                                        :hideBorder=false
+                                                        @showOptions=showOptions
+                                                        @optionSelect=selectOption
+                                                    />
+                                                </div>
+                                                <div class="field_error" v-if="selectedWorkYearToError != ''">
+                                                    {{ selectedWorkYearToError }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <TextareaField
+                                                label="Description (Optional)"
+                                                :model="workDescModel"
+                                            />
+                                        </div>
+
+                                        <div class="extra_instruction"></div>
+                                    </div>
+
+                                    <div class="background_card certificate">
+                                        <div class="label">Certificates</div>
+                                        
+                                        <div class="double_field_equal">
+                                            <div class="field date">
+                                                <label>Date Awarded</label>
+                                                <div class="dropdown_wrapper">
+                                                    <DropDown  
+                                                        placeholder="-- Select Date --"
+                                                        :dropdownIndex=11
+                                                        :options=years
+                                                        :selected=dropdownSelected[11]
+                                                        :selectedIndex=dropdownSelectedIndex[11]
+                                                        :isOptionsVisible=optionsVisible[11]
+                                                        raiseBy=0
+                                                        :hideBorder=false
+                                                        @showOptions=showOptions
+                                                        @optionSelect=selectOption
+                                                    />
+                                                </div>
+                                                <div class="field_error" v-if="selectedCertYearError != ''">
+                                                    {{ selectedCertYearError }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="double_field_equal">
+                                            <div class="field">
+                                                <InputField 
+                                                    label="Certificate Title" 
+                                                    :model="certTitleModel"
+                                                    @inputAction=validateCertTitle
+                                                />
+                                            </div>
+                                            <div class="field">
+                                                <InputField 
+                                                    label="Institution" 
+                                                    :model="certInstitutionModel"
+                                                    @inputAction=validateCertInstitution
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <TextareaField 
+                                                label="Description (Optional)"
+                                                :model="certDescModel"
+                                            />
+                                        </div>
+
+                                        <div class="field">
+                                            <label>Attachment (Scanned and in color)</label>
+                                            <div class="">
+                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                                <span class="text"> Max 2MB </span>
+                                            </div>
+                                            <div class="">
+                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                                <span class="text"> PDF or JPG file </span>
+                                            </div>
+                                            <div class="">
+                                                <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                                <span class="text"> Visible to Bukassa staff only </span>
+                                            </div>
+                                        </div>
+
+                                        <label for="choose_cert">
+                                            <div class="choose_photo_button choose_cert_wrapper">
+                                                Choose File
+                                            </div>
+                                            <input 
+                                                type="file" 
+                                                id="choose_cert"
+                                                @change="selectCertFile"
+                                                hidden 
+                                            />
+                                        </label>
+                                        <div class="cert_name">
+                                            {{ certFileModel.name }}
+                                        </div>
+                                        <div 
+                                            class="error"
+                                            v-if="certFileModel.error != ''"
+                                        >
+                                            {{ certFileModel.error }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">5.</div>
-                                    <FormTitle title="Teacher Introduction" />
-                                </div>
-                                <div class="body">
-                                    <div class="sub_title">
-                                        <div class="sub_title_note">
-                                            Note: You can't add external links or use offensive terms in your description 
-                                        </div>
-                                    </div>
-                                    <div class="body">
-                                        <div class="field">
-                                            <TextareaField
-                                                label="About Me (as a teacher)"
-                                                :model="aboutMeModel"
-                                                @inputAction="validateAboutMe()"
-                                            />
-                                        </div>
-
-                                        <div class="field">
-                                            <TextareaField
-                                                label="My lessons & Teaching Style"
-                                                :model="lessonsDescModel"
-                                                @inputAction="validateLessonsDesc()"
-                                            />
-                                        </div>
-
-                                        <div class="teaching_materials field">
-                                            <label>My Teaching Material</label>
-                                            <div class="check_boxes grid_list col_3">
-                                                <div
-                                                    class="checkbox_option"
-                                                    v-for="(material, index) in allTeachingMaterials"
-                                                    :key=index
-                                                >
-                                                    <CheckBox 
-                                                        :label="material.label"
-                                                        :value="material.value"
-                                                        :selected="material.selected"
-                                                        :index="index + 1"
-                                                        @selectCheckBox="selectCheckBoxItem"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div 
-                                                class="checkbox_error error" 
-                                                v-if="selectedTeachingMaterialsError != ''"
-                                            >
-                                                {{ selectedTeachingMaterialsError }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">5.</div>
+                                <FormTitle title="Teacher Introduction" />
                             </div>
-                        </div>
-
-                        <div class="form_section">
-                            <div class="form">
-                                <div class="title">
-                                    <div class="no">6.</div>
-                                    <FormTitle title="Video Introduction" />
+                            <div class="body">
+                                <div class="sub_title">
+                                    <div class="sub_title_note">
+                                        Note: You can't add external links or use offensive terms in your description 
+                                    </div>
                                 </div>
                                 <div class="body">
-                                    <div class="sub_title">
-                                        <div class="sub_title_main">
-                                            It's mandatory for every teacher to upload a video introduction
-                                        </div>
-                                        <div class="sub_title_note"></div>
-                                    </div>
                                     <div class="field">
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text"> 
-                                                By submitting your video to Bukassa, you acknowledge that you agree to Bukassa's Terms of Service.
-                                            </span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text"> File size may not exceed 500 MB</span>
-                                        </div>
-                                        <div class="">
-                                            <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
-                                            <span class="text"> For the best result, the video aspect ratio should be 16:9. </span>
-                                        </div>
+                                        <TextareaField
+                                            label="About Me (as a teacher)"
+                                            :model="aboutMeModel"
+                                            @inputAction="validateAboutMe()"
+                                        />
+                                    </div>
 
-                                        <div class="field video_upload_section">
-                                            <VideoFileSelector 
-                                                @videoSaved="introVideoSelected"
-                                            />
-                                            <div 
-                                                class="error intro_video_error"
-                                                v-if="introVideoModel.error != ''"
+                                    <div class="field">
+                                        <TextareaField
+                                            label="My lessons & Teaching Style"
+                                            :model="lessonsDescModel"
+                                            @inputAction="validateLessonsDesc()"
+                                        />
+                                    </div>
+
+                                    <div class="teaching_materials field">
+                                        <label>My Teaching Material</label>
+                                        <div class="check_boxes grid_list col_3">
+                                            <div
+                                                class="checkbox_option"
+                                                v-for="(material, index) in allTeachingMaterials"
+                                                :key=index
                                             >
-                                                {{ introVideoModel.error }}
+                                                <CheckBox 
+                                                    :label="material.label"
+                                                    :value="material.value"
+                                                    :selected="material.selected"
+                                                    :index="index + 1"
+                                                    @selectCheckBox="selectCheckBoxItem"
+                                                />
                                             </div>
+                                        </div>
+                                        <div 
+                                            class="checkbox_error error" 
+                                            v-if="selectedTeachingMaterialsError != ''"
+                                        >
+                                            {{ selectedTeachingMaterialsError }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                
-                <div class="form_error" v-if="formError != ''">
-                    {{ formError }}
-                    <font-awesome-icon :icon="['fas', 'times']" @click="clearFormError" class="icon" />
-                </div>
+                    </div>
 
-                <div class="submit_button_section">
-                    <div class="submit_btn_wrapper">
-                        <ButtonPlainText
-                            buttonText="SUBMIT"
-                            @buttonAction="submitApplication"
-                            :isLoading="isSubmitting"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div 
-                v-else
-                class="application_submitted_modal_wrapper"
-            >
-                <div class="application_submitted_modal">
-                    <div class="modal_img_wrapper">
-                        <img src="@/assets/become-tutor-success.png" />
-                    </div>
-                    <div class="modal_text">
-                        <div class="title">Congrats!</div>
-                        <div class="body">
-                            As a tutor you're all set and ready to start teaching here.
+                    <div class="form_section">
+                        <div class="form">
+                            <div class="title">
+                                <div class="no">6.</div>
+                                <FormTitle title="Video Introduction" />
+                            </div>
+                            <div class="body">
+                                <div class="sub_title">
+                                    <div class="sub_title_main">
+                                        It's mandatory for every teacher to upload a video introduction
+                                    </div>
+                                    <div class="sub_title_note"></div>
+                                </div>
+                                <div class="field">
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text"> 
+                                            By submitting your video to Bukassa, you acknowledge that you agree to Bukassa's Terms of Service.
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text"> File size may not exceed 500 MB</span>
+                                    </div>
+                                    <div class="">
+                                        <font-awesome-icon :icon="['fas', 'circle']" class="circle_icon" />
+                                        <span class="text"> For the best result, the video aspect ratio should be 16:9. </span>
+                                    </div>
+
+                                    <div class="field video_upload_section">
+                                        <VideoFileSelector 
+                                            @videoSaved="introVideoSelected"
+                                        />
+                                        <div 
+                                            class="error intro_video_error"
+                                            v-if="introVideoModel.error != ''"
+                                        >
+                                            {{ introVideoModel.error }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="finish_btn_wrapper">
-                        <ButtonPlainText 
-                            buttonText="CREATE LESSON"
-                        />
-                    </div>
+                </form>
+            </div>
+            
+            <div class="form_error" v-if="formError != ''">
+                {{ formError }}
+                <font-awesome-icon :icon="['fas', 'times']" @click="clearFormError" class="icon" />
+            </div>
+
+            <div class="submit_button_section">
+                <div class="submit_btn_wrapper">
+                    <ButtonPlainText
+                        buttonText="SUBMIT"
+                        @buttonAction="submitApplication"
+                        :isLoading="isSubmitting"
+                    />
                 </div>
             </div>
-        </section>
-      
-        <SiteFooter />
+        </div>
+        <div 
+            v-else
+            class="application_submitted_modal_wrapper"
+        >
+            <div class="application_submitted_modal">
+                <div class="modal_img_wrapper">
+                    <img src="@/assets/become-tutor-success.png" />
+                </div>
+                <div class="modal_text">
+                    <div class="title">Congrats!</div>
+                    <div class="body">
+                        As a tutor you're all set and ready to start teaching here.
+                    </div>
+                </div>
+                <div class="finish_btn_wrapper">
+                    <ButtonPlainText 
+                        buttonText="CREATE LESSON"
+                    />
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
