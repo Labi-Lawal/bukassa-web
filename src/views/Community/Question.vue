@@ -1,5 +1,5 @@
 <template>
-    <div class="community_question" v-if="question != ''">
+    <div class="community_question">
         <div class="main">
             <div class="question section">
                 <div class="question_title">
@@ -12,10 +12,10 @@
                     </div>
                     <div class="dets">
                         <div class="user_name">
-                            John Doe
+                            {{ userData.fullname }}
                         </div>
                         <div class="date">
-                            13 days ago
+                            <!-- 13 days ago -->
                         </div>
                     </div>
                     <div class="language">
@@ -30,15 +30,18 @@
                 <div class="others">
                     <div class="likes">
                         <div class="number">
-                            
+                            {{ question.likes }}
                         </div>
                         <div class="label">Likes</div>
                     </div>
-                    <div class="comments">
+                    <div class="comments" v-if="question.comments.length">
                         <div class="number">
-                            
+                            {{ question.comments.length }}
                         </div>
                         <div class="label">Comments</div>
+                    </div>
+                    <div class="comments" v-else>
+                        <div class="label">No Comments</div>
                     </div>
                 </div>
             </div>
@@ -54,7 +57,7 @@
                     </div>
                 </div>
 
-                <div class="comments_list">
+                <!-- <div class="comments_list">
                     <CommentCard 
                         v-for="comments in question.comments"
                         :key="comments._id"
@@ -65,11 +68,11 @@
                         :replies="comments.replies"
                         :likes="comments.likes"
                     />
-                </div>
+                </div> -->
             </div>
         </div>
 
-        <div class="related">
+        <!-- <div class="related">
             <div class="head">Related</div>
             <div class="related_list">
                 <div 
@@ -83,93 +86,91 @@
                     <div class="desc">{{ related.desc }}</div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import Header from "@/components/Header/Header.vue";
-import SiteFooter from "@/components/SiteFooter.vue";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
 import CommentCard from "@/components/Card/CommentCard.vue";
 
 export default defineComponent({
-    components: { Header, SiteFooter, ButtonIcon, CommentCard },
+    components: { ButtonIcon, CommentCard },
     data() {
-        var question = '';
-
         return {
-            question,
-            relatedList: [
-                {   
-                    _id: '12321',
-                    title: 'How to greet properly',
-                    desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
-                    desc: 'lorem ipsum',
-                    user: '61c211f4f6d8f52b0cdd143f',
-                    language: 'english',
-                    comments: [
-                        {
-                            _id: '1',
-                            content: 'lorem ipsum',
-                            user: '61c211f4f6d8f52b0cdd143f',
-                            replies: [],
-                            date: '11/04/2019',
-                            likes: [],
-                        },
-                        {
-                            _id: '2',
-                            content: 'lorem ipsum',
-                            user: '61c211f4f6d8f52b0cdd143f',
-                            replies: [],
-                            date: '11/04/2019',
-                            likes: [],
-                        }       
-                    ],
-                    date: '11/04/2019',
-                    likes: [],
-                },
-                {   
-                    _id: '299843',
-                    title: 'How to greet properly',
-                    desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
-                    desc: 'lorem ipsum',
-                    user: '61c211f4f6d8f52b0cdd143f',
-                    language: 'english',
-                    comments: [
-                        {
-                            _id: '1',
-                            content: 'lorem ipsum',
-                            user: '61c211f4f6d8f52b0cdd143f',
-                            replies: [],
-                            date: '11/04/2019',
-                            likes: [],
-                        },
-                        {
-                            _id: '2',
-                            content: 'lorem ipsum',
-                            user: '61c211f4f6d8f52b0cdd143f',
-                            replies: [],
-                            date: '11/04/2019',
-                            likes: [],
-                        }       
-                    ],
-                    date: '11/04/2019',
-                    likes: [],
-                }
-            ]
+            question: '',
+            userData: '',
+            // relatedList: [
+            //     {   
+            //         _id: '12321',
+            //         title: 'How to greet properly',
+            //         desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
+            //         desc: 'lorem ipsum',
+            //         user: '61c211f4f6d8f52b0cdd143f',
+            //         language: 'english',
+            //         comments: [
+            //             {
+            //                 _id: '1',
+            //                 content: 'lorem ipsum',
+            //                 user: '61c211f4f6d8f52b0cdd143f',
+            //                 replies: [],
+            //                 date: '11/04/2019',
+            //                 likes: [],
+            //             },
+            //             {
+            //                 _id: '2',
+            //                 content: 'lorem ipsum',
+            //                 user: '61c211f4f6d8f52b0cdd143f',
+            //                 replies: [],
+            //                 date: '11/04/2019',
+            //                 likes: [],
+            //             }       
+            //         ],
+            //         date: '11/04/2019',
+            //         likes: [],
+            //     },
+            //     {   
+            //         _id: '299843',
+            //         title: 'How to greet properly',
+            //         desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
+            //         desc: 'lorem ipsum',
+            //         user: '61c211f4f6d8f52b0cdd143f',
+            //         language: 'english',
+            //         comments: [
+            //             {
+            //                 _id: '1',
+            //                 content: 'lorem ipsum',
+            //                 user: '61c211f4f6d8f52b0cdd143f',
+            //                 replies: [],
+            //                 date: '11/04/2019',
+            //                 likes: [],
+            //             },
+            //             {
+            //                 _id: '2',
+            //                 content: 'lorem ipsum',
+            //                 user: '61c211f4f6d8f52b0cdd143f',
+            //                 replies: [],
+            //                 date: '11/04/2019',
+            //                 likes: [],
+            //             }       
+            //         ],
+            //         date: '11/04/2019',
+            //         likes: [],
+            //     }
+            // ]
         }
     },
-    mounted() {
+    async mounted () {
         const id = this.$route.params.question;
 
-        console.log(id);
-        this.$store.dispatch('fetchcommunityquestion', id)
-        .then((questionInfo)=> {
-            this.question = questionInfo;
-
-            console.log(this.question);
+        await this.$store.dispatch('fetchcommunityquestion', id)
+        .then(async (questionInfo)=> {
+            this.question = questionInfo[0]
+            
+            await this.$store.dispatch('fetchuser', this.question.user)
+            .then((userdata)=> this.userData = userdata )
+            .catch((error)=> console.log(error));
         })
         .catch((error)=> console.log(error));
 

@@ -18,7 +18,7 @@ export default createStore({
         tempRoute: '',
         class: '',
         role: '',
-        communityLanguage: ''
+        communityLanguage: 'english'
     },
     mutations: {
         changePrefCurrency(state, payload){
@@ -361,7 +361,6 @@ export default createStore({
             return new Promise(async (resolve, reject)=> {
              
                 const url = `${baseURL}/community/questions/${this.state.communityLanguage}`;
-                console.log(url);
                 
                 await axios.get(url)
                 .then((response)=> resolve(response.data.data))
@@ -372,7 +371,6 @@ export default createStore({
             return new Promise(async (resolve, reject)=> {
              
                 const url = `${baseURL}/community/question/${payload}`;
-                console.log(url);
                 
                 await axios.get(url)
                 .then((response)=> resolve(response.data.data))
@@ -401,7 +399,8 @@ export default createStore({
         tutors: state => state.tutors,
         token: state => state.token,
         bookingData: state => (state.bookingInfo == '') ?JSON.parse(localStorage.getItem('bookinginfo')) : state.bookingInfo,
-        classData: state => state.class
+        classData: state => state.class,
+        communityLanguage: state=> state.communityLanguage
     }
 
 });

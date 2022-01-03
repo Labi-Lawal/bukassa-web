@@ -18,7 +18,7 @@
        
         <nav>
             <router-link to="/tutors/explore">Find a tutor</router-link>
-            <!-- <router-link to="/community">Community</router-link> -->
+            <router-link :to="`/community/${this.$store.getters.communityLanguage}`">Community</router-link>
             <router-link to="/become-tutor" v-if="userRole !== 'tutor'">Become a tutor</router-link>
         </nav>
        
@@ -162,7 +162,7 @@ export default {
                     icon: ''
                 }
             ],
-            showSideBar: false
+            showSideBar: false,
         }
     },
     methods: { 

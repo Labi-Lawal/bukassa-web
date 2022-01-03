@@ -1,6 +1,6 @@
 <template>
     <div class="question_card">
-        <router-link :to="language + '/' + id">
+        <router-link :to="'question' + '/' + id">
             <div class="question_title">
                 {{ title }}
             </div>
@@ -11,7 +11,7 @@
             </div>
             <div class="dets">
                 <div class="user_name">
-                    John Doe
+                    {{ userData.fullname }}
                 </div>
                 <div class="date">
                     13 days ago
@@ -51,7 +51,18 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'question-card',
-    props: ['id', 'title', 'user', 'date', 'description', 'languages', 'comments', 'likes']
+    props: ['id', 'title', 'user', 'date', 'description', 'languages', 'comments', 'likes'],
+    data() {
+        return {
+            userData: ''
+        }
+    },
+    mounted() {
+
+        this.$store.dispatch('fetchuser', this.user)
+        .then((userdata)=> this.userData = userdata )
+        .catch((error)=> console.log(error));
+    }
 });
 </script>
 
@@ -97,7 +108,8 @@ export default defineComponent({
     }
     .user_name {
         font-weight: 500;
-        font-size: 100%;
+        font-size: 90%;
+        text-transform: capitalize;
     }
     .date {
         font-size: 80%;
