@@ -763,7 +763,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import Header from "@/components/Header.vue";
+import Header from "@/components/Header/Header.vue";
 import SiteFooter from "@/components/SiteFooter.vue";
 import PageTitle from "@/components/title/page-title.vue";
 import FormTitle from "@/components/title/FormTitle.vue";

@@ -24,7 +24,7 @@
        
         <div class="user-nav" v-show="isLoggedIn" @click="toggleProfileMenu">
             <div class="user-image">
-                <img src="../assets/userimage.png">
+                <img src="@/assets/userimage.png">
             </div>
             <UserProfileMenu v-if="showUserMenu" :nav="nav" />
         </div>
@@ -40,7 +40,7 @@
                 <div class="user">
                     <div class="profile_min" v-if="isLoggedIn">
                         <div class="user-image">
-                            <img src="../assets/userimage.png">
+                            <img src="@/assets/userimage.png">
                         </div>
                         <div class="name">
                             {{ fullname }}

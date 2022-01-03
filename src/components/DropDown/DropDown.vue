@@ -49,8 +49,8 @@ import { defineComponent } from "@vue/runtime-core";
 export default defineComponent({
     name: 'drop-down',
     props: [
-        'placeholder', 
-        'options', 
+        'placeholder',
+        'options',
         'isOptionsVisible',
         'selected', 
         'selectedIndex', 

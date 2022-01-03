@@ -97,6 +97,19 @@ export default {
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+  .custom_scroll::-webkit-scrollbar {
+    width: 10px;
+    background: none;
+  }
+  .custom_scroll::-webkit-scrollbar-track {
+    padding: 5% 0;
+  }
+  .custom_scroll::-webkit-scrollbar-thumb {
+    background: var(--paper-grey-300);
+    border-radius: 5px;
+    cursor: pointer !important;
+  }
   
   
 </style>

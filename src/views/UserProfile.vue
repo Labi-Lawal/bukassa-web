@@ -67,7 +67,7 @@
 </template>
 
 <script>
-    import Header from '../components/Header.vue';
+    import Header from '../components/Header/Header.vue';
     import SiteFooter from '../components/SiteFooter.vue';
     import CompleteReg from '../components/tutor/CompleteRegModal.vue'
     

@@ -120,11 +120,29 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: '/community',
-  //   name: 'Community',
-  //   component: ()=> import('../views/BecomeTutor.vue'),
-  // },
+  {
+    path: '/community',
+    name: 'Community',
+    component: ()=> import('../views/Community/Index.vue'),
+    children: [
+      {
+        path: '', name: 'Community Welcome',
+        component: ()=> import('../views/Community/Welcome.vue'),
+      },
+      {
+        path: ':language', name: 'Community Language',
+        component: ()=> import('../views/Community/Questions.vue'),
+      },
+      {
+        path: ':language/:question', name: 'Community Question',
+        component: ()=> import('../views/Community/Question.vue'),
+      },
+      {
+        path: 'new', name: 'Create New Question',
+        component: ()=> import('../views/Community/New.vue'),
+      }
+    ]
+  },
   {
     path: '/booking-payment',
     component: ()=> import('../views/BookingPayment.vue'),

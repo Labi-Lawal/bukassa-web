@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import Header from '@/components/Header.vue';
+    import Header from '../components/Header/Header.vue';
     import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
     
     export default {

@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/Header/Header.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import duration  from "@/helper/duration.js";
 import appendCurreny  from "@/helper/currency.js";

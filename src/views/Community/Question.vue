@@ -1,0 +1,345 @@
+<template>
+    <div class="community_question" v-if="question != ''">
+        <div class="main">
+            <div class="question section">
+                <div class="question_title">
+                    {{ question.title }}
+                </div>
+                
+                <div class="user_details">
+                    <div class="user_image">
+                        <img src="@/assets/userimage.png">
+                    </div>
+                    <div class="dets">
+                        <div class="user_name">
+                            John Doe
+                        </div>
+                        <div class="date">
+                            13 days ago
+                        </div>
+                    </div>
+                    <div class="language">
+                        {{ question.languages }}
+                    </div>
+                </div>
+                
+                <div class="desc">
+                    {{ question.desc }}
+                </div>
+
+                <div class="others">
+                    <div class="likes">
+                        <div class="number">
+                            
+                        </div>
+                        <div class="label">Likes</div>
+                    </div>
+                    <div class="comments">
+                        <div class="number">
+                            
+                        </div>
+                        <div class="label">Comments</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments section ">
+                
+                <div class="new_comment_box">
+                    <textarea class="custom_scroll"></textarea>
+                    <div class="submit_btn_wrapper">
+                        <ButtonIcon 
+                            buttonIcon="paper-plane"
+                        />
+                    </div>
+                </div>
+
+                <div class="comments_list">
+                    <CommentCard 
+                        v-for="comments in question.comments"
+                        :key="comments._id"
+                        :id="comments._id"
+                        :user="comments.user"
+                        :date="comments.date"
+                        :content="comments.content"
+                        :replies="comments.replies"
+                        :likes="comments.likes"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="related">
+            <div class="head">Related</div>
+            <div class="related_list">
+                <div 
+                    v-for="related in relatedList"
+                    :key="related._id"
+                    class="related_question"
+                >
+                    <router-link :to="related._id">
+                        <div class="title"> {{ related.title }} </div>
+                    </router-link>
+                    <div class="desc">{{ related.desc }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { defineComponent } from "@vue/runtime-core";
+import Header from "@/components/Header/Header.vue";
+import SiteFooter from "@/components/SiteFooter.vue";
+import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
+import CommentCard from "@/components/Card/CommentCard.vue";
+
+export default defineComponent({
+    components: { Header, SiteFooter, ButtonIcon, CommentCard },
+    data() {
+        var question = '';
+
+        return {
+            question,
+            relatedList: [
+                {   
+                    _id: '12321',
+                    title: 'How to greet properly',
+                    desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
+                    desc: 'lorem ipsum',
+                    user: '61c211f4f6d8f52b0cdd143f',
+                    language: 'english',
+                    comments: [
+                        {
+                            _id: '1',
+                            content: 'lorem ipsum',
+                            user: '61c211f4f6d8f52b0cdd143f',
+                            replies: [],
+                            date: '11/04/2019',
+                            likes: [],
+                        },
+                        {
+                            _id: '2',
+                            content: 'lorem ipsum',
+                            user: '61c211f4f6d8f52b0cdd143f',
+                            replies: [],
+                            date: '11/04/2019',
+                            likes: [],
+                        }       
+                    ],
+                    date: '11/04/2019',
+                    likes: [],
+                },
+                {   
+                    _id: '299843',
+                    title: 'How to greet properly',
+                    desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit, placerat platea lobortis leo maecenas neque felis senectus, commodo augue orci sodales semper varius. Mauris porta purus vehicula bibendum parturient egestas quis fusce, pretium vestibulum suscipit ornare dignissim ad torquent commodo cum, hac inceptos ut vulputate dapibus ac sed. Aptent dictumst aliquet mus nunc litora vitae purus conubia volutpat est, inceptos feugiat porttitor metus quis arcu pretium at platea natoque magna, sociosqu bibendum ultrices hendrerit vestibulum ligula molestie cursus nulla.',
+                    desc: 'lorem ipsum',
+                    user: '61c211f4f6d8f52b0cdd143f',
+                    language: 'english',
+                    comments: [
+                        {
+                            _id: '1',
+                            content: 'lorem ipsum',
+                            user: '61c211f4f6d8f52b0cdd143f',
+                            replies: [],
+                            date: '11/04/2019',
+                            likes: [],
+                        },
+                        {
+                            _id: '2',
+                            content: 'lorem ipsum',
+                            user: '61c211f4f6d8f52b0cdd143f',
+                            replies: [],
+                            date: '11/04/2019',
+                            likes: [],
+                        }       
+                    ],
+                    date: '11/04/2019',
+                    likes: [],
+                }
+            ]
+        }
+    },
+    mounted() {
+        const id = this.$route.params.question;
+
+        console.log(id);
+        this.$store.dispatch('fetchcommunityquestion', id)
+        .then((questionInfo)=> {
+            this.question = questionInfo;
+
+            console.log(this.question);
+        })
+        .catch((error)=> console.log(error));
+
+    }
+})
+</script>
+
+<style scoped>
+    .community_question {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .main {
+        box-shadow: var(--shadow-100);
+        border-radius: 10px;
+        width: 70%;
+        padding: 3%;
+    }
+    .related {
+        box-shadow: var(--shadow-100);
+        width: 22%;
+        height: max-content;
+        border-radius: 5px;
+    }
+    .related .head {
+        padding: 4%;
+        font-size: 110%;
+        font-weight: 700;
+        border-bottom: 1px solid var(--paper-grey-200);
+    }
+    .related_list {
+        padding: 2% 0;
+    }
+    .related_question {
+        border-bottom: 1px solid var(--paper-grey-200);
+        padding: 4% 2%;
+        overflow: hidden;
+        width: 90%;
+        margin: 0 auto;
+    }
+    .related_question:last-child {
+        border: none;
+    }
+    .related_question .title {
+        font-weight: 600;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .related_question .desc {
+        font-weight: 400;
+        font-size: 90%;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .question_title {
+        font-size: 240%;
+        font-weight: 600;
+        color: var(--paper-grey-800);
+        display: flex;
+    }
+
+    .user_details {
+        height: 100px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .user_image {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+    }
+
+    .dets {
+        margin-left: 2%; 
+    }
+    .user_name {
+        font-weight: 500;
+        font-size: 110%;
+    }
+    .date {
+        font-size: 90%;
+        color: var(--paper-grey-600);
+    }
+
+    .language {
+        margin-left: auto;
+        text-transform: capitalize;
+        padding: 5px 25px;
+        background: var(--burgundy-faded);
+        color: var(--burgundy-100);
+        border-radius: 5px;
+        font-weight: 600;
+    }
+
+    .desc {
+        margin-top: 5px;
+        color: var(--paper-grey-800);
+        font-size: 140%;
+        overflow: hidden;
+    }
+
+    .others {
+        display: flex;
+        align-items: center;
+        height: 100px;
+    }
+    .others > div {
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        margin-right: 1%;
+        font-weight: 400;
+        color: var(--paper-grey-700);
+        font-size: 120%;
+    }
+    .number {
+        padding: 0 5px;
+    }
+
+    .community_question .main .section {
+        margin-left: auto;
+        width: calc(100% - 2%);
+    }
+    .community_question .main .section:first-of-type {
+        margin-left: auto;
+        width: 100%;
+    }
+
+    .comments.section {
+        
+    }
+    .new_comment_box {
+        display: flex;
+    }
+    .new_comment_box textarea {
+        width: 90%;
+        min-height: 70px;
+        resize: none;
+        border-radius: 10px;
+        outline: none;
+        font-size: 120%;
+        padding: 4px 8px;
+    }
+    
+    .submit_btn_wrapper {
+        width: 60px;
+        height: 60px;
+        margin-left: auto;
+    }
+    .submit_btn_wrapper button {
+        border-radius: 50%;
+        border: none;
+        background: var(--burgundy-100);
+        color: white;
+        box-shadow: var(--shadow-100);
+    }
+    .comments_list {
+        /* border-top: 1px solid var(--paper-grey-400); */
+    }
+</style>
+

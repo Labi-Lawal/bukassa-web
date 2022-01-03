@@ -111,7 +111,7 @@
 </template>
 
 <script>
-    import Header from '../components/Header.vue';
+    import Header from '../components/Header/Header.vue';
     import BackDrop from "../components/BackDrop.vue";
     import TutorContactModal from "../components/tutor/TutorContactModal.vue";
     import TutorBookingModal from "../components/tutor/TutorBookingModal.vue";

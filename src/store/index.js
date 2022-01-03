@@ -17,7 +17,8 @@ export default createStore({
         counter: 0,
         tempRoute: '',
         class: '',
-        role: ''
+        role: '',
+        communityLanguage: ''
     },
     mutations: {
         changePrefCurrency(state, payload){
@@ -84,6 +85,9 @@ export default createStore({
         },
         clear_user_role(state, payload) {
             state.role = '';
+        },
+        store_community_language(state, payload) {
+            state.communityLanguage = payload;
         }
     },
     actions: { 
@@ -346,6 +350,46 @@ export default createStore({
         },
         clearrole({commit}){
             commit('clear_user_role');
+        },
+        storecommunitylanguage({commit}, payload) {
+            return new Promise((resolve, reject)=> {
+                commit('store_community_language', payload);
+                resolve();
+            });
+        },
+        fetchcommunityquestions({commit}) {
+            return new Promise(async (resolve, reject)=> {
+             
+                const url = `${baseURL}/community/questions/${this.state.communityLanguage}`;
+                console.log(url);
+                
+                await axios.get(url)
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
+        },
+        fetchcommunityquestion({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+             
+                const url = `${baseURL}/community/question/${payload}`;
+                console.log(url);
+                
+                await axios.get(url)
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
+        },
+        createquestion({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                url = `${baseURL}/community/questions/create`;
+                
+                await axios.post(url, payload, 
+                { headers: headers })
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
         }
     },
     getters: { 
