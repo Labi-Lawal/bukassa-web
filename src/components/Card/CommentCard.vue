@@ -31,6 +31,26 @@
                 </div>
                 <div class="label">replies</div>
             </div>
+
+            <div class="reply_action" @click="showReplyBox()">
+                Reply
+            </div>
+        </div>
+
+        <div class="reply_section" v-if="replyBoxVisibility" ref="replyBox">
+            <div class="new_comment_box">
+                <div
+                    class="custom_scroll textarea"
+                    ref="comment_reply"
+                    contenteditable
+                ></div>
+                <div class="submit_btn_wrapper">
+                    <ButtonIcon 
+                        buttonIcon="paper-plane"
+                        @buttonAction="submitCommentReply()"
+                    />
+                </div>
+            </div>
         </div>
 
         <CommentCard 
@@ -48,17 +68,35 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
+import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
 
 export default defineComponent({
     name: 'comment-card',
     props: ['id', 'user', 'date', 'content', 'replies', 'likes'],
+    components: { ButtonIcon },
     data() {
         return {
-            userData: ''
+            userData: '',
+            replyBoxVisibility: false
+        }
+    },
+    methods: {
+        submitCommentReply(id) {
+            const payload = {
+                questionid: this.$route.params.question,
+                commentid: this.id,
+                reply: this.$refs.comment_reply.innerText
+            };
+
+            this.$store.dispatch('submitcommentreply', payload)
+            .then((response)=> console.log(response))
+            .catch((error)=> console.log(error.response));
+        },
+        showReplyBox() {
+            this.replyBoxVisibility = true;
         }
     },
     mounted() {
-
         this.$store.dispatch('fetchuser', this.user)
         .then((userdata)=> this.userData = userdata )
         .catch((error)=> console.log(error));
@@ -136,5 +174,44 @@ export default defineComponent({
     }
     .number {
         padding: 0 5px 0 0;
+    }
+    .reply_action {
+        margin-left: 5%;
+        font-weight: 600 !important;
+        color: var(--burgundy-100) !important;
+        cursor: pointer;
+    }
+    
+    .reply_section {
+        margin-top: 2%;
+    }
+    .new_comment_box {
+        display: flex;
+        align-items: flex-end;
+    }
+    .new_comment_box .textarea {
+        border: 1px solid var(--paper-grey-500);
+        width: 90%;
+        min-height: 50px;
+        max-height: 100px;
+        overflow: hidden;
+        overflow-y: auto;
+        resize: none;
+        border-radius: 25px;
+        outline: none;
+        font-size: 120%;
+        padding: 4px 8px;
+    }
+    .submit_btn_wrapper {
+        width: 60px;
+        height: 60px;
+        margin-left: auto;
+    }
+    .submit_btn_wrapper button {
+        border-radius: 50%;
+        border: none;
+        background: var(--burgundy-100);
+        color: white;
+        box-shadow: var(--shadow-100);
     }
 </style>

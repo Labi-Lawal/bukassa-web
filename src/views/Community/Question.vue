@@ -2,8 +2,8 @@
     <div class="community_question">
         <div class="main">
             <div class="question section">
-                <div class="question_title">
-                    {{ question.title }}
+                <div class="question_title" v-if="question.title">
+                    {{ capitalize(question.title) }}
                 </div>
                 
                 <div class="user_details">
@@ -203,7 +203,10 @@ export default defineComponent({
             this.$store.dispatch('submitcomment', payload)
             .then((response)=> console.log(response))
             .catch((error)=> console.log(error.response));
-        }
+        },
+        capitalize(text) {
+            return text[0].toUpperCase() + text.substr(1, text.length)
+        },
     },
     async mounted () {
         this.fetchQuestionDetails();

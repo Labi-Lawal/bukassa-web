@@ -106,7 +106,11 @@
                             autocomplete="false"
                             @keyup="searchLanguageList()"
                         >
-                        <div class="create_language_btn_wrapper">
+                        <div class="create_language_btn_wrapper"
+                            :style="{
+                                color: (languageModel.search != '' && languageModel.options.length > 0)
+                            }"
+                        >
                             <ButtonPlainText 
                                 buttonText="add"
                                 @buttonAction="addLanguage()"

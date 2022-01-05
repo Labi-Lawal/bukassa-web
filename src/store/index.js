@@ -414,6 +414,16 @@ export default createStore({
                 .catch((error)=> reject(error));
             });
         },
+        submitcommentreply({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                url = `${baseURL}/community/comment/reply`;
+
+                await axios.post(url, payload, { headers: headers })
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
+        }
     },
     getters: { 
         registrationRole: state => state.role,
