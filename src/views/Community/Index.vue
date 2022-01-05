@@ -1,6 +1,6 @@
 <template>
     <div class="become_tutor">
-        <CommunityHeader />
+        <Header />
         
         <div class="body">
             <router-view />
@@ -11,11 +11,11 @@
 </template>
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import CommunityHeader from "@/components/Header/CommunityHeader.vue";
+import Header from "@/components/Header/Header.vue";
 import SiteFooter from "@/components/SiteFooter.vue";
 
 export default defineComponent({
-    components: { CommunityHeader, SiteFooter }
+    components: { Header, SiteFooter }
 })
 </script>
 <style scoped>

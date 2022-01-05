@@ -18,8 +18,12 @@
                             <!-- 13 days ago -->
                         </div>
                     </div>
-                    <div class="language">
-                        {{ question.languages }}
+                    <div 
+                        class="language"
+                        v-for="language in question.languages"
+                        :key="language"
+                    >
+                        {{ language }}
                     </div>
                 </div>
                 
@@ -30,17 +34,17 @@
                 <div class="others">
                     <div class="likes">
                         <div class="number">
-                            {{ question.likes }}
+                            {{ likes.length }}
                         </div>
                         <div class="label">Likes</div>
                     </div>
-                    <div class="comments" v-if="question.comments.length">
+                    <div class="comments" v-if="comments.length > 0">
                         <div class="number">
-                            {{ question.comments.length }}
+                            {{ comments.length }}
                         </div>
                         <div class="label">Comments</div>
                     </div>
-                    <div class="comments" v-else>
+                    <div class="comments empty" v-else>
                         <div class="label">No Comments</div>
                     </div>
                 </div>
@@ -49,17 +53,21 @@
             <div class="comments section ">
                 
                 <div class="new_comment_box">
-                    <textarea class="custom_scroll"></textarea>
+                    <textarea 
+                        class="custom_scroll"
+                        v-model="newCommentModel.value"
+                    ></textarea>
                     <div class="submit_btn_wrapper">
                         <ButtonIcon 
                             buttonIcon="paper-plane"
+                            @buttonAction="submitComment()"
                         />
                     </div>
                 </div>
 
-                <!-- <div class="comments_list">
+                <div class="comments_list">
                     <CommentCard 
-                        v-for="comments in question.comments"
+                        v-for="comments in comments"
                         :key="comments._id"
                         :id="comments._id"
                         :user="comments.user"
@@ -68,25 +76,28 @@
                         :replies="comments.replies"
                         :likes="comments.likes"
                     />
-                </div> -->
+                </div>
             </div>
         </div>
 
-        <!-- <div class="related">
-            <div class="head">Related</div>
-            <div class="related_list">
-                <div 
-                    v-for="related in relatedList"
-                    :key="related._id"
-                    class="related_question"
-                >
-                    <router-link :to="related._id">
-                        <div class="title"> {{ related.title }} </div>
-                    </router-link>
-                    <div class="desc">{{ related.desc }}</div>
+        <!-- 
+            <div class="related">
+                <div class="head">Related</div>
+                <div class="related_list">
+                    <div 
+                        v-for="related in relatedList"
+                        :key="related._id"
+                        class="related_question"
+                    >
+                        <router-link :to="related._id">
+                            <div class="title"> {{ related.title }} </div>
+                        </router-link>
+                        <div class="desc">{{ related.desc }}</div>
+                    </div>
                 </div>
             </div>
-        </div> -->
+        -->
+
     </div>
 </template>
 
@@ -100,7 +111,13 @@ export default defineComponent({
     data() {
         return {
             question: '',
+            likes: [],
+            comments: [],
             userData: '',
+            newCommentModel: {
+                value: '',
+                error: ''
+            }
             // relatedList: [
             //     {   
             //         _id: '12321',
@@ -161,19 +178,35 @@ export default defineComponent({
             // ]
         }
     },
-    async mounted () {
-        const id = this.$route.params.question;
+    methods: {
+        async fetchQuestionDetails () {
+            const id = this.$route.params.question;
 
-        await this.$store.dispatch('fetchcommunityquestion', id)
-        .then(async (questionInfo)=> {
-            this.question = questionInfo[0]
-            
-            await this.$store.dispatch('fetchuser', this.question.user)
-            .then((userdata)=> this.userData = userdata )
+            await this.$store.dispatch('fetchcommunityquestion', id)
+            .then(async (questionInfo)=> {
+
+                this.question = questionInfo[0];
+                this.likes = this.question.likes;
+                this.comments = this.question.comments.reverse();
+                
+                await this.$store.dispatch('fetchuser', this.question.user)
+                .then((userdata)=> this.userData = userdata )
+                .catch((error)=> console.log(error));
+            })
             .catch((error)=> console.log(error));
-        })
-        .catch((error)=> console.log(error));
-
+        },
+        submitComment() {
+            const payload = {
+                questionid: this.$route.params.question,
+                comment: this.newCommentModel.value
+            }
+            this.$store.dispatch('submitcomment', payload)
+            .then((response)=> console.log(response))
+            .catch((error)=> console.log(error.response));
+        }
+    },
+    async mounted () {
+        this.fetchQuestionDetails();
     }
 })
 </script>
@@ -236,21 +269,20 @@ export default defineComponent({
     }
 
     .question_title {
-        font-size: 240%;
+        font-size: 200%;
         font-weight: 600;
         color: var(--paper-grey-800);
         display: flex;
     }
 
     .user_details {
-        height: 100px;
         display: flex;
         align-items: center;
     }
     
     .user_image {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         border-radius: 50%;
     }
 
@@ -259,7 +291,8 @@ export default defineComponent({
     }
     .user_name {
         font-weight: 500;
-        font-size: 110%;
+        font-size: 100%;
+        text-transform: capitalize;
     }
     .date {
         font-size: 90%;
@@ -277,9 +310,9 @@ export default defineComponent({
     }
 
     .desc {
-        margin-top: 5px;
+        margin-top: 2%;
         color: var(--paper-grey-800);
-        font-size: 140%;
+        font-size: 120%;
         overflow: hidden;
     }
 
@@ -296,7 +329,7 @@ export default defineComponent({
         margin-right: 1%;
         font-weight: 400;
         color: var(--paper-grey-700);
-        font-size: 120%;
+        font-size: 110%;
     }
     .number {
         padding: 0 5px;
@@ -319,9 +352,9 @@ export default defineComponent({
     }
     .new_comment_box textarea {
         width: 90%;
-        min-height: 70px;
+        min-height: 50px;
         resize: none;
-        border-radius: 10px;
+        border-radius: 25px;
         outline: none;
         font-size: 120%;
         padding: 4px 8px;
@@ -342,5 +375,10 @@ export default defineComponent({
     .comments_list {
         /* border-top: 1px solid var(--paper-grey-400); */
     }
+    .comments.empty {
+        font-weight: 600;
+    }
 </style>
+
+
 

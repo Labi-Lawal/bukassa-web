@@ -62,16 +62,7 @@ export default defineComponent({
         return {
             questions: [],
             languages: {
-                options: [
-                    {
-                        display_name: 'english',
-                        value: 'english'
-                    },
-                    {
-                        display_name: 'yoruba',
-                        value: 'yoruba'
-                    }
-                ],
+                options: [],
                 selected: true,
                 selectedIndex: 0,
                 selectedOption: 'english'
@@ -80,6 +71,15 @@ export default defineComponent({
         }
     },
     methods: {
+        loadLanguages() {
+            const comLang = this.$store.getters.communityLanguages;
+            comLang.forEach(language => {
+                this.languages.options.push({
+                    display_name: language,
+                    value: language
+                });
+            });
+        },
         fetchQuestions() {
             this.$store.dispatch('fetchcommunityquestions')
             .then((response)=> {
@@ -92,6 +92,22 @@ export default defineComponent({
         },
         storeCommunityLanguage() {
             this.$store.dispatch('storecommunitylanguage', this.languages.selectedOption);
+        },
+        async fetchLanguages() {
+            this.loadLanguages();
+            await this.$store.dispatch('fetchcommunitylanguages')
+            .then((response)=> {
+                const lang = [];
+                response.forEach(language => {
+                    lang.push({
+                        display_name: language.title,
+                        value: language.title
+                    });
+                });
+
+                this.languages.options = response;
+            })
+            .catch((error)=> console.log(error.response));
         },
         selectOption(selected) {
             
@@ -113,7 +129,8 @@ export default defineComponent({
             this.$router.push('new');
         }
     },
-    beforeMount() {
+    async beforeMount() {
+        await this.fetchLanguages();
         this.storeCommunityLanguage();
         this.fetchQuestions();
     }

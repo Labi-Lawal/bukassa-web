@@ -106,8 +106,10 @@
                             autocomplete="false"
                             @keyup="searchLanguageList()"
                         >
-                        <div class="btn_wrapper">
-
+                        <div class="create_language_btn_wrapper">
+                            <ButtonPlainText 
+                                buttonText="add"
+                            />
                         </div>
                     </div>
                     <div class="list">
@@ -190,11 +192,26 @@ export default defineComponent({
             };
 
             this.$store.dispatch('createquestion', body)
-            .then((questionInfo)=> this.$router.push(`/${body.languages[0]}/${questionInfo._id}`))
+            .then((questionInfo)=> this.$router.push(`/community/question/${questionInfo._id}`))
             .catch((error)=> {
                 console.log(error);
             });
-        }
+        },
+        fetchLanguages() {
+            this.$store.dispatch('fetchcommunitylanguages')
+            .then((response)=> { 
+                const lang = [];
+                response.data.data.forEach(language => {
+                    lang.push(language.title);
+                });
+
+                this.languageModel.options = lang 
+            })
+            .catch((error)=> console.log(error.response));
+        },
+    },
+    beforeMount() {
+        this.fetchLanguages();
     }
 })
 </script>
@@ -297,7 +314,7 @@ export default defineComponent({
         margin: 5% 0;
         margin-left: auto;
     }
-    .submit_btn_wrapper button {
+    .submit_btn_wrapper button, .create_language_btn_wrapper button {
         border: none;
         border-radius: 5px;
         background: var(--burgundy-200);
@@ -322,7 +339,7 @@ export default defineComponent({
     }
     .languages_list_box .head {
         height: 10%;
-        border-bottom: 1px solid var(--paper-grey-300);
+        border-bottom: 1px solid var(--paper-grey-100);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -340,8 +357,10 @@ export default defineComponent({
         height: 90%;
     }
     .languages_list_box .input_field {
-        border-bottom: 1px solid var(--paper-grey-300);
+        border-bottom: 1px solid var(--paper-grey-100);
         height: 10%;
+        display: flex;
+
     }
     .languages_list_box input {
         height: 100%;
@@ -349,7 +368,14 @@ export default defineComponent({
         border-radius: 0;
         border: 0;
         outline: none;
-        width: 70%;
+        width: 80%;
+    }
+    .create_language_btn_wrapper {
+        width: 20%;
+        height: 100%;
+    }
+    .create_language_btn_wrapper button {
+        border-radius: 0;
     }
     .list {
         height: 89.5%;

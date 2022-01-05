@@ -6,13 +6,14 @@
             </div>
             <div class="dets">
                 <div class="user_name">
-                    John Doe
+                    {{ userData.fullname }}
                 </div>
                 <div class="date">
                     13 days ago
                 </div>
             </div>
         </div>
+        
         <div class="desc">
             {{ content }}
         </div>
@@ -31,6 +32,17 @@
                 <div class="label">replies</div>
             </div>
         </div>
+
+        <CommentCard 
+            v-for="comments in replies"
+            :key="comments._id"
+            :id="comments._id"
+            :user="comments.user"
+            :date="comments.date"
+            :content="comments.content"
+            :replies="comments.replies"
+            :likes="comments.likes"
+        />
     </div>
 </template>
 
@@ -39,7 +51,18 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'comment-card',
-    props: ['id', 'user', 'date', 'content', 'replies', 'likes']
+    props: ['id', 'user', 'date', 'content', 'replies', 'likes'],
+    data() {
+        return {
+            userData: ''
+        }
+    },
+    mounted() {
+
+        this.$store.dispatch('fetchuser', this.user)
+        .then((userdata)=> this.userData = userdata )
+        .catch((error)=> console.log(error));
+    }
 });
 </script>
 
@@ -55,7 +78,7 @@ export default defineComponent({
 
     .comment_title {
         height: 15%;
-        font-size: 200%;
+        font-size: 180%;
         font-weight: 600;
         color: var(--paper-grey-800);
         display: flex;
@@ -72,8 +95,8 @@ export default defineComponent({
     }
     
     .user_image {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         border-radius: 50%;
     }
 
@@ -82,7 +105,8 @@ export default defineComponent({
     }
     .user_name {
         font-weight: 500;
-        font-size: 110%;
+        font-size: 90%;
+        text-transform: capitalize;
     }
     .date {
         font-size: 90%;
@@ -92,14 +116,9 @@ export default defineComponent({
     .desc {
         margin-top: 5px;
         color: var(--paper-grey-700);
-        font-size: 120%;
+        font-size: 100%;
         overflow: hidden;
         padding: 2% 0;
-
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        -webkit-box-orient: vertical;
     }
 
     .others {
@@ -110,13 +129,12 @@ export default defineComponent({
         border-radius: 15px;
         display: flex;
         align-items: center;
-        padding: 2px;
         margin-right: 1%;
         font-weight: 400;
         color: var(--paper-grey-700);
-        font-size: 110%;
+        font-size: 90%;
     }
     .number {
-        padding: 0 5px;
+        padding: 0 5px 0 0;
     }
 </style>

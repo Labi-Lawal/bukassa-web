@@ -18,7 +18,8 @@ export default createStore({
         tempRoute: '',
         class: '',
         role: '',
-        communityLanguage: 'english'
+        communityLanguage: 'english',
+        communityLanguages: ['']
     },
     mutations: {
         changePrefCurrency(state, payload){
@@ -88,6 +89,9 @@ export default createStore({
         },
         store_community_language(state, payload) {
             state.communityLanguage = payload;
+        },
+        store_community_languages(state, payload) {
+            state.communityLanguages = payload;
         }
     },
     actions: { 
@@ -388,7 +392,28 @@ export default createStore({
                 .then((response)=> resolve(response.data.data))
                 .catch((error)=> reject(error));
             });
-        }
+        },
+        submitcomment({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                url = `${baseURL}/community/comment/create`;
+
+                await axios.post(url, payload, { headers: headers })
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
+        },
+        fetchcommunitylanguages({commit}) {
+            return new Promise(async (resolve, reject)=> {
+                const url = `${baseURL}/community/languages`;
+
+                await axios.get(url)
+                .then((response)=> {
+                    resolve(response.data.data);
+                })
+                .catch((error)=> reject(error));
+            });
+        },
     },
     getters: { 
         registrationRole: state => state.role,
@@ -400,7 +425,8 @@ export default createStore({
         token: state => state.token,
         bookingData: state => (state.bookingInfo == '') ?JSON.parse(localStorage.getItem('bookinginfo')) : state.bookingInfo,
         classData: state => state.class,
-        communityLanguage: state=> state.communityLanguage
+        communityLanguage: state => state.communityLanguage,
+        communityLanguages: state => state.communityLanguages
     }
 
 });
