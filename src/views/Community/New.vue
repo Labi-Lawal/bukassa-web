@@ -109,6 +109,7 @@
                         <div class="create_language_btn_wrapper">
                             <ButtonPlainText 
                                 buttonText="add"
+                                @buttonAction="addLanguage()"
                             />
                         </div>
                     </div>
@@ -151,11 +152,13 @@ export default defineComponent({
             },
             languageModel: {
                 type: 'search',
-                options: ['english', 'yoruba'],
+                search: '',
+                options: [],
                 value: [],
                 error: ''
             },
-            showLanguages: false
+            showLanguages: false,
+            lang: []
         }
     },
     methods: {
@@ -172,15 +175,22 @@ export default defineComponent({
             }
             this.closeLanguages();
         },
+        addLanguage() {
+            if(!this.languageModel.options.includes(this.languageModel.search)) {
+                this.languageModel.value.push(this.languageModel.search);
+            }
+            this.closeLanguages();
+        },
         removeLanguage(index) {
             this.languageModel.value.splice(index, 1)
         },
         searchLanguageList() {
             if(this.languageModel.search != '') {
-                
-            
+                this.languageModel.options = this.lang.filter(item => {
+                    return item.search(this.languageModel.search) != -1
+                });
             } else {
-                
+                this.languageModel.options = this.lang;
             }
         },
         submitQuestion() {
@@ -200,12 +210,11 @@ export default defineComponent({
         fetchLanguages() {
             this.$store.dispatch('fetchcommunitylanguages')
             .then((response)=> { 
-                const lang = [];
-                response.data.data.forEach(language => {
-                    lang.push(language.title);
+                response.forEach(language => {
+                    this.lang.push(language.title);
                 });
 
-                this.languageModel.options = lang 
+                this.languageModel.options = this.lang 
             })
             .catch((error)=> console.log(error.response));
         },

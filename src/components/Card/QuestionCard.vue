@@ -2,7 +2,7 @@
     <div class="question_card">
         <router-link :to="'question' + '/' + id">
             <div class="question_title">
-                {{ title }}
+                {{ capitalize(title) }}
             </div>
         </router-link>
         <div class="user_details">
@@ -55,6 +55,11 @@ export default defineComponent({
     data() {
         return {
             userData: ''
+        }
+    },
+    methods: {
+        capitalize(text) {
+            return text[0].toUpperCase() + text.substr(1, text.length)
         }
     },
     mounted() {

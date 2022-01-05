@@ -84,7 +84,6 @@ export default defineComponent({
             this.$store.dispatch('fetchcommunityquestions')
             .then((response)=> {
                 this.questions = response;
-                console.log(response);
             })
             .catch((error)=> {
                 console.log(error.response);
@@ -98,6 +97,7 @@ export default defineComponent({
             await this.$store.dispatch('fetchcommunitylanguages')
             .then((response)=> {
                 const lang = [];
+
                 response.forEach(language => {
                     lang.push({
                         display_name: language.title,
@@ -105,7 +105,7 @@ export default defineComponent({
                     });
                 });
 
-                this.languages.options = response;
+                this.languages.options = lang;
             })
             .catch((error)=> console.log(error.response));
         },
@@ -127,7 +127,7 @@ export default defineComponent({
         },
         gotocreateform() {
             this.$router.push('new');
-        }
+        },
     },
     async beforeMount() {
         await this.fetchLanguages();
