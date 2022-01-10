@@ -9,25 +9,31 @@
                     {{ userData.fullname }}
                 </div>
                 <div class="date">
-                    13 days ago
+                    {{ calcTimeLapse() }}
                 </div>
             </div>
         </div>
         
         <div class="desc">
+            <div class="parent_reply" v-if="parentUser">
+                @{{ parentData.fullname }}
+            </div>
             {{ content }}
         </div>
 
         <div class="others">
-            <div class="likes">
+            <div class="likes" v-if="!parentUser">
                 <div class="number">
                     {{ likes.length }}
                 </div>
                 <div class="label">Likes</div>
             </div>
-            <div class="comments">
-                <div class="number">
+            <div class="comments" v-if="!parentUser">
+                <div class="number" v-if="replies">
                     {{ replies.length }}
+                </div>
+                <div class="number" v-else>
+                    0
                 </div>
                 <div class="label">replies</div>
             </div>
@@ -58,10 +64,12 @@
             :key="comments._id"
             :id="comments._id"
             :user="comments.user"
-            :date="comments.date"
+            :parentUser="comments.parentUser"
+            :date="comments.dateCreated"
             :content="comments.content"
             :replies="comments.replies"
             :likes="comments.likes"
+            :branchNo="branchNo + 1"
         />
     </div>
 </template>
@@ -69,14 +77,16 @@
 <script>
 import { defineComponent } from "@vue/runtime-core";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
+import duration from "@/helper/duration.js";
 
 export default defineComponent({
     name: 'comment-card',
-    props: ['id', 'user', 'date', 'content', 'replies', 'likes'],
+    props: ['id', 'user', 'date', 'parentUser', 'content', 'replies', 'likes', 'branchNo'],
     components: { ButtonIcon },
     data() {
         return {
             userData: '',
+            parentData: '',
             replyBoxVisibility: false
         }
     },
@@ -84,22 +94,43 @@ export default defineComponent({
         submitCommentReply(id) {
             const payload = {
                 questionid: this.$route.params.question,
+                userid: this.user,
                 commentid: this.id,
                 reply: this.$refs.comment_reply.innerText
             };
 
-            this.$store.dispatch('submitcommentreply', payload)
-            .then((response)=> console.log(response))
-            .catch((error)=> console.log(error.response));
+            if(this.branchNo == 1) {
+                this.$store.dispatch('submitcommentreply', payload)
+                .then((response)=> console.log(response))
+                .catch((error)=> console.log(error.response));
+                
+            } else {
+                this.$store.dispatch('submitreplytoreply', payload)
+                .then((response)=> console.log(response))
+                .catch((error)=> console.log(error.response));
+            }
         },
         showReplyBox() {
             this.replyBoxVisibility = true;
+        },
+        async detReplyBranch() {
+            if(this.parentUser)
+                this.parentData = await this.fetchUser(this.parentUser);
+        },
+        fetchUser(userid) {
+            return new Promise((resolve)=> {
+                this.$store.dispatch('fetchuser', userid)
+                .then((userdata)=> resolve(userdata))
+                .catch((error)=> console.log(error));
+            }); 
+        },
+        calcTimeLapse() {
+            return duration.timeLapse(this.date);
         }
     },
-    mounted() {
-        this.$store.dispatch('fetchuser', this.user)
-        .then((userdata)=> this.userData = userdata )
-        .catch((error)=> console.log(error));
+    async mounted() {
+      this.userData = await this.fetchUser(this.user);
+      await this.detReplyBranch();
     }
 });
 </script>
@@ -158,6 +189,13 @@ export default defineComponent({
         overflow: hidden;
         padding: 2% 0;
     }
+    .desc > div {
+        display: inline;
+    }
+    .parent_reply {
+        color: var(--burgundy-200);
+        text-decoration: underline;
+    }
 
     .others {
         display: flex;
@@ -175,8 +213,10 @@ export default defineComponent({
     .number {
         padding: 0 5px 0 0;
     }
+    .others > .comments {
+        margin-right: 5%;
+    }
     .reply_action {
-        margin-left: 5%;
         font-weight: 600 !important;
         color: var(--burgundy-100) !important;
         cursor: pointer;

@@ -14,7 +14,7 @@
                     {{ userData.fullname }}
                 </div>
                 <div class="date">
-                    13 days ago
+                    {{ calcTimeLapse() }}
                 </div>
             </div>
             <div 
@@ -48,6 +48,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
+import duration from "@/helper/duration.js";
 
 export default defineComponent({
     name: 'question-card',
@@ -60,10 +61,12 @@ export default defineComponent({
     methods: {
         capitalize(text) {
             return text[0].toUpperCase() + text.substr(1, text.length)
+        },
+        calcTimeLapse() {
+            return duration.timeLapse(this.date);
         }
     },
     mounted() {
-
         this.$store.dispatch('fetchuser', this.user)
         .then((userdata)=> this.userData = userdata )
         .catch((error)=> console.log(error));

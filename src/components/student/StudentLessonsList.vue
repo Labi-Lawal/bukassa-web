@@ -38,9 +38,13 @@ export default defineComponent({
 
             this.$store.dispatch('fetchtutor', lesson.tutor)
             .then(async (tutor)=> {
-                console.log(tutor);
+                
+                console.log(tutor.lessons);
+                console.log(lesson.lessonId);
                 
                 const mainLesson = await tutor.lessons.filter(element => element._id == lesson.lessonId);
+
+                console.log(mainLesson);
 
                 this.allLessons.push({
                     tutorId: tutor._id,
@@ -56,6 +60,7 @@ export default defineComponent({
                 console.log(this.allLessons);
             })
             .catch((error)=> {
+                console.log(error);
                 console.log(error.response);
             });
 

@@ -32,6 +32,7 @@
                                                 :options=countries
                                                 :selected=dropdownSelected[0]
                                                 :selectedIndex=dropdownSelectedIndex[0]
+                                                :enableSearchBar=showSearchBar[0]
                                                 :isOptionsVisible=optionsVisible[0]
                                                 :hideBorder=false
                                                 @showOptions=showOptions
@@ -47,6 +48,7 @@
                                         <div class="dropdown_wrapper">
                                             <DropDown
                                                 placeholder="-- Select Option --"
+                                                :enableSearchBar=showSearchBar[1]
                                                 :dropdownIndex=1
                                                 :options=countries
                                                 :selected=dropdownSelected[1]
@@ -105,6 +107,7 @@
                                         <div class="dropdown_wrapper">
                                             <DropDown  
                                                 placeholder="-- Select Your Gender --"
+                                                :enableSearchBar=showSearchBar[2]
                                                 :dropdownIndex=2
                                                 :options=gender
                                                 :selected=dropdownSelected[2]
@@ -134,6 +137,7 @@
                                         <div class="dropdown_wrapper">
                                             <DropDown  
                                                 placeholder="City"
+                                                :enableSearchBar=showSearchBar[3]
                                                 :dropdownIndex=3
                                                 :options=cities
                                                 :selected=dropdownSelected[3]
@@ -350,6 +354,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="Please select an option"
+                                                            :enableSearchBar=showSearchBar[5]
                                                             :dropdownIndex=5
                                                             :options=degreeTypes
                                                             :selected=dropdownSelected[5]
@@ -381,6 +386,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="-- Select Date --"
+                                                            :enableSearchBar=showSearchBar[6]
                                                             :dropdownIndex=6
                                                             :options=years
                                                             :selected=dropdownSelected[6]
@@ -401,6 +407,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="-- Select Date --"
+                                                            :enableSearchBar=showSearchBar[7]
                                                             :dropdownIndex=7
                                                             :options=years
                                                             :selected=dropdownSelected[7]
@@ -453,6 +460,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="Please select an option"
+                                                        :enableSearchBar=showSearchBar[8]
                                                         :dropdownIndex=8
                                                         :options=countries
                                                         :selected=dropdownSelected[8]
@@ -475,6 +483,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="-- Select Date --"
+                                                            :enableSearchBar=showSearchBar[9]
                                                             :dropdownIndex=9
                                                             :options=years
                                                             :selected=dropdownSelected[9]
@@ -495,6 +504,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="-- Select Date --"
+                                                            :enableSearchBar=showSearchBar[10]
                                                             dropdownIndex="10"
                                                             :options=years
                                                             :selected=dropdownSelected[10]
@@ -531,6 +541,7 @@
                                                     <div class="dropdown_wrapper">
                                                         <DropDown  
                                                             placeholder="-- Select Date --"
+                                                            :enableSearchBar=showSearchBar[11]
                                                             :dropdownIndex=11
                                                             :options=years
                                                             :selected=dropdownSelected[11]
@@ -1083,6 +1094,7 @@ export default defineComponent({
         dropdownSelected = [],
         dropdownSelectedIndex = [0, 0, 0, 0, 0, 0],
         optionsVisible = [false, false, false, false, false, false],
+        showSearchBar = [true, true, false, false, false, false, false, false, false, false, false, false, false],
         allTeachingMaterials = [
             {
                 label: 'PDF file',
@@ -1153,6 +1165,7 @@ export default defineComponent({
         };
 
         return {
+            showSearchBar,
             displayNameModel: {
                 type: 'text',
                 value: '',
@@ -1959,6 +1972,7 @@ export default defineComponent({
         }
     },
     async beforeMount() {
+        console.log(this.showSearchBar);
         await this.generateYears(1946);
     }
 });

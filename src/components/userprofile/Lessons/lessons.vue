@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="create_new_wrapper">
+            <div class="create_new_wrapper" v-if="user.role === 'tutor'">
                 <ButtonIcon 
                     buttonIcon="plus" 
                     @buttonAction="createNewLesson()"

@@ -1,7 +1,10 @@
 <template>
     <div class="class_card">
         <div class="image_wrapper">
-            <img src="" >
+            <img src="@/assets/class2.jpg" >
+            <div class="overlay">
+                <font-awesome-icon :icon="['fas', 'clock']" />
+            </div>
         </div>
         <div class="lesson_card_details">
             <div class="tutor">
@@ -38,7 +41,7 @@ import duration  from "../../helper/duration.js";
 import ButtonPlainText from "@/components/buttons/ButtonPlainText.vue";
 
 export default defineComponent({
-    name: 'lesson-card',
+    name: 'class-card',
     components: { ButtonPlainText },
     props: ['title', 'tutorImage', 'tutorId', 'tutorName', 'studentId', 'datetime', 'status', 'language', 'duration'],
     data() {
@@ -54,8 +57,7 @@ export default defineComponent({
             const result = duration.timeRemaning(datetime, this.duration);
 
             if(result.toLowerCase() == 'in session') this.liveClass = true;
-            console.log(this.liveClass);
-            return result
+            return 'Class in ' + result
         },
         gotoClass() {
             
@@ -102,9 +104,28 @@ export default defineComponent({
         border-radius: 5px;
         cursor: pointer;
         position: relative;
+        overflow: hidden;
     }
     .image_wrapper {
         height: 180px;
+        position: relative;
+    }
+    .image_wrapper img {
+        object-fit: cover;
+    }
+    .overlay {
+        background: rgba(0, 0, 0, 0.309);
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        color: var(--paper-grey-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 400%;
     }
     .tutor  {
         display: flex;
@@ -173,8 +194,7 @@ export default defineComponent({
 
    
     .date_time {
-        font-weight: 600;
-        text-transform: capitalize;
+        font-weight: 500;
         color: var(--paper-grey-700); 
     }
 

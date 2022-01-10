@@ -43,11 +43,10 @@ export default {
         
     }
     .break_down_sec {
-        box-shadow: 0px 0px 5px 2px var(--shadow-color);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 60vh;
+        height: 80vh;
         width: 90%;
         margin: 5% auto;
     }
@@ -88,7 +87,7 @@ export default {
     }
     .apply_btn_wrapper button {
         border: 2px solid var(--burgundy-200);
-        background: #ae191910;
+        background: #ee9d9d1c;
         color: var(--burgundy-200);
         border-radius: 5px;
     }

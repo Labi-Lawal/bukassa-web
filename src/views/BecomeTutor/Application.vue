@@ -1,5 +1,6 @@
 <template>        
     <section class="become_tutor_body">
+       
         <div 
             v-if="applicationSubmitted === false"
         >
@@ -25,12 +26,13 @@
                                     <div class="dropdown_wrapper">
                                         <DropDown
                                             placeholder="-- Select Your Nationality --"
+                                            :enableSearch="true"
                                             :dropdownIndex=0
                                             :options=countries
                                             :selected=dropdownSelected[0]
                                             :selectedIndex=dropdownSelectedIndex[0]
                                             :isOptionsVisible=optionsVisible[0]
-                                            :hideBorder=false
+                                            :hideBorder="false"
                                             @showOptions=showOptions
                                             @optionSelect=selectOption
                                         />
@@ -44,6 +46,7 @@
                                     <div class="dropdown_wrapper">
                                         <DropDown
                                             placeholder="-- Select Option --"
+                                            :enableSearch="true"
                                             :dropdownIndex=1
                                             :options=countries
                                             :selected=dropdownSelected[1]
@@ -102,6 +105,7 @@
                                     <div class="dropdown_wrapper">
                                         <DropDown  
                                             placeholder="-- Select Your Gender --"
+                                            :enableSearch="false"
                                             :dropdownIndex=2
                                             :options=gender
                                             :selected=dropdownSelected[2]
@@ -131,6 +135,7 @@
                                     <div class="dropdown_wrapper">
                                         <DropDown  
                                             placeholder="City"
+                                            :enableSearch="true"
                                             :dropdownIndex=3
                                             :options=cities
                                             :selected=dropdownSelected[3]
@@ -347,6 +352,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="Please select an option"
+                                                        :enableSearch="false"
                                                         :dropdownIndex=5
                                                         :options=degreeTypes
                                                         :selected=dropdownSelected[5]
@@ -378,6 +384,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="-- Select Date --"
+                                                        :enableSearch="true"
                                                         :dropdownIndex=6
                                                         :options=years
                                                         :selected=dropdownSelected[6]
@@ -398,6 +405,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="-- Select Date --"
+                                                        :enableSearch="true"
                                                         :dropdownIndex=7
                                                         :options=years
                                                         :selected=dropdownSelected[7]
@@ -450,6 +458,7 @@
                                             <div class="dropdown_wrapper">
                                                 <DropDown  
                                                     placeholder="Please select an option"
+                                                    :enableSearch="true"
                                                     :dropdownIndex=8
                                                     :options=countries
                                                     :selected=dropdownSelected[8]
@@ -472,6 +481,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="-- Select Date --"
+                                                        :enableSearch="true"
                                                         :dropdownIndex=9
                                                         :options=years
                                                         :selected=dropdownSelected[9]
@@ -492,6 +502,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="-- Select Date --"
+                                                        :enableSearch="true"
                                                         dropdownIndex="10"
                                                         :options=years
                                                         :selected=dropdownSelected[10]
@@ -528,6 +539,7 @@
                                                 <div class="dropdown_wrapper">
                                                     <DropDown  
                                                         placeholder="-- Select Date --"
+                                                        :enableSearch="true"
                                                         :dropdownIndex=11
                                                         :options=years
                                                         :selected=dropdownSelected[11]
@@ -731,6 +743,7 @@
                 </div>
             </div>
         </div>
+
         <div 
             v-else
             class="application_submitted_modal_wrapper"
@@ -752,6 +765,7 @@
                 </div>
             </div>
         </div>
+        
     </section>
 </template>
 
@@ -1415,7 +1429,7 @@ export default defineComponent({
                 });
 
                 this.isSubmitting = true;
-                this.$store.dispatch('submittutorapplication', formData)
+                await this.$store.dispatch('submittutorapplication', formData)
                 .then(()=> this.applicationSubmitted = true)
                 .catch((error)=> {
                     this.isSubmitting = false;
@@ -1450,10 +1464,6 @@ export default defineComponent({
                 this.validateWorkCountry() &&
                 this.validateWorkYearFrom() &&
                 this.validateWorkYearTo() &&
-                this.validateCertYear() &&
-                this.validateCertTitle() &&
-                this.validateCertInstitution() &&
-                this.validateCertFile() &&
                 this.validateCompany() &&
                 this.validatePosition() &&
                 this.validateAboutMe() &&
@@ -1729,7 +1739,9 @@ export default defineComponent({
             return true;
         },
         validateCertTitle() {
-            if(this.certTitleModel.value == '') {
+            if( this.selectedCertYear != '' &&
+                this.certTitleModel.value == ''
+              ) {
                 this.certTitleModel.error = "Please provide your certificate title.";
                 return false;
             }
@@ -1738,7 +1750,9 @@ export default defineComponent({
             return true;
         },
         validateCertInstitution() {
-            if(this.certInstitutionModel.value == '') {
+            if( this.certTitleModel.value != '' && 
+                this.certInstitutionModel.value == ''
+              ) {
                 this.certInstitutionModel.error = "Please provide the institution that awarded you the certificate";
                 return false;
             }
@@ -1747,7 +1761,9 @@ export default defineComponent({
             return true;
         },
         validateCertFile() {
-            if(this.certFileModel.value == '') {
+            if( this.certTitleModel.value != '' && 
+                this.certInstitutionModel.value != '' &&
+                this.certFileModel.value == '') {
                 this.certFileModel.error = "Please provide the institution that awarded you the certificate";
                 return false;
             }
@@ -2046,7 +2062,6 @@ form {
     width: 100%;
 }
 label {
-    height: 23px;
     color: var(--paper-grey-600);
 }
 input, textarea {
@@ -2059,8 +2074,7 @@ input, textarea {
 }
 .dropdown_wrapper {
     border-radius: 5px;
-    height: 40px;
-    margin-bottom: 1%;
+    height: 45px;
 }
 
 .language_field {

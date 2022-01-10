@@ -8,6 +8,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
+// global css
+import "./style/style.css";
+
 library.add(fas);
 
 createApp(App)

@@ -29,15 +29,15 @@ export default defineComponent({
 <style scoped> 
   .user-profile-menu {
     position: absolute;
-    top: 80px;
+    top: 50px;
     right: 0;
     width: 500%;
     max-height: 90vh;
     overflow-y: auto;
     padding: 4% 0%;
     background: white;
-    box-shadow: 0px 0px 8px 1px rgb(221, 221, 221);
-    border-radius: 2px;
+    box-shadow: 0px 3px 8px 1px rgba(221, 221, 221, 0.453);
+    border-radius: 8px;
     color: rgb(12, 12, 12) !important;
     z-index: 10000000;
   }
@@ -47,7 +47,7 @@ export default defineComponent({
     align-items: center;
   }
   .menu_item:hover {
-    background: rgb(238, 238, 238);
+    background: rgba(238, 238, 238, 0.584);
   }
   .menu_item > .anchor {
     width: 100%;
@@ -56,6 +56,7 @@ export default defineComponent({
     margin-left: 7%;
     font-weight: 500;
     text-transform: capitalize;
+    color: var(--paper-grey-700);
   }
 
 </style>

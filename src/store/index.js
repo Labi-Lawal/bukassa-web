@@ -204,8 +204,10 @@ export default createStore({
                     'x-access-token':`Bearer ${this.state.token}`
                 };
                 
-                await axios.post(`${baseURL}/tutors/becometutor`, payload, headers)
+                await axios.post(`${baseURL}/tutors/becometutor`, payload, 
+                    { headers: headers })
                 .then((response)=> {
+                    
                     const tutor = response.data.tutor,
                     user = response.data.user;
 
@@ -418,6 +420,16 @@ export default createStore({
             return new Promise(async (resolve, reject)=> {
                 const headers = {'x-access-token':`Bearer ${this.state.token}`},
                 url = `${baseURL}/community/comment/reply`;
+
+                await axios.post(url, payload, { headers: headers })
+                .then((response)=> resolve(response.data.data))
+                .catch((error)=> reject(error));
+            });
+        },
+        submitreplytoreply({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                url = `${baseURL}/community/comment/replytoreply`;
 
                 await axios.post(url, payload, { headers: headers })
                 .then((response)=> resolve(response.data.data))

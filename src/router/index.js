@@ -51,7 +51,7 @@ const routes = [
         path: '', name: 'Become Tutor Welcome',
         component: ()=> import('../views/BecomeTutor/Welcome.vue')
       },
-      {
+      {  
         path: 'application', name: 'Become Tutor Application',
         component: ()=> import('../views/BecomeTutor/Application.vue'),
         async beforeEnter(to, from, next) {
@@ -61,8 +61,22 @@ const routes = [
               if(store.getters.tutorData == '') next()
             }
           } else {
-            await store.dispatch('storerole', 'tutor')
-            .then(()=> next('/register'));
+            if(store.getters.token) {
+              await store.dispatch('fetchuserdata')
+              .then(async ()=> {
+                if(store.getters.userData.role == 'tutor' && store.getters.tutorData == '') {
+                  await store.dispatch('fetchtutordata')
+                  .then(()=> next())
+                  .catch(()=> next())
+                
+                } 
+                else next()
+              })
+              .catch(()=> next('/logout'));
+            } else {
+              await store.dispatch('storerole', 'tutor')
+              .then(()=> next('/register'));
+            }
           }
         },
       }

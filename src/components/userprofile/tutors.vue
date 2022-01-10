@@ -15,9 +15,9 @@
         </div>
         <div class="no_lesson" v-else>
             <div>
-                <div class="icon">
+                <!-- <div class="icon">
                     <img src="" />
-                </div>
+                </div> -->
                 <div class="label">You are not subcribed to any tutor</div>
                 <div class="explore_tutors_btn_wrapper">
                     <ButtonPlainText 
@@ -85,7 +85,7 @@ export default defineComponent({
 
     .explore_tutors_btn_wrapper {
         width: 20%;
-        height: 40px;
+        height: 50px;
         margin: 2% auto 0;
     }
     .explore_tutors_btn_wrapper button {
@@ -106,8 +106,8 @@ export default defineComponent({
         margin: 0 auto;
     }
     .no_lesson .label {
-        font-size: 140%;
-        font-weight: 700;
+        font-size: 200%;
+        font-weight: 600;
         color: var(--paper-grey-400);
     }
     .no_lesson .label::selection {

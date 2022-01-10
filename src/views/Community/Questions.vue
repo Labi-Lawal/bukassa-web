@@ -35,7 +35,7 @@
                     :id="question._id"
                     :title="question.title"
                     :user="question.user"
-                    :date="question.date"
+                    :date="question.dateCreated"
                     :languages="question.languages"
                     :description="question.desc"
                     :comments="question.comments"
@@ -83,7 +83,7 @@ export default defineComponent({
         fetchQuestions() {
             this.$store.dispatch('fetchcommunityquestions')
             .then((response)=> {
-                this.questions = response;
+                this.questions = response.reverse();
             })
             .catch((error)=> {
                 console.log(error.response);

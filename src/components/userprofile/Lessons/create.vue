@@ -26,6 +26,7 @@
                         <div class="label">Lesson Languauge</div>
                         <DropDown
                             :dropdownIndex=0
+                            searchBarSwitch=true
                             :options="languageModel.options"
                             :selected="languageModel.selected"
                             :selectedIndex="languageModel.selectedIndex"
@@ -45,6 +46,7 @@
                             />
                             <DropDown
                                 :dropdownIndex=1
+                                searchBarSwitch=false
                                 :options="durationModel.options"
                                 :selected="durationModel.selected"
                                 :selectedIndex="durationModel.selectedIndex"

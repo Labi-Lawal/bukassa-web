@@ -15,7 +15,7 @@
                             {{ userData.fullname }}
                         </div>
                         <div class="date">
-                            <!-- 13 days ago -->
+                            {{ calcTimeLapse(question.dateCreated) }}
                         </div>
                     </div>
                     <div 
@@ -71,10 +71,11 @@
                         :key="comments._id"
                         :id="comments._id"
                         :user="comments.user"
-                        :date="comments.date"
+                        :date="comments.dateCreated"
                         :content="comments.content"
                         :replies="comments.replies"
                         :likes="comments.likes"
+                        :branchNo="1"
                     />
                 </div>
             </div>
@@ -105,6 +106,7 @@
 import { defineComponent } from "@vue/runtime-core";
 import ButtonIcon from "@/components/buttons/ButtonIcon.vue";
 import CommentCard from "@/components/Card/CommentCard.vue";
+import duration from "@/helper/duration.js";
 
 export default defineComponent({
     components: { ButtonIcon, CommentCard },
@@ -198,7 +200,7 @@ export default defineComponent({
         submitComment() {
             const payload = {
                 questionid: this.$route.params.question,
-                comment: this.newCommentModel.value
+                comment: this.newCommentModel.value,
             }
             this.$store.dispatch('submitcomment', payload)
             .then((response)=> console.log(response))
@@ -207,6 +209,9 @@ export default defineComponent({
         capitalize(text) {
             return text[0].toUpperCase() + text.substr(1, text.length)
         },
+        calcTimeLapse(date) {
+            return duration.timeLapse(date);
+        }
     },
     async mounted () {
         this.fetchQuestionDetails();
