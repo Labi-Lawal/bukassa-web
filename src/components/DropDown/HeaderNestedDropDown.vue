@@ -1,13 +1,6 @@
 <template>
   <div class="nested_drop_down_frame" @click=toggleNestedOptions>
         <div class="display">
-            <!-- <Translator
-                :countries="allLanguages" 
-                @on-country-click="customEvent" 
-            /> -->
-        </div>
-        
-        <!-- <div class="display">
           <div class="lang">{{ allLanguages[selectedLangIndex].display_name }} . {{ allCurrencies[selectedCurrencyIndex].display_name }} </div>
           <font-awesome-icon :icon="['fas', 'caret-up']" class="icon" v-if=!isCollapsed[0] />
           <font-awesome-icon :icon="['fas', 'caret-down']" class="icon" v-if=isCollapsed[0] />
@@ -33,7 +26,7 @@
                     @selected=resetCurrency
                 />
             </div>
-        </div> -->
+        </div>
   </div>
 </template>
 
@@ -41,11 +34,10 @@
 import { defineComponent } from "@vue/runtime-core";
 import DropDown from "./DropDown.vue";
 import SelectOptions from "./SelectOptions.vue";
-import { Translator } from 'vue-google-translate';
 
 export default defineComponent({
     name: 'header-nested-drop-down',
-    components: { DropDown, SelectOptions, Translator },
+    components: { DropDown, SelectOptions },
     data() {
         const allLanguages = [
             {
@@ -179,50 +171,43 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    body {
-        top: 0 !important;
+    .nested_drop_down_frame {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative !important;
     }
-    /* get rids of the banner at the bottom of the web page */
-    .skiptranslate {
-    display: none !important;
+    .display {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        padding: 0% 2%;
+        cursor: pointer;
     }
-.nested_drop_down_frame {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-}
-.display {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    padding: 0% 2%;
-    cursor: pointer;
-}
-.options {
-    position: absolute;
-    z-index: 100000;
-    left: -1%;
-    background: white;
-    width: 100%;
-    border-top: 1px solid var(--burgundy-white-text);
-}
-.options > div {
-    padding: 10% 5%;
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: 0.2s;
-    color: var(--paper-grey-800);
-}
-.options > div:hover {
-    background: var(--black-100);
-    color: white;
-}
+    .options {
+        position: absolute;
+        z-index: 100000;
+        left: -1%;
+        background: white;
+        width: 100%;
+        border-top: 1px solid var(--burgundy-white-text);
+    }
+    .options > div {
+        padding: 10% 5%;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: 0.2s;
+        color: var(--paper-grey-800);
+    }
+    .options > div:hover {
+        background: var(--black-100);
+        color: white;
+    }
 
-.options > div {
-    position: relative;
-}
+    .options > div {
+        position: relative;
+    }
 
 
 </style>
