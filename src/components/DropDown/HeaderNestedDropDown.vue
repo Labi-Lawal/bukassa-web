@@ -1,28 +1,18 @@
 <template>
-    <div class="nested_drop_down_frame" @click=showNestedOptions>
+    <div class="nested_drop_down_frame" @click=toggleNestedOptions>
         <div class="display">
-            <div class="lang">{{ allLanguages[selectedLangIndex].display_name }} . {{ allCurrencies[selectedCurrencyIndex].display_name }} </div>
+            <div class="lang">
+                {{ allCurrencies[selectedCurrencyIndex].display_name }} 
+            </div>
             <font-awesome-icon :icon="['fas', 'caret-down']" class="icon" v-if=isCollapsed[0] />
             <font-awesome-icon 
-                :icon="['fas', 'times']" 
+                :icon="['fas', 'caret-up']" 
                 class="icon" 
                 v-if=!isCollapsed[0]
-                @click=hideAllOptions
             />
         </div>
 
         <div class="options" v-if="!isCollapsed[0]">
-            <Translator />
-            <!-- <div class="langauge" > -->
-                <!-- Site Language
-                <font-awesome-icon :icon="['fas', 'caret-right']" class="icon"/> -->
-                <!-- <SelectOptions
-                    :alloptions="allLanguages"
-                    v-if="!isCollapsed[1]"
-                    @selected=resetLanguage
-                /> -->
-            <!-- </div> -->
-
             <div class="currency" @mouseover="showCurrencyOptions" @mouseleave="hideCurrencyOptions">
                 Currency
                 <font-awesome-icon :icon="['fas', 'caret-right']" class="icon"/>
@@ -194,17 +184,20 @@ export default defineComponent({
     .display {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         height: 100%;
         padding: 0% 2%;
         cursor: pointer;
     }
+    .icon {
+        margin-left: 5%;
+    }
     .options {
+        border-radius: 0px 0px 5px 5px;
         position: absolute;
         z-index: 100000;
         left: -1%;
         background: white;
-        width: 100%;
+        width: 160%;
         border-top: 1px solid var(--burgundy-white-text);
     }
     .options > div {

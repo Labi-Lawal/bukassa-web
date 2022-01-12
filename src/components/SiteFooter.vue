@@ -120,6 +120,8 @@
                     <div>Support</div>
                     <div>Legal</div>
                 </div>
+
+                <div id="google_translate_element_hide"></div>
             </div>
         </div>
     </div>
@@ -130,6 +132,9 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: 'site-footer',
+    // mounted() {
+    //     new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element_hide');
+    // }
 })
 </script>
 
@@ -227,5 +232,10 @@ export default defineComponent({
 }
 .legal > div:last-child {
     border: none;
+}
+#google_translate_element_hide {
+    position: absolute;
+    opacity: 0;
+    bottom: 100;
 }
 </style>

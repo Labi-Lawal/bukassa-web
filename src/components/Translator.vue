@@ -1,9 +1,8 @@
 <template>
-    <div class="translator">
-        <div id="google_translate_element"></div>
-        <font-awesome-icon :icon="['fas', 'caret-right']" class="icon"/>
-    </div>
-    
+  <div class="translator">
+    <div id="google_translate_element"></div>
+    <font-awesome-icon :icon="['fas', 'circle']" class="dot"/>
+  </div>
 </template>
 
 <script>
@@ -17,19 +16,24 @@ export default defineComponent({
         }
     },
     mounted() {
-        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-      
+      new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
     }
 });
 </script>
 
 <style scoped>
   .translator {
-    width: 90%;
+    display: flex;
   }
-  .icon {
-    position: absolute;
-    z-index: 100;
-    right: 5%;
+  #google_translate_element {
+    width: 97%;
+  }
+  .dot {
+    width: 3%;
+    font-size: 5px;
+    font-weight: 400 !important;
+    margin-top: auto;
+    margin-bottom: 15px;
+    color: var(--paper-grey-700);
   }
 </style>

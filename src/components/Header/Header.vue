@@ -12,8 +12,9 @@
             </router-link>
         </div>
      
-        <div class="drop-down">
-            <HeaderNestedDropDown />
+        <div class="drop_down_section">
+            <Translator class="translator"/>
+            <HeaderNestedDropDown class="currency"/>
         </div>
        
         <nav>
@@ -86,10 +87,11 @@
 <script>
 import HeaderNestedDropDown from '@/components/DropDown/HeaderNestedDropDown.vue';
 import UserProfileMenu from '@/components/userprofile/UserProfileMenu.vue';
+import Translator from "../Translator.vue"; 
 
 export default {
     name: 'Header',
-    components: { HeaderNestedDropDown, UserProfileMenu },
+    components: { HeaderNestedDropDown, UserProfileMenu, Translator },
     data() {
 
         var isLoggedIn, showUserMenu = false;
@@ -257,12 +259,23 @@ export default {
         font-size: 200%;
         color: var(--burgundy-100);
     }
-    div.drop-down {
+    .drop_down_section {
         margin-left: auto;
-        width: 10%;
+        width: 20%;
         height: 50%;
+        position: relative;
+        display: flex;
     }
-   
+    .drop_down_section > div {
+        height: 100% !important;
+    }
+    .translator {
+        width: 75% !important;
+    }
+    .currency {
+        width: 35% !important;
+    }
+
     nav {
         margin: 0% 0% 0% 3%;
         display: flex;
@@ -332,7 +345,7 @@ export default {
     }
 
     @media screen and (max-width: 1280px) {
-        div.drop-down {
+        div.drop_down_section {
             width: 12%;
         }   
     } 
@@ -341,7 +354,7 @@ export default {
         div.logo {
             font-size: 150%;
         }
-        div.drop-down {
+        div.drop_down_section {
             width: 15%;
             font-size: 80%;
         }
@@ -369,7 +382,7 @@ export default {
             margin-right: 2%;
             color: var(--burgundy-100);
         }
-        .drop-down, 
+        .drop_down_section, 
         nav, 
         .user-nav,
         .notmobile {
