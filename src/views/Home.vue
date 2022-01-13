@@ -33,7 +33,6 @@
 
       <div class="all_languages">
         <div class="all_languages_wrapper">
-          <div class="images"></div>
           <div class="content">
             <div class="pre_title">ONLINE AFRICAN LANGUAGE LESSONS</div>
             <div class="main_title">
@@ -306,7 +305,9 @@
     border: 1px solid black;
   }
   .content {
-    width: 45%;
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
   }
   .content .main_title {
     margin: 3% 0;
@@ -319,6 +320,7 @@
     width: calc(100% / 2);
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 2% 0%;
   }
   .all_languages .points div.icon {
@@ -331,7 +333,8 @@
   .all_languages .btn_wrapper {
     width: 40%;
     height: 50px;
-    margin-top: 5%;
+    margin: 0 auto;
+    margin-top: 10%;
   }
   .all_languages .btn_wrapper button {
     background: var(--burgundy-100);
@@ -528,6 +531,10 @@
     color: white;
     border: none;
     font-size: 120%;
+  }
+
+  .btn_wrapper button {
+    border-radius: 5px;
   }
 
   @media screen and (max-width: 300px) {

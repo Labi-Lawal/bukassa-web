@@ -1,7 +1,7 @@
 <template>
     <div class="community_questions">
         <div class="main">
-            <div class="head">
+            <div class="head" v-if="languages.options.length > 0">
                 <div class="title">
                     All Discussions
                 </div>
@@ -74,6 +74,7 @@ export default defineComponent({
         loadLanguages() {
             const comLang = this.$store.getters.communityLanguages;
             comLang.forEach(language => {
+                console.log(language)
                 this.languages.options.push({
                     display_name: language,
                     value: language
@@ -83,6 +84,7 @@ export default defineComponent({
         fetchQuestions() {
             this.$store.dispatch('fetchcommunityquestions')
             .then((response)=> {
+                console.log(response);
                 this.questions = response.reverse();
             })
             .catch((error)=> {
@@ -93,11 +95,12 @@ export default defineComponent({
             this.$store.dispatch('storecommunitylanguage', this.languages.selectedOption);
         },
         async fetchLanguages() {
-            this.loadLanguages();
+            // this.loadLanguages();
+
             await this.$store.dispatch('fetchcommunitylanguages')
             .then((response)=> {
+              
                 const lang = [];
-
                 response.forEach(language => {
                     lang.push({
                         display_name: language.title,

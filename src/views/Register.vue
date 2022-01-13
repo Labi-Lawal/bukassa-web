@@ -342,6 +342,15 @@ export default {
     .header_wrapper header:deep nav > * {
         color: white !important;
     }
+    .header_wrapper header:deep nav > * {
+        color: white !important;
+    }
+    .header_wrapper header:deep #google_translate_element .goog-te-combo {
+        color: white !important;
+    }
+    .header_wrapper header:deep #google_translate_element .goog-te-combo option {
+        color: black !important;
+    }
 
     section.body {
         display: flex;
@@ -361,7 +370,7 @@ export default {
         object-fit: cover;
     }
     .overlay {
-        background: linear-gradient(to right, rgba(18, 18, 18, 0.753),  rgba(18, 18, 18, 0.911));
+        background: linear-gradient(to right, rgba(18, 18, 18, 0.897),  rgba(18, 18, 18, 0.973));
         top: 0;
         left: 0;
         width: 100%;

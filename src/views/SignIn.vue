@@ -164,6 +164,13 @@
     .header_wrapper header:deep nav > * {
         color: white !important;
     }
+    .header_wrapper header:deep #google_translate_element .goog-te-combo {
+        color: white !important;
+    }
+    .header_wrapper header:deep #google_translate_element .goog-te-combo option {
+        color: black !important;
+    }
+    
     section.body {
         display: flex;
         padding: 0;

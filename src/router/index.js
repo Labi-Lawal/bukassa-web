@@ -138,9 +138,6 @@ const routes = [
     path: '/community',
     name: 'Community',
     component: ()=> import('../views/Community/Index.vue'),
-    meta: {
-      requiresAuth: true
-    },
     children: [
       {
         path: '', name: 'Community Welcome',
@@ -157,6 +154,9 @@ const routes = [
       {
         path: 'new', name: 'Create New Question',
         component: ()=> import('../views/Community/New.vue'),
+        meta: {
+          requiresAuth: true
+        },
       }
     ]
   },
