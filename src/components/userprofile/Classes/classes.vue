@@ -24,7 +24,7 @@
                 <div class="icon">
                     <img src="@/assets/icons/empty.png" />
                 </div>
-            <div class="label">You have not added any lesson</div>
+            <div class="label">No class has been booked yet</div>
         </div>
 
    

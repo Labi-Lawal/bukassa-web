@@ -92,6 +92,11 @@
                     source: require('../assets/icons/tutor.png')
                 },
                 {
+                    label: 'Wallet',
+                    path: '/profile/wallet',
+                    source: require('../assets/icons/tutor.png')
+                },
+                {
                     label: 'edit profile',
                     path: '/profile/edit',
                     source: require('../assets/icons/editprofile.png')
@@ -122,6 +127,11 @@
                     label: 'my students',
                     path: '/profile/students',
                     source: require('../assets/icons/students.png')
+                },
+                {
+                    label: 'Wallet',
+                    path: '/profile/wallet',
+                    source: require('../assets/icons/tutor.png')
                 },
                 {
                     label: 'edit profile',

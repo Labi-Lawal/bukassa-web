@@ -121,9 +121,10 @@ export default defineComponent({
             this.newEvent = {
                 tutorname: this.tutorname,
                 type: "Lesson",
-                datetime: new Date(year, month, day, hour, min),    
+                datetime: new Date(year, month, day, hour, min),
                 studentId: this.$store.getters.userData._id || '',
-                lesson: this.selectedLesson
+                lesson: this.selectedLesson,
+                paymentId: '',
             };
 
             this.goToNextSection();

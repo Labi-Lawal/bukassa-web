@@ -18,7 +18,7 @@
                 <div class="icon">
                     <img src="" />
                 </div>
-                <div class="label">You have not added any lesson</div>
+                <div class="label">No subcribed students yet</div>
             </div>
         </div>
     </section>

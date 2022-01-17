@@ -204,6 +204,7 @@ export default defineComponent({
         }
     },
     beforeMount() {
+        console.log(this.$store.getters.tutorData.languages);
         this.$store.getters.tutorData.languages.forEach(element => {
             this.languageModel.options.push({
                 display_name: element,

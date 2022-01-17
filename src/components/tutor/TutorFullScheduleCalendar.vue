@@ -122,11 +122,11 @@ export default defineComponent({
         for(var i=0; i<this.events.length; i++) {
             const eventDate = new Date(this.events[i].datetime).getTime();
 
-            if(this.events[i].type.toLowerCase() == "lesson")
+            if(this.events[i].eventType.toLowerCase() == "lesson")
                 if(this.events[i].studentId == this.$store.getters.userData._id) this.allUserEventDates.push(eventDate)
                 else this.allBookedEventDates.push(eventDate);
 
-            if(this.events[i].type.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
+            if(this.events[i].eventType.toLowerCase() == "noavail") this.allUnavailableEventDates.push(eventDate)
         }
         this.load();
     },

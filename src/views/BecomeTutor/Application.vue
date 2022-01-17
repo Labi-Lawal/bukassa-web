@@ -434,7 +434,7 @@
                                     </div>
 
                                     <div class="background_card">
-                                        <div class="label">Work Experience</div>
+                                        <div class="label">Work Experience (Optional)</div>
 
                                         <div class="double_field_equal">
                                             <div class="field">
@@ -531,7 +531,7 @@
                                     </div>
 
                                     <div class="background_card certificate">
-                                        <div class="label">Certificates</div>
+                                        <div class="label">Certificates (Optional)</div>
                                         
                                         <div class="double_field_equal">
                                             <div class="field date">
@@ -761,6 +761,7 @@
                 <div class="finish_btn_wrapper">
                     <ButtonPlainText 
                         buttonText="CREATE LESSON"
+                        @buttonAction="gotolessonprofile()"
                     />
                 </div>
             </div>
@@ -1181,7 +1182,7 @@ export default defineComponent({
             },
             dobModel: {
                 type: 'date',
-                value: '',
+                value: this.$store.getters.userData.fullname,
                 error: '',
                 readonly: false
             },
@@ -1382,7 +1383,7 @@ export default defineComponent({
                     dob: this.dobModel.value,
                     gender: this.selectedGender,
                     str: this.strAddModel.value,
-                    city: this.selectedCity,
+                    state: this.selectedCity,
                     languages: this.selectedLanguages,
                     
                     // SECTION 3
@@ -1459,13 +1460,6 @@ export default defineComponent({
                 this.validateEduDegreeType() &&
                 this.validateEduYearFrom() &&
                 this.validateEduYearTo() &&
-                this.validateCompany() &&
-                this.validatePosition() &&
-                this.validateWorkCountry() &&
-                this.validateWorkYearFrom() &&
-                this.validateWorkYearTo() &&
-                this.validateCompany() &&
-                this.validatePosition() &&
                 this.validateAboutMe() &&
                 this.validateLessonsDesc() &&
                 this.validateTeachingMaterials() &&
@@ -1966,6 +1960,9 @@ export default defineComponent({
         },
         removeLanguage(index) {
             this.languagesModel.splice(index, 1);
+        },
+        gotolessonprofile() {
+            this.$router.push('/profile/lessons/create');
         }
     },
     async beforeMount() {

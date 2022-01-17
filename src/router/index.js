@@ -132,6 +132,21 @@ const routes = [
           }
         ]
       },
+      {
+        path: 'wallet', name: 'Wallet',
+        component: ()=> import('../views/Wallet/Index.vue'),
+        meta: { requiresAuth: true },
+        children: [
+          {
+            path: '', name: 'WalletHistory',
+            component: ()=> import('../views/Wallet/History.vue'),
+          },
+          {
+            path: 'withdraw', name: 'WalletWithdrawal',
+            component: ()=> import('../views/Wallet/History.vue'),
+          },
+        ]
+      },
     ],
   },
   {
@@ -161,10 +176,19 @@ const routes = [
     ]
   },
   {
-    path: '/booking-payment',
-    component: ()=> import('../views/BookingPayment.vue'),
-    name: 'BookingPayment',
-    props: true
+    path: '/booking-payment', name: 'BookingPayment',
+    component: ()=> import('../views/Payment/Index.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '', name: 'BookingPaymentCheckOut',
+        component: ()=> import('../views/Payment/Payment.vue'),
+      },
+      {
+        path: 'success', name: 'BookingPaymentSuccess',
+        component: ()=> import('../views/Payment/Success.vue'),
+      },
+    ]
   },
   {
     path: '/live-class', name: 'Live Class',

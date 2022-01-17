@@ -1,30 +1,7 @@
 <template>
-  <div>
-    <Header />
     <section class="booking_payment">
-      <div class="payment_methods">
-        <div class="div_title">Payment Methods</div>
-        <div class="all_payment_options">
-          <div
-            v-for="(paymentOption, index) in paymentOptions"
-            :key="index"
-            class="option"
-            @click="selectPaymentMethod(index)"
-          >
-            <img :src="paymentOption.image">
-            <div class="label">{{ paymentOption.name }}</div>
-            <div 
-              :class="{
-                radio: true,
-                filled: (index == selectedIndex) ? true : false
-              }"
-              >
-              <div class="fill" v-if="index == selectedIndex"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="check_out">
+      <div class="check_out" v-if="tutor != '' && bookingInfo != ''">
+       
         <div class="checkout_summary">
           <div class="tutor_info">
             <img :src="tutor.profilePicture">
@@ -43,11 +20,16 @@
               <div class="label">{{ bookingInfo.lesson.title }}</div>
             </div>
             <div class="lesson_item lesson_date">
+              <font-awesome-icon :icon="['fas', 'calendar']" class="icon" />
+              <div class="label">{{ bookingInfo.datetime.split('T')[0] }}</div>
+            </div>
+            <div class="lesson_item lesson_date">
               <font-awesome-icon :icon="['fas', 'clock']" class="icon" />
-              <div class="label">{{ bookingInfo.datetime }}</div>
+              <div class="label">{{ bookingInfo.datetime.split('T')[1].split('.')[0].split(':')[0] + ":" + bookingInfo.datetime.split('T')[1].split('.')[0].split(':')[1] }}</div>
             </div>
           </div>
         </div>
+        
         <div class="calc_price">
           <div class="prices">
             <div class="sub_total">
@@ -63,14 +45,14 @@
             <div class="label">Total</div>
             <div class="price">{{ totalPrice }}</div>
           </div>
-          <button @click="submitEvent" >
+         
+         <div ref="paypal"></div>
+          <!-- <button @click="submitEvent" >
             Pay {{ totalPrice }}
-          </button>
+          </button> -->
         </div>
       </div>
     </section>
-    <SiteFooter />
-  </div>
 </template>
 
 <script>
@@ -91,7 +73,7 @@ export default {
       ],
       selectedPaymentMethod = null,
       selectedIndex,
-      tutor;
+      tutor = '';
 
       return { 
         bookingInfo: this.$store.getters.bookingData,
@@ -132,6 +114,27 @@ export default {
       },
       convertDuration(datetime) {
         return duration.convertMilliSecsToMins(datetime);
+      },
+      setLoaded() {
+        window.paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                description: '',
+                amount: {
+                  currency_code: 'USD',
+                  value: 5
+                }
+              }]
+            })
+          },
+          onApprove: (data, actions)=> {
+            return actions.order.capture().then((details)=> {
+              this.bookingInfo.paymentId = details.id
+              this.submitEvent();
+            })
+          }
+        }).render(this.$refs.paypal); 
       }
     },
     async beforeMount() {
@@ -139,6 +142,12 @@ export default {
       
       this.fetchTutor();
       this.calcTotal();
+    },
+    mounted() {
+      const script = document.createElement("script");
+      script.src = "https://www.paypal.com/sdk/js?client-id=AQnxjR3MUMR48GMfMW8aCTK9oVXViu3PVtScwY1EyCYBZKKwYwkQdGtHfycMVpLyfvxcsfm-ihwhsKI_";
+      script.addEventListener("load", this.setLoaded);
+      document.body.appendChild(script);
     }
 }
 </script>
@@ -146,6 +155,7 @@ export default {
 <style scoped>
   .booking_payment {
     width: 90%;
+    min-height: 80vh;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -169,10 +179,9 @@ export default {
     border-bottom: 1px solid #ddd;
   }
   .check_out {
-    width: 25%;
-    /* position: absolute; */
-    right: 16%;
-    top: 0;
+    width: 40%;
+    margin: auto; 
+    min-height: 85%;
   }
   .all_payment_options{
     width: 90%;
@@ -214,6 +223,10 @@ export default {
     width: 90%;
     margin: 5% auto;
   }
+  .calc_price .label {
+    font-size: 110%;
+    font-weight: 500;
+  }
   .prices {
     border: 1px solid #ddd;
     border-left: none;
@@ -225,12 +238,19 @@ export default {
     justify-content: space-between;
     height: 50px;
   }
-  .calc_price button {
-    width: 100%;
-    height: 40px;
-    background: var(--burgundy-100);
-    border: 1px solid var(--burgundy-100);
-    color: white;
+  .sub_total .price {
+    font-size: 110%;
+    color: var(--paper-grey-700);
+  }
+  .total_price .price {
+    font-size: 120%;
+    font-weight: 700;
+  }
+  
+  .calc_price .paypal-button-label-container {
+    background: var(--burgundy-100) !important;
+    border: 1px solid var(--burgundy-100) !important;
+    color: white !important;
     border-radius: 5px;
     font-size: 100%;
     font-weight: 600;
@@ -258,7 +278,7 @@ export default {
     margin-left: 5%;
   }
   .tutor_info div.tutor_name {
-    font-size: 110%;
+    font-size: 130%;
     font-weight: 600;
     text-transform: capitalize;
   }
@@ -266,6 +286,7 @@ export default {
     margin-top: 2%;
     margin-left: auto;
     width: 90%;
+    font-size: 110%;
   } 
   .info > div {
     margin-bottom: 5%;
@@ -280,17 +301,21 @@ export default {
   }
   .lesson_title {
     text-transform: capitalize;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 120%;
   }
 
   .lesson_date {
-    
+    color: var(--paper-grey-700);
+    font-size: 110%;
+    font-weight: 500;
   }
 
   .lesson_title_middle {
     text-transform: capitalize;
     display: flex;
     align-items: center;
+    
   }
  
   .label {
