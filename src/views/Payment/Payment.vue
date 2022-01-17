@@ -21,11 +21,11 @@
             </div>
             <div class="lesson_item lesson_date">
               <font-awesome-icon :icon="['fas', 'calendar']" class="icon" />
-              <div class="label">{{ bookingInfo.datetime.split('T')[0] }}</div>
+              <div class="label">{{ date }}</div>
             </div>
             <div class="lesson_item lesson_date">
               <font-awesome-icon :icon="['fas', 'clock']" class="icon" />
-              <div class="label">{{ bookingInfo.datetime.split('T')[1].split('.')[0].split(':')[0] + ":" + bookingInfo.datetime.split('T')[1].split('.')[0].split(':')[1] }}</div>
+              <div class="label">{{ time }}</div>
             </div>
           </div>
         </div>
@@ -47,9 +47,6 @@
           </div>
          
          <div ref="paypal"></div>
-          <!-- <button @click="submitEvent" >
-            Pay {{ totalPrice }}
-          </button> -->
         </div>
       </div>
     </section>
@@ -73,10 +70,26 @@ export default {
       ],
       selectedPaymentMethod = null,
       selectedIndex,
-      tutor = '';
+      tutor = '',
+      bookingInfo = this.$store.getters.bookingData,
+      thisDatetime = bookingInfo.datetime.toString(),
+      date, time;
+
+      if(thisDatetime) {
+        thisDatetime = thisDatetime.split('T');
+        var date = thisDatetime[0]
+        time = thisDatetime[1].split('.')[0].split(':')[0] + ':' + thisDatetime[1].split('.')[0].split(':')[1]
+      
+      } else {
+        thisDatetime = bookingInfo.datetime.split(' ');
+        var date = `${thisDatetime[0]} ${thisDatetime[1]} ${thisDatetime[2]} ${thisDatetime[3]}`,
+        time = thisDatetime[4].split(':')[0] + ':' + thisDatetime[4].split(':')[1]
+      }
 
       return { 
-        bookingInfo: this.$store.getters.bookingData,
+        bookingInfo,
+        thisDatetime,
+        date, time,
         tutor,
         paymentOptions,
         selectedPaymentMethod,

@@ -12,14 +12,14 @@ import { defineComponent } from "@vue/runtime-core";
 import Table from './Table.vue';
 
 export default defineComponent({
-    name: 'students-wallet-table',
+    name: 'tutor-wallet-table',
     components: { Table },
     props: ['txns'],
     data() {
         return {
             headings: [
                 'Amount',
-                'Tutor',
+                'Student',
                 'Lesson',
                 'Class Date',
                 'Txn Date'
@@ -34,9 +34,9 @@ export default defineComponent({
                 const tempRow = [];
                 tempRow.push(tranx.amount);
                 
-                this.$store.dispatch('fetchtutor', tranx.tutor)
-                .then((tutor)=> {
-                    tempRow.push(tutor.tutorName);
+                this.$store.dispatch('fetchuser', tranx.studentId)
+                .then((student)=> {
+                    tempRow.push(student.fullname);
                     tempRow.push(tranx.lessonTitle);
                     tempRow.push(tranx.event.split('T')[0].toString());
 

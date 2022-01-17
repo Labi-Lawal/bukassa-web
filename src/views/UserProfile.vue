@@ -94,7 +94,7 @@
                 {
                     label: 'Wallet',
                     path: '/profile/wallet',
-                    source: require('../assets/icons/tutor.png')
+                    source: require('../assets/icons/wallet.png')
                 },
                 {
                     label: 'edit profile',
@@ -131,7 +131,7 @@
                 {
                     label: 'Wallet',
                     path: '/profile/wallet',
-                    source: require('../assets/icons/tutor.png')
+                    source: require('../assets/icons/wallet.png')
                 },
                 {
                     label: 'edit profile',

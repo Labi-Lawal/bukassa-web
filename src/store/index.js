@@ -435,6 +435,22 @@ export default createStore({
                 .then((response)=> resolve(response.data.data))
                 .catch((error)=> reject(error));
             });
+        },
+        submitwithdrawalrequest({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const headers = {'x-access-token':`Bearer ${this.state.token}`},
+                url = `${baseURL}/tutors/withdraw`;
+
+                axios.post(url, payload, { headers: headers })
+                .then((response)=> {
+                    commit('store_tutor', response.data.tutor);
+                    resolve(response.data.tutor);
+                })
+                .catch((error)=> {
+                    console.log(error)
+                    reject(error)
+                });
+            });
         }
     },
     getters: { 

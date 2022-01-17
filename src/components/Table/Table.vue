@@ -84,21 +84,22 @@ export default defineComponent({
 }
 .row {
     border-bottom: 1px solid var(--paper-grey-200);
-    height: 50px;
+    height: 40px;
     display: flex;
 }
 .column {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid ;
     height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 .content {
-    width: 80%;
+    text-transform: capitalize;
+    font-size: 85%;
+    width: 90%;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
