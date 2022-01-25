@@ -1,9 +1,9 @@
 <template>
-    <div class="community_question">
+    <div class="community_post">
         <div class="main">
-            <div class="question section">
-                <div class="question_title" v-if="question.title">
-                    {{ capitalize(question.title) }}
+            <div class="post section">
+                <div class="post_title" v-if="post.title">
+                    {{ capitalize(post.title) }}
                 </div>
                 
                 <div class="user_details">
@@ -15,12 +15,12 @@
                             {{ userData.fullname }}
                         </div>
                         <div class="date">
-                            {{ calcTimeLapse(question.dateCreated) }}
+                            {{ calcTimeLapse(post.dateCreated) }}
                         </div>
                     </div>
                     <div 
                         class="language"
-                        v-for="language in question.languages"
+                        v-for="language in post.languages"
                         :key="language"
                     >
                         {{ language }}
@@ -28,7 +28,7 @@
                 </div>
                 
                 <div class="desc">
-                    {{ question.desc }}
+                    {{ post.desc }}
                 </div>
 
                 <div class="others">
@@ -88,7 +88,7 @@
                     <div 
                         v-for="related in relatedList"
                         :key="related._id"
-                        class="related_question"
+                        class="related_post"
                     >
                         <router-link :to="related._id">
                             <div class="title"> {{ related.title }} </div>
@@ -112,7 +112,7 @@ export default defineComponent({
     components: { ButtonIcon, CommentCard },
     data() {
         return {
-            question: '',
+            post: '',
             likes: [],
             comments: [],
             userData: '',
@@ -181,17 +181,17 @@ export default defineComponent({
         }
     },
     methods: {
-        async fetchQuestionDetails () {
-            const id = this.$route.params.question;
+        async fetchpostDetails () {
+            const id = this.$route.params.postid;
+        
+            await this.$store.dispatch('fetchcommunitypost', id)
+            .then(async (postInfo)=> {
 
-            await this.$store.dispatch('fetchcommunityquestion', id)
-            .then(async (questionInfo)=> {
-
-                this.question = questionInfo[0];
-                this.likes = this.question.likes;
-                this.comments = this.question.comments.reverse();
+                this.post = postInfo[0];
+                this.likes = this.post.likes;
+                this.comments = this.post.comments.reverse();
                 
-                await this.$store.dispatch('fetchuser', this.question.user)
+                await this.$store.dispatch('fetchuser', this.post.user)
                 .then((userdata)=> this.userData = userdata )
                 .catch((error)=> console.log(error));
             })
@@ -199,7 +199,7 @@ export default defineComponent({
         },
         submitComment() {
             const payload = {
-                questionid: this.$route.params.question,
+                postid: this.$route.params.post,
                 comment: this.newCommentModel.value,
             }
             this.$store.dispatch('submitcomment', payload)
@@ -214,13 +214,13 @@ export default defineComponent({
         }
     },
     async mounted () {
-        this.fetchQuestionDetails();
+        this.fetchpostDetails();
     }
 })
 </script>
 
 <style scoped>
-    .community_question {
+    .community_post {
         display: flex;
         justify-content: space-between;
     }
@@ -246,17 +246,17 @@ export default defineComponent({
     .related_list {
         padding: 2% 0;
     }
-    .related_question {
+    .related_post {
         border-bottom: 1px solid var(--paper-grey-200);
         padding: 4% 2%;
         overflow: hidden;
         width: 90%;
         margin: 0 auto;
     }
-    .related_question:last-child {
+    .related_post:last-child {
         border: none;
     }
-    .related_question .title {
+    .related_post .title {
         font-weight: 600;
 
         display: -webkit-box;
@@ -265,7 +265,7 @@ export default defineComponent({
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .related_question .desc {
+    .related_post .desc {
         font-weight: 400;
         font-size: 90%;
 
@@ -276,7 +276,7 @@ export default defineComponent({
         overflow: hidden;
     }
 
-    .question_title {
+    .post_title {
         font-size: 200%;
         font-weight: 600;
         color: var(--paper-grey-800);
@@ -343,11 +343,11 @@ export default defineComponent({
         padding: 0 5px;
     }
 
-    .community_question .main .section {
+    .community_post .main .section {
         margin-left: auto;
         width: calc(100% - 2%);
     }
-    .community_question .main .section:first-of-type {
+    .community_post .main .section:first-of-type {
         margin-left: auto;
         width: 100%;
     }

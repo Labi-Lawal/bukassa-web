@@ -147,7 +147,7 @@
 
             var nav = [];
 
-            if(this.$store.getters.userData.role == 'student')
+            if(this.$store.getters.userData.role !== 'tutor')
                 nav = studentMenu;
             if(this.$store.getters.userData.role == 'tutor')
                 nav = tutorMenu;

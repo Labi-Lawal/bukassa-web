@@ -14,7 +14,7 @@
                     <div class="left">
                         <img :src="tutor.profilePicture">
                         <div class="buttons">
-                            <button @click="openContactModal">
+                            <button @click="openContactModal" v-if="auth">
                                 <font-awesome-icon :icon="['fas', 'comments']" />
                                 <div class="text">Chat Me</div>
                             </button>
@@ -27,7 +27,7 @@
                             <div class="lang"> {{ tutor.languages.join(', ') }} </div>
                         </div>
                         <div class="ratings">
-                            <TutorRatingsIcon :rating="tutor.ratings" :showDigit="false"/>
+                            <TutorRatingsIcon :avgRating="tutor.avgRating" :showDigit="false"/>
                         </div>
                         <div class="metrics">
                             <div>
@@ -36,7 +36,7 @@
                             </div>
                             <div>
                                 <div class="title">Ratings</div>
-                                <div class="number">{{ tutor.ratings }}</div>
+                                <div class="number">{{ tutor.avgRating }}</div>
                             </div>
                             <div>
                                 <div class="title">Reviews</div>
@@ -79,14 +79,14 @@
                     <div class="section-title">Schedule For The Day</div>
                     <TutorScheduleCalendar 
                         :events="tutor.events" 
-                        @buttonAction="openBookingModal" 
+                        @buttonAction="openBookingModal"
                     />
                 </div>
             </div> 
             <div class="modals" v-if="showModals">
 
-                <TutorBookingModal 
-                    v-if="showBookingModal" 
+                <TutorBookingModal
+                    v-if="showBookingModal && auth" 
                     :tutorEvents="tutor.events" 
                     :tutorname="tutor.tutorName"
                     :lessons="tutor.lessons"
@@ -95,14 +95,14 @@
                 />
                 
                 <TutorContactModal 
-                    v-if="showContactModal" 
+                    v-if="showContactModal && auth" 
                     :tutorimage="tutor.profilePicture"
                     :tutorname="tutor.tutorName"
                     :tutoruserId="tutor.userId"
-                    @buttonAction="closeContactModal" 
+                    @close="closeContactModal" 
                 />
                 
-                <BackDrop @buttonAction="closeModal"/>
+                <BackDrop @buttonAction="closeModal" v-if="auth"/>
 
             </div>
         </section>
@@ -144,6 +144,7 @@
                 showModals: false,
                 showContactModal: false,
                 showBookingModal: false,
+                auth: false
             }
         },
         methods: {
@@ -162,9 +163,11 @@
                 this.showContactModal = false;
             },
             openBookingModal(date) {
-                this.checkSessionStatus();
-                this.showModals = true;
-                this.showBookingModal = true;
+                if(this.auth) {
+                    this.checkSessionStatus();
+                    this.showModals = true;
+                    this.showBookingModal = true;
+                }
             },
             closeBookingModal() {
                 this.showModals = false;
@@ -178,6 +181,7 @@
             async fetchTutorData() {
                 await this.$store.dispatch('fetchtutor', this.$route.params.name)
                 .then((tutor)=> {
+                    if(tutor.email === this.$store.getters.userData.email) this.auth = false;
                     this.tutor = tutor;
                     this.isLoading = false;
                 })

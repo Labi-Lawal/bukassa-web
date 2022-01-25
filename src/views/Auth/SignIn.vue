@@ -41,7 +41,7 @@
                         <div class="error-message" v-if="passwordModel.error != ''">{{ passwordModel.error }}</div>
 
                         <div class="link">
-                            <router-link to="/"> Forgot your password? </router-link>
+                            <router-link to="/forgot-password"> Forgot your password? </router-link>
                         </div>
                         
                         <div class="signin_btn_wrapper">
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import Header from '../components/Header/Header.vue';
+    import Header from '../../components/Header/Header.vue';
     import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
     
     export default {

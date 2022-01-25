@@ -32,7 +32,7 @@
            
             <StudentLessonsList
                 v-else-if="
-                        user.role === 'student' &&
+                        user.role != 'tutor' &&
                         user.classes.length > 0
                     "
                 :lessons="user.classes" 

@@ -11,7 +11,7 @@ import { VideoSDKMeeting } from "@videosdk.live/rtc-js-prebuilt";
 export default {
   data() {
     
-    const isStudent = (this.$store.getters.userData.role == 'student') ?true :false,
+    const isStudent = (this.$store.getters.userData.role !== 'tutor') ?true :false,
           clientId = this.$store.getters.classData.id,
           title = this.$store.getters.classData.title,
           username = this.$store.getters.userData.fullname,

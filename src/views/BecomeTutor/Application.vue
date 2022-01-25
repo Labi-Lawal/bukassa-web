@@ -28,7 +28,7 @@
                                             placeholder="-- Select Your Nationality --"
                                             :enableSearch="true"
                                             :dropdownIndex=0
-                                            :options=countries
+                                            :options=nationalities
                                             :selected=dropdownSelected[0]
                                             :selectedIndex=dropdownSelectedIndex[0]
                                             :isOptionsVisible=optionsVisible[0]
@@ -801,7 +801,256 @@ export default defineComponent({
         CheckBox
     },
     data() {    
-        var countries = [
+        var nationalities = [
+            {display_name: 'Afghanistanian', value: 'Afghanistanian'},
+            {display_name: 'Åland Islandian', value: 'Åland Islandian'},
+            {display_name: 'Albanian', value: 'Albanian'},
+            {display_name: 'Algerian', value: 'Algerian'},
+            {display_name: 'American Samoan', value: 'American Samoan'},
+            {display_name: 'Andorran', value: 'Andorran'},
+            {display_name: 'Angolan', value: 'Angolan'},
+            {display_name: 'Anguillan', value: 'Anguillan'},
+            {display_name: 'Antarctican', value: 'Antarctican'},
+            {display_name: 'Antiguan and Barbudan', value: 'Antiguan and Barbudan'},
+            {display_name: 'Argentinan', value: 'Argentinan'},
+            {display_name: 'Armenian', value: 'Armenian'},
+            {display_name: 'Aruban', value: 'Aruban'},
+            {display_name: 'Australian', value: 'Australian'},
+            {display_name: 'Austrian', value: 'Austrian'},
+            {display_name: 'Azerbaijanan', value: 'Azerbaijanan'},
+            {display_name: 'Bahamasian', value: 'Bahamasian'},
+            {display_name: 'Bahrainian', value: 'Bahrainian'},
+            {display_name: 'Bangladeshi', value: 'Bangladeshi'},
+            {display_name: 'Barbadose', value: 'Barbadose'},
+            {display_name: 'Belarusian', value: 'Belarusian'},
+            {display_name: 'Belgium', value: 'Belgium'},
+            {display_name: 'Belizenian', value: 'Belizenian'},
+            {display_name: 'Benin', value: 'Benin'},
+            {display_name: 'Bermudan', value: 'Bermudan'},
+            {display_name: 'Bhutan', value: 'Bhutan'},
+            {display_name: 'Bolivian', value: 'Bolivian'},
+            {display_name: 'Bosnian and Herzegovinan', value: 'Bosnian and Herzegovinan'},
+            {display_name: 'Botswanan', value: 'Botswanan'},
+            {display_name: 'Bouvet Islandian', value: 'Bouvet Islandian'},
+            {display_name: 'Brazilian', value: 'Brazilian'},
+            {display_name: 'British Indian Ocean Territory', value: 'British Indian Ocean Territory'},
+            {display_name: 'British Virgin Islandian', value: 'British Virgin Islandian'},
+            {display_name: 'Brunei', value: 'Brunei'},
+            {display_name: 'Bulgarian', value: 'Bulgarian'},
+            {display_name: 'Burkina Faso', value: 'Burkina Faso'},
+            {display_name: 'Burundian', value: 'Burundian'},
+            {display_name: 'Cambodian', value: 'Cambodian'},
+            {display_name: 'Cameroonian', value: 'Cameroonian'},
+            {display_name: 'Canadian', value: 'Canadian'},
+            {display_name: 'Cape Verdian', value: 'Cape Verdian'},
+            {display_name: 'Caribbean Netherlands', value: 'Caribbean Netherlands'},
+            {display_name: 'Cayman Islandian', value: 'Cayman Islandian'},
+            {display_name: 'Central African Republican', value: 'Central African Republican'},
+            {display_name: 'Chadian', value: 'Chadian'},
+            {display_name: 'Chile', value: 'Chile'},
+            {display_name: 'Chinese', value: 'Chinese'},
+            {display_name: 'Christmas Islandian', value: 'Christmas Islandian'},
+            {display_name: 'Cocos (Keeling) Islandian', value: 'Cocos (Keeling) Islandian'},
+            {display_name: 'Colombian', value: 'Colombian'},
+            {display_name: 'Comorosian', value: 'Comorosian'},
+            {display_name: 'Cook Islandian', value: 'Cook Islandian'},
+            {display_name: 'Costa Rican', value: 'Costa Rican'},
+            {display_name: 'Croatian', value: 'Croatian'},
+            {display_name: 'Cubanian', value: 'Cubanian'},
+            {display_name: 'Curaçao', value: 'Curaçao'},
+            {display_name: 'Cyprus', value: 'Cyprus'},
+            {display_name: 'Czechian', value: 'Czechian'},
+            {display_name: 'Denmarkian', value: 'Denmarkian'},
+            {display_name: 'Djiboutian', value: 'Djiboutian'},
+            {display_name: 'Dominican', value: 'Dominican'},
+            {display_name: 'Dominican Republician', value: 'Dominican Republician'},
+            {display_name: 'DR Congolese', value: 'DR Congolese'},
+            {display_name: 'Ecuadoran', value: 'Ecuadoran'},
+            {display_name: 'Egyptian', value: 'Egyptian'},
+            {display_name: 'El Salvadorian', value: 'El Salvadorian'},
+            {display_name: 'Equatorial Guinea', value: 'Equatorial Guinea'},
+            {display_name: 'Eritrean', value: 'Eritrean'},
+            {display_name: 'Estonian', value: 'Estonian'},
+            {display_name: 'Eswatini', value: 'Eswatini'},
+            {display_name: 'Ethiopian', value: 'Ethiopian'},
+            {display_name: 'Falkland Islandian', value: 'Falkland Islandian'},
+            {display_name: 'Faroe Islandian', value: 'Faroe Islandian'},
+            {display_name: 'Fiji', value: 'Fiji'},
+            {display_name: 'Finlandian', value: 'Finlandian'},
+            {display_name: 'France', value: 'France'},
+            {display_name: 'French Guianan', value: 'French Guianan'},
+            {display_name: 'French Polynesian', value: 'French Polynesian'},
+            {display_name: 'French Southern and Antarctic Lands', value: 'French Southern and Antarctic Lands'},
+            {display_name: 'Gabon', value: 'Gabon'},
+            {display_name: 'Gambian', value: 'Gambian'},
+            {display_name: 'Georgian', value: 'Georgian'},
+            {display_name: 'German', value: 'German'},
+            {display_name: 'Ghanian', value: 'Ghanian'},
+            {display_name: 'Gibraltaran', value: 'Gibraltaran'},
+            {display_name: 'Greek', value: 'Greek'},
+            {display_name: 'Greenland', value: 'Greenland'},
+            {display_name: 'Grenadan', value: 'Grenadan'},
+            {display_name: 'Guadeloupian', value: 'Guadeloupian'},
+            {display_name: 'Guaman', value: 'Guaman'},
+            {display_name: 'Guatemala', value: 'Guatemala'},
+            {display_name: 'Guernsey', value: 'Guernsey'},
+            {display_name: 'Guinea', value: 'Guinea'},
+            {display_name: 'Guinea-Bissau', value: 'Guinea-Bissau'},
+            {display_name: 'Guyana', value: 'Guyana'},
+            {display_name: 'Haiti', value: 'Haiti'},
+            {display_name: 'Heard Island and McDonald Islands', value: 'Heard Island and McDonald Islands'},
+            {display_name: 'Honduras', value: 'Honduras'},
+            {display_name: 'Hong Kong', value: 'Hong Kong'},
+            {display_name: 'Hungary', value: 'Hungary'},
+            {display_name: 'Iceland', value: 'Iceland'},
+            {display_name: 'India', value: 'India'},
+            {display_name: 'Indonesia', value: 'Indonesia'},
+            {display_name: 'Iran', value: 'Iran'},
+            {display_name: 'Iraq', value: 'Iraq'},
+            {display_name: 'Ireland', value: 'Ireland'},
+            {display_name: 'Isle of Man', value: 'Isle of Man'},
+            {display_name: 'Israel', value: 'Israel'},
+            {display_name: 'Italy', value: 'Italy'},
+            {display_name: 'Ivory Coast', value: 'Ivory Coast'},
+            {display_name: 'Jamaica', value: 'Jamaica'},
+            {display_name: 'Japan', value: 'Japan'},
+            {display_name: 'Jersey', value: 'Jersey'},
+            {display_name: 'Jordan', value: 'Jordan'},
+            {display_name: 'Kazakhstan', value: 'Kazakhstan'},
+            {display_name: 'Kenya', value: 'Kenya'},
+            {display_name: 'Kiribati', value: 'Kiribati'},
+            {display_name: 'Kosovo', value: 'Kosovo'},
+            {display_name: 'Kuwait', value: 'Kuwait'},
+            {display_name: 'Kyrgyzstan', value: 'Kyrgyzstan'},
+            {display_name: 'Laos', value: 'Laos'},
+            {display_name: 'Latvia', value: 'Latvia'},
+            {display_name: 'Lebanon', value: 'Lebanon'},
+            {display_name: 'Lesotho', value: 'Lesotho'},
+            {display_name: 'Liberia', value: 'Liberia'},
+            {display_name: 'Libya', value: 'Libya'},
+            {display_name: 'Liechtenstein', value: 'Liechtenstein'},
+            {display_name: 'Lithuania', value: 'Lithuania'},
+            {display_name: 'Luxembourg', value: 'Luxembourg'},
+            {display_name: 'Macau', value: 'Macau'},
+            {display_name: 'Madagascar', value: 'Madagascar'},
+            {display_name: 'Malawi', value: 'Malawi'},
+            {display_name: 'Malaysia', value: 'Malaysia'},
+            {display_name: 'Maldives', value: 'Maldives'},
+            {display_name: 'Mali', value: 'Mali'},
+            {display_name: 'Malta', value: 'Malta'},
+            {display_name: 'Marshall Islands', value: 'Marshall Islands'},
+            {display_name: 'Martinique', value: 'Martinique'},
+            {display_name: 'Mauritania', value: 'Mauritania'},
+            {display_name: 'Mauritius', value: 'Mauritius'},
+            {display_name: 'Mayotte', value: 'Mayotte'},
+            {display_name: 'Mexico', value: 'Mexico'},
+            {display_name: 'Micronesia', value: 'Micronesia'},
+            {display_name: 'Moldova', value: 'Moldova'},
+            {display_name: 'Monaco', value: 'Monaco'},
+            {display_name: 'Mongolian', value: 'Mongolian'},
+            {display_name: 'Montenegro', value: 'Montenegro'},
+            {display_name: 'Montserrat', value: 'Montserrat'},
+            {display_name: 'Morocco', value: 'Morocco'},
+            {display_name: 'Mozambique', value: 'Mozambique'},
+            {display_name: 'Myanmar', value: 'Myanmar'},
+            {display_name: 'Namibian', value: 'Namibian'},
+            {display_name: 'Nauru', value: 'Nauru'},
+            {display_name: 'Nepal', value: 'Nepal'},
+            {display_name: 'Netherlands', value: 'Netherlands'},
+            {display_name: 'New Caledonian', value: 'New Caledonian'},
+            {display_name: 'New Zealand', value: 'New Zealand'},
+            {display_name: 'Nicaraguan', value: 'Nicaraguan'},
+            {display_name: 'Niger', value: 'Niger'},
+            {display_name: 'Nigerian', value: 'Nigerian'},
+            {display_name: 'Niue', value: 'Niue'},
+            {display_name: 'Norfolk Islandian', value: 'Norfolk Islandian'},
+            {display_name: 'North Korean', value: 'North Korean'},
+            {display_name: 'North Macedonian', value: 'North Macedonian'},
+            {display_name: 'Northern Mariana Islandian', value: 'Northern Mariana Islandian'},
+            {display_name: 'Norwanian', value: 'Norwanian'},
+            {display_name: 'Oman', value: 'Oman'},
+            {display_name: 'Pakistani', value: 'Pakistani'},
+            {display_name: 'Palau', value: 'Palau'},
+            {display_name: 'Palestinian', value: 'Palestinian'},
+            {display_name: 'Panaman', value: 'Panaman'},
+            {display_name: 'Papua New Guinea', value: 'Papua New Guinea'},
+            {display_name: 'Paraguanian', value: 'Paraguanian'},
+            {display_name: 'Peru', value: 'Peru'},
+            {display_name: 'Philippino', value: 'Philippino'},
+            {display_name: 'Pitcairn Islandian', value: 'Pitcairn Islandian'},
+            {display_name: 'Polandian', value: 'Polandian'},
+            {display_name: 'Portugese', value: 'Portugese'},
+            {display_name: 'Puerto Rico', value: 'Puerto Rico'},
+            {display_name: 'Qatar', value: 'Qatar'},
+            {display_name: 'Republic of the Congolese', value: 'Republic of the Congolese'},
+            {display_name: 'Réunion', value: 'Réunion'},
+            {display_name: 'Romanian', value: 'Romanian'},
+            {display_name: 'Russian', value: 'Russian'},
+            {display_name: 'Rwandan', value: 'Rwandan'},
+            {display_name: 'Saint Barthélemy', value: 'Saint Barthélemy'},
+            {display_name: 'Saint Helena, Ascension and Tristan da Cunha', value: 'Saint Helena, Ascension and Tristan da Cunha'},
+            {display_name: 'Saint Kitts and Nevis', value: 'Saint Kitts and Nevis'},
+            {display_name: 'Saint Lucia', value: 'Saint Lucia'},
+            {display_name: 'Saint Martini', value: 'Saint Martini'},
+            {display_name: 'Saint Pierre and Miquelon', value: 'Saint Pierre and Miquelon'},
+            {display_name: 'Saint Vincent and the Grenadines', value: 'Saint Vincent and the Grenadines'},
+            {display_name: 'Samoan', value: 'Samoan'},
+            {display_name: 'San Marino', value: 'San Marino'},
+            {display_name: 'São Tomé and Príncipe', value: 'São Tomé and Príncipe'},
+            {display_name: 'Saudi Arabian', value: 'Saudi Arabian'},
+            {display_name: 'Senegalese', value: 'Senegalese'},
+            {display_name: 'Serbian', value: 'Serbian'},
+            {display_name: 'Seychellese', value: 'Seychellese'},
+            {display_name: 'Sierra Leonian', value: 'Sierra Leonian'},
+            {display_name: 'Singapore', value: 'Singapore'},
+            {display_name: 'Sint Maarten', value: 'Sint Maarten'},
+            {display_name: 'Slovakian', value: 'Slovakian'},
+            {display_name: 'Slovenian', value: 'Slovenian'},
+            {display_name: 'Solomon Islandian', value: 'Solomon Islandian'},
+            {display_name: 'Somalian', value: 'Somalian'},
+            {display_name: 'South African', value: 'South African'},
+            {display_name: 'South Georgian', value: 'South Georgian'},
+            {display_name: 'South Korean', value: 'South Korean'},
+            {display_name: 'South Sudanese', value: 'South Sudanese'},
+            {display_name: 'Spanish', value: 'Spanish'},
+            {display_name: 'Sri Lankan', value: 'Sri Lankan'},
+            {display_name: 'Sudanese', value: 'Sudanese'},
+            {display_name: 'Surinamian', value: 'Surinamian'},
+            {display_name: 'Svalbard and Jan Mayen', value: 'Svalbard and Jan Mayen'},
+            {display_name: 'Sweden', value: 'Sweden'},
+            {display_name: 'Switzerland', value: 'Switzerland'},
+            {display_name: 'Syrian', value: 'Syrian'},
+            {display_name: 'Taiwanese', value: 'Taiwanese'},
+            {display_name: 'Tajikistan', value: 'Tajikistan'},
+            {display_name: 'Tanzanian', value: 'Tanzanian'},
+            {display_name: 'Thailand', value: 'Thailand'},
+            {display_name: 'Timor-Leste', value: 'Timor-Leste'},
+            {display_name: 'Togolese', value: 'Togolese'},
+            {display_name: 'Tokelau', value: 'Tokelau'},
+            {display_name: 'Tongan', value: 'Tongan'},
+            {display_name: 'Trinidad and Tobago', value: 'Trinidad and Tobago'},
+            {display_name: 'Tunisia', value: 'Tunisia'},
+            {display_name: 'Turkey', value: 'Turkey'},
+            {display_name: 'Turkmenistan', value: 'Turkmenistan'},
+            {display_name: 'Turks and Caicos Islands', value: 'Turks and Caicos Islands'},
+            {display_name: 'Tuvalu', value: 'Tuvalu'},
+            {display_name: 'Ugandan', value: 'Ugandan'},
+            {display_name: 'Ukrainian', value: 'Ukrainian'},
+            {display_name: 'United Arab Emirates', value: 'United Arab Emirates'},
+            {display_name: 'British', value: 'British'},
+            {display_name: 'American', value: 'American'},
+            {display_name: 'Uruguan', value: 'Uruguan'},
+            {display_name: 'Uzbekistan', value: 'Uzbekistan'},
+            {display_name: 'Vanuatu', value: 'Vanuatu'},
+            {display_name: 'Vatican', value: 'Vatican'},
+            {display_name: 'Venezuelan', value: 'Venezuelan'},
+            {display_name: 'Vietnamese', value: 'Vietnamese'},
+            {display_name: 'Western Saharan', value: 'Western Saharan'},
+            {display_name: 'Yemen', value: 'Yemen'},
+            {display_name: 'Zambian', value: 'Zambian'},
+            {display_name: 'Zimbabwenian', value: 'Zimbabwenian'},
+        ],
+        countries = [
             {display_name: 'Afghanistan', value: 'Afghanistan'},
             {display_name: 'Åland Islands', value: 'Åland Islands'},
             {display_name: 'Albania', value: 'Albania'},
@@ -1065,11 +1314,6 @@ export default defineComponent({
                 note: ''
             },
             {
-                display_name: 'Non Binary',
-                value:'non binary',
-                note: ''
-            },
-            {
                 display_name: 'Prefer Not To Say',
                 value:'prefer not to say',
                 note: ''
@@ -1166,6 +1410,7 @@ export default defineComponent({
                 type: 'text',
                 value: '',
                 error: '',
+                charlength: 12,
                 readonly: false
             },
             firstNameModel: {
@@ -1275,6 +1520,7 @@ export default defineComponent({
                 selected: false,
                 error: ''
             },
+            nationalities,
             countries,
             selectedNativeCountry: '',
             selectedNativeCountryError: '',
@@ -1436,7 +1682,7 @@ export default defineComponent({
                     this.isSubmitting = false;
                     
                     if(error.response.message) this.formError = error.response.message;
-                    else this.formError = 'There was an error submitting application, please try again.'
+                    else this.formError = 'There was a server error while submitting application, please try again.'
                 });
             } 
             else this.formError = 'There was a validation error, please make corrections and try again.'
@@ -1674,12 +1920,17 @@ export default defineComponent({
                 return false;
             }
 
+            if(this.displayNameModel.value.split(' ').length > 1) {
+                this.displayNameModel.error = "Enter your first name only"
+                return false;
+            }
+
             this.displayNameModel.error = '';
             return true;
         },
         validateFirstName() {
             if(this.firstNameModel.value == '') {
-                this.firstNameModel.error = "Please select a name "
+                this.firstNameModel.error = "Please select a name"
                 return false;
             }
 
@@ -1688,7 +1939,7 @@ export default defineComponent({
         },
         validateLastName() {
             if(this.lastNameModel.value == '') {
-                this.lastNameModel.error = "Please select a name "
+                this.lastNameModel.error = "Please select a name"
                 return false;
             }
 
@@ -1813,7 +2064,7 @@ export default defineComponent({
             this.dropdownSelectedIndex[selected.dropdownIndex] = selected.optionIndex;
             
             if(selected.dropdownIndex == 0) {
-                this.selectedNativeCountry = this.countries[selected.optionIndex].value;
+                this.selectedNativeCountry = this.nationalities[selected.optionIndex].value;
                 this.selectedNativeCountryError = '';
             }
        

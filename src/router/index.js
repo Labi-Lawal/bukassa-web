@@ -10,7 +10,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: ()=> import('../views/SignIn.vue'),
+    component: ()=> import('../views/Auth/SignIn.vue'),
     meta: {
       authRoute: true
     }
@@ -18,10 +18,25 @@ const routes = [
   {
     path: '/register',
     name: 'Register',
-    component: ()=> import('../views/Register.vue'),
+    component: ()=> import('../views/Auth/Register.vue'),
     meta: {
       authRoute: true
     }
+  },
+  {
+    path: '/forgot-password', name: 'ForgotPassword',
+    component: ()=> import('../views/Auth/ForgotPassword/Index.vue'),
+    meta: { authRoute: true },
+    children: [ 
+      {
+        path: '', name: 'RequestLink',
+        component: ()=> import('../views/Auth/ForgotPassword/ForgotPassword.vue'),
+      },
+      {
+        path: ':email&:code', name: 'NewPassword',
+        component: ()=> import('../views/Auth/ForgotPassword/NewPassword.vue'),
+      }
+    ]
   },
   {
     path: '/logout',
@@ -155,16 +170,12 @@ const routes = [
     component: ()=> import('../views/Community/Index.vue'),
     children: [
       {
-        path: '', name: 'Community Welcome',
-        component: ()=> import('../views/Community/Welcome.vue'),
+        path: 'posts', alias:'', name: 'Community Posts',
+        component: ()=> import('../views/Community/Posts.vue')
       },
       {
-        path: ':language', name: 'Community Language',
-        component: ()=> import('../views/Community/Questions.vue'),
-      },
-      {
-        path: 'question/:question', name: 'Community Question',
-        component: ()=> import('../views/Community/Question.vue'),
+        path: 'posts/:postid', name: 'Community Post',
+        component: ()=> import('../views/Community/Post.vue'),
       },
       {
         path: 'new', name: 'Create New Question',

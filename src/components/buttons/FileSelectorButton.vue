@@ -5,7 +5,7 @@
         </div>
         <input 
             type="file"
-            accept="video/*"
+            :accept="fileType"
             @change="handleFileChange"
         >
     </label>
@@ -17,7 +17,7 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: "file-selector-button",
-    props: ['buttonText'],
+    props: ['buttonText', 'fileType'],
     methods: {
         handleFileChange(event) {
             this.$emit('input', {file: event.target.files[0]});

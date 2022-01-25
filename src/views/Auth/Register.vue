@@ -132,7 +132,7 @@
 
 <script>
     
-import Header from '../components/Header/Header.vue';
+import Header from '../../components/Header/Header.vue';
 import AccountTypes from '@/components/account-types.vue';
 import ButtonPlainText from '@/components/buttons/ButtonPlainText.vue';
 
@@ -164,19 +164,19 @@ export default {
                     title: 'student',
                     value: 'student',
                     desc: 'Excited to explore and learn new languages from the experts',
-                    image: require("../assets/class_student.jpg")
+                    image: require("@/assets/class_student.jpg")
                 },
                 {
                     title: 'Parent',
-                    value: 'student',
+                    value: 'parent',
                     desc: 'Manage lessons and payments for your child',
-                    image: require("../assets/class_parent.jpg")
+                    image: require("@/assets/class_parent.jpg")
                 },
                 {
                     title: 'tutor',
                     value: 'tutor',
                     desc: 'Use your tutoring talents to teach languages to students',
-                    image: require("../assets/class_tutor.jpg")
+                    image: require("@/assets/class_tutor.jpg")
                 }
             ]
         }

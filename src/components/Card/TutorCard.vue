@@ -2,16 +2,23 @@
     <div class="tutor">
         <div class="profile">
             <img :src="image" alt="">
-            <div class="rating">
-                <TutorRatingsIcon :rating="rating" :showDigit="false"/>
+            <div class="not_new_tutor" v-if="classes.length > 0">
+                <div class="rating">
+                    <TutorRatingsIcon :avgRating="avgRating" :showDigit="false"/>
+                </div>
+                <div class="lessons">{{ classes.length }} Classes </div>
             </div>
-            <div class="lessons">{{ lessons.length }} Lessons</div>
-            <div class="book_btn_wrapper">
-                <ButtonPlainText buttonText="Book Me" />
+            <div class="new_tutor" v-else>
+                New Tutor
             </div>
+            <router-link :to="`/tutor/${tutorName}`">
+                <div class="book_btn_wrapper">
+                    <ButtonPlainText buttonText="Book Me" />
+                </div>
+            </router-link>
         </div>
         <div class="details">
-            <router-link :to="`/tutor/${tutorName}`"><div class="name"> {{ tutorName }} </div></router-link>
+            <div class="name"> {{ tutorName }} </div>
             <div class="career">{{ work }}</div>
             <div class="under"></div>
 
@@ -77,13 +84,14 @@ import { defineComponent } from "@vue/runtime-core";
 import ButtonPlainText from "../buttons/ButtonPlainText.vue";
 import TutorIntroVideo from "../tutor/TutorIntrovideo.vue";
 import TutorScheduleCalendar from '../tutor/TutorScheduleCalendar.vue';
+import TutorRatingsIcon from '../TutorRatingsIcon.vue';
 
 export default defineComponent({
     name: 'tutor-card',
-    components: { ButtonPlainText, TutorIntroVideo, TutorScheduleCalendar },
+    components: { ButtonPlainText, TutorIntroVideo, TutorScheduleCalendar, TutorRatingsIcon },
     props: [
         'image', 
-        'rating',
+        'avgRating',
         'lessons',
         'tutorName',
         'work',
@@ -96,7 +104,8 @@ export default defineComponent({
         return {
             introvidVisible: true,
             scheduleVisible: false,
-            selectedIndex: 0
+            selectedIndex: 0,
+            classes: this.events
         }
     },
     methods: {
@@ -109,7 +118,13 @@ export default defineComponent({
             this.selectedIndex = 1;
             this.introvidVisible = false;
             this.scheduleVisible = true;
+        },
+        howManyClasses() {
+            this.classes = this.events.filter((event)=> event.eventType.toLowerCase() === 'lesson');
         }
+    },
+    mounted() {
+        this.howManyClasses();
     }
 
 });
@@ -166,9 +181,6 @@ div.details div.name {
     font-weight: 700;
     font-size: 130%;
     text-transform: capitalize;
-}
-div.details div.name:hover {
-    text-decoration: underline;
 }
 div.lang-box {
     display: flex;

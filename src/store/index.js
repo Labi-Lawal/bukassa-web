@@ -1,5 +1,4 @@
 import { createStore } from 'vuex';
-import net from "../services/http";
 import axios from "axios";
 
 const baseURL = process.env.VUE_APP_API_BASE_URL;
@@ -357,40 +356,33 @@ export default createStore({
         clearrole({commit}){
             commit('clear_user_role');
         },
-        storecommunitylanguage({commit}, payload) {
-            return new Promise((resolve, reject)=> {
-                commit('store_community_language', payload);
-                resolve();
-            });
-        },
-        fetchcommunityquestions({commit}) {
+        fetchcommunityposts({commit}) {
             return new Promise(async (resolve, reject)=> {
              
-                const url = `${baseURL}/community/questions/${this.state.communityLanguage}`;
+                const url = `${baseURL}/community/posts`;
                 
                 await axios.get(url)
                 .then((response)=> resolve(response.data.data))
                 .catch((error)=> reject(error));
             });
         },
-        fetchcommunityquestion({commit}, payload) {
+        fetchcommunitypost({commit}, payload) {
             return new Promise(async (resolve, reject)=> {
              
-                const url = `${baseURL}/community/question/${payload}`;
+                const url = `${baseURL}/community/posts/${payload}`;
                 
                 await axios.get(url)
                 .then((response)=> resolve(response.data.data))
                 .catch((error)=> reject(error));
             });
         },
-        createquestion({commit}, payload) {
+        createpost({commit}, payload) {
             return new Promise(async (resolve, reject)=> {
                 
                 const headers = {'x-access-token':`Bearer ${this.state.token}`},
-                url = `${baseURL}/community/questions/create`;
+                url = `${baseURL}/community/posts/create`;
                 
-                await axios.post(url, payload, 
-                { headers: headers })
+                await axios.post(url, payload, { headers: headers })
                 .then((response)=> resolve(response.data.data))
                 .catch((error)=> reject(error));
             });
@@ -402,17 +394,6 @@ export default createStore({
 
                 await axios.post(url, payload, { headers: headers })
                 .then((response)=> resolve(response.data.data))
-                .catch((error)=> reject(error));
-            });
-        },
-        fetchcommunitylanguages({commit}) {
-            return new Promise(async (resolve, reject)=> {
-                const url = `${baseURL}/community/languages`;
-
-                await axios.get(url)
-                .then((response)=> {
-                    resolve(response.data.data);
-                })
                 .catch((error)=> reject(error));
             });
         },
@@ -449,6 +430,48 @@ export default createStore({
                 .catch((error)=> {
                     console.log(error)
                     reject(error)
+                });
+            });
+        },
+        resetpassword({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const url = `${baseURL}/user/resetpassword`; 
+                console.log(payload);
+                axios.post(url, payload)
+                .then(()=> {
+                    resolve();
+                })
+                .catch((error)=> {
+                    console.log(error.response);
+                    reject(error);
+                });
+            });
+        },
+        setnewpassword({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const url = `${baseURL}/user/setnewpassword`; 
+                
+                axios.post(url, payload)
+                .then(()=> {
+                    resolve();
+                })
+                .catch((error)=> {
+                    console.log(error.response);
+                    reject(error);
+                });
+            });
+        },
+        checkresetcode({commit}, payload) {
+            return new Promise(async (resolve, reject)=> {
+                const url = `${baseURL}/user/checkresetcode`; 
+                
+                axios.post(url, payload)
+                .then(()=> {
+                    resolve();
+                })
+                .catch((error)=> {
+                    console.log(error.response);
+                    reject(error);
                 });
             });
         }

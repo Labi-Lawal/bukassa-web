@@ -13,7 +13,7 @@
             :key="tutor._id"
             :index="index"
             :image="tutor.profilePicture"
-            :rating="0"
+            :avgRating="tutor.avgRating"
             :lessons="tutor.lessons"
             :tutorName="tutor.tutorName"
             :work="tutor.work.position"

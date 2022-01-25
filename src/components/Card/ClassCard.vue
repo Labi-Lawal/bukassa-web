@@ -67,7 +67,7 @@ export default defineComponent({
                 title: ''
             };
             
-            if(this.$store.getters.userData.role == 'student') {
+            if(this.$store.getters.userData.role != 'tutor') {
                 studentID = this.$store.getters.userData._id;
                 tutorID = this.tutorId;
 

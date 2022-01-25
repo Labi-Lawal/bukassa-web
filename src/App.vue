@@ -85,6 +85,44 @@ export default {
     }
   }
 
+  /* CIRCLE LOADER */
+  .circle_loader {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .circle_loader div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid var(--paper-grey-600);
+    border-radius: 50%;
+    animation: circle_loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: var(--paper-grey-600) transparent transparent transparent;
+  }
+  .circle_loader div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .circle_loader div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .circle_loader div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes circle_loader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,

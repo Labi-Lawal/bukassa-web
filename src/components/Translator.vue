@@ -11,11 +11,15 @@ import { defineComponent } from "@vue/runtime-core";
 export default defineComponent({
     name: 'translator',
     data() {
-        return {
-          ele: null
-        }
+      return {
+        ele: null
+      }
     },
     mounted() {
+      // const script = document.createElement("script");
+      // script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      // document.body.appendChild(script);
+
       // new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
     }
 });

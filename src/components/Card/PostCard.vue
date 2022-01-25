@@ -1,10 +1,11 @@
 <template>
     <div class="question_card">
-        <router-link :to="'question' + '/' + id">
+        <router-link :to="'/community/posts/'+id">
             <div class="question_title">
                 {{ capitalize(title) }}
             </div>
         </router-link>
+
         <div class="user_details">
             <div class="user_image">
                 <img src="@/assets/userimage.png">
@@ -25,9 +26,8 @@
                 {{ language }}
             </div>
         </div>
-        <div class="desc">
-            {{ description }}
-        </div>
+        
+        <div class="desc"> {{ description }} </div>
 
         <div class="others">
             <div class="likes">
@@ -54,9 +54,7 @@ export default defineComponent({
     name: 'question-card',
     props: ['id', 'title', 'user', 'date', 'description', 'languages', 'comments', 'likes'],
     data() {
-        return {
-            userData: ''
-        }
+        return { userData: '' }
     },
     methods: {
         capitalize(text) {

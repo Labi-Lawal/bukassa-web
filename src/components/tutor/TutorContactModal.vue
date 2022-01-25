@@ -11,6 +11,8 @@
                         <div class="name"> {{ tutorname }} </div>
                     </div>
 
+                    <font-awesome-icon :icon="['fas', 'times']" class="close_modal_icon"  @click="$emit('close')"/>
+
                 </div>
 
                 <div class="messages_list_frame">
@@ -190,6 +192,10 @@ export default defineComponent({
         font-size: 130%;
         text-transform: capitalize;
         font-weight: 600;
+    }
+    .close_modal_icon {
+        font-size: 130%;
+        cursor: pointer;
     }
 
     .messages_list_frame {

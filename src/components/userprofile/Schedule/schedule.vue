@@ -8,7 +8,7 @@
         />
 
         <StudentFullScheduleCalendar 
-            v-if="user.role === 'student'"
+            v-else
             :events="user.classes"
             showingTo="student"
         />

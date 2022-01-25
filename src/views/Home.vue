@@ -16,7 +16,7 @@
               We don’t just teach African languages to your kid, we also bring awareness of various African cultures, reintroduce them to their roots and Identity by teaching them their native language.
             </div>
             
-            <form class="search">
+            <!-- <form class="search">
               <input placeholder="Search A Language">
               
               <div class="btn_wrapper">
@@ -25,7 +25,15 @@
                 />
               </div> 
             
-            </form>
+            </form> -->
+
+            <router-link to="/tutors/explore">
+            <div class="hero_btn_wrapper">
+                <ButtonPlainText 
+                  buttonText="Find A Tutor" 
+                />
+            </div>
+            </router-link>
           </div>
         </div>
         <div class="half_white"></div>
@@ -33,6 +41,10 @@
 
       <div class="all_languages">
         <div class="all_languages_wrapper">
+          <div class="image_wrapper">
+            <img src="../assets/sec1.png">
+          </div>
+
           <div class="content">
             <div class="pre_title">ONLINE AFRICAN LANGUAGE LESSONS</div>
             <div class="main_title">
@@ -68,7 +80,7 @@
               </div>
             </div>
             <div class="btn_wrapper">
-              <ButtonPlainText buttonText="View All Languages" />
+              <ButtonPlainText buttonText="Connect In The Community" />
             </div>
           </div>
         </div>
@@ -86,13 +98,19 @@
               <li>Nurture your language development</li>
               <li>Gain knowledge of Africa and its cultures in a native learning environment</li>
             </ul>
-            <div class="btn_wrapper">
-              <ButtonPlainText buttonText="Find A Tutor" />
-            </div>
+
+            <router-link to="/tutors/explore">
+              <div class="btn_wrapper">
+                <ButtonPlainText buttonText="Find A Tutor" />
+              </div>
+            </router-link>
           </div>
         </div>
 
-         <div class="break_down_sec">
+        <div class="break_down_sec">
+          <div class="image_wrapper">
+            <img src="../assets/sec2.png">
+          </div>
           <div class="details">
             <div class="title">How it works</div>
             <ul class="list">
@@ -100,16 +118,15 @@
               <li>Browse a native speaking tutor</li>
               <li>Join the best online African language class</li>
             </ul>
-            <div class="btn_wrapper">
-              <ButtonPlainText buttonText="Find A Language" />
-            </div>
-          </div>
-          <div class="image_wrapper">
-            <img src="../assets/sec2.png">
+            <router-link to="/tutors/explore">
+              <div class="btn_wrapper">
+                <ButtonPlainText buttonText="Find A Language" />
+              </div>
+            </router-link>
           </div>
         </div>
 
-         <div class="break_down_sec">
+        <div class="break_down_sec">
           <div class="image_wrapper">
             <img src="../assets/sec3.png">
           </div>
@@ -120,9 +137,11 @@
               <li>Find African teachers from all over the world and learn the African cultures</li>
               <li>Study at your own pace, in the comfort of your own home</li>
             </ul>
-            <div class="btn_wrapper">
-              <ButtonPlainText buttonText="Explore Our Community" />
-            </div>
+            <router-link to="/community">
+              <div class="btn_wrapper">
+                <ButtonPlainText buttonText="Explore Our Community" />
+              </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -287,6 +306,17 @@
     color: white;
     border: none;
   }
+  .hero_btn_wrapper {
+    width: 40%;
+    height: 50px;    
+    margin-top: 10%;
+  }
+  .hero_btn_wrapper button {
+    border-radius: 5px;
+    background: var(--burgundy-100);
+    color: white;
+    border: none;
+  }
 
 
 
@@ -300,14 +330,19 @@
     display: flex;
     justify-content: space-between;
   }
-  .all_languages .images {
+  .all_languages .image_wrapper {
     width: 50%;
-    border: 1px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .all_languages img {
+    object-fit: cover;
   }
   .content {
     width: 60%;
-    text-align: center;
+    /* text-align: center; */
     margin: 0 auto;
+    margin-left: 5%;
   }
   .content .main_title {
     margin: 3% 0;
@@ -320,7 +355,7 @@
     width: calc(100% / 2);
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     padding: 2% 0%;
   }
   .all_languages .points div.icon {
@@ -333,7 +368,7 @@
   .all_languages .btn_wrapper {
     width: 40%;
     height: 50px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     margin-top: 10%;
   }
   .all_languages .btn_wrapper button {
@@ -463,6 +498,9 @@
     justify-content: center;
     padding: 5% 0;
   }
+  .break_down_sec {
+    margin: 3% 0;
+  } 
   .break_down_sec .image_wrapper {
     width: 35%;
     height: 40vh;

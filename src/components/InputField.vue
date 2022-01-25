@@ -10,6 +10,7 @@
             input_error: (model.error != '') ? true : false
         }"
         @keyup="$emit('input-action')"
+        :maxlength="model.charlength"
     >
     <div class="error" v-if="model.error != ''">
         {{ model.error }}

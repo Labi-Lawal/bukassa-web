@@ -2,9 +2,7 @@
     <div class="become_tutor">
         <Header />
         
-        <div class="body">
-            <router-view />
-        </div>
+        <router-view />
 
         <SiteFooter />
     </div>
@@ -19,9 +17,5 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-    .body {
-        width: 90%;
-        min-height: 65vh;
-        margin: 5% auto;
-    }
+    
 </style>
