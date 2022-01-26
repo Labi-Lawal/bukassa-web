@@ -3,6 +3,7 @@
         <LessonCard 
             v-for="lesson in lessons"
             :key="lesson._id"
+            :id="lesson._id"
             :title="lesson.title"
             :language="lesson.language"
             :duration="lesson.durationInMilliSecs"

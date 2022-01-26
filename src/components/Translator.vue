@@ -20,7 +20,7 @@ export default defineComponent({
       // script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       // document.body.appendChild(script);
 
-      // new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+      new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
     }
 });
 </script>
